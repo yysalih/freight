@@ -12,6 +12,7 @@ import 'package:kamyon/widgets/input_field_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/authentication_service.dart';
+import '../main_view.dart';
 
 class LoginView extends ConsumerWidget {
   const LoginView({super.key});
@@ -83,16 +84,15 @@ class LoginView extends ConsumerWidget {
                     if(user != null) {
                       prefs.setString("uid", user.uid);
 
-                      bool isUserExists = await authWatch.checkIfUserExists(user);
+                      bool isUserExists = 1 == 1;//await authWatch.checkIfUserExists(user);
 
                       if(isUserExists) {
                         Navigator.push(context,
-                            mainWatch.routeToSignInScreen(const MainView()));
+                            routeToView(const MainView()));
                       }
                       else {
-                        await authWatch.createNewUser(user.uid, user);
-                        Navigator.push(context,
-                            mainWatch.routeToSignInScreen(const MainView()));
+                        //await authWatch.createNewUser(user.uid, user);
+                        Navigator.push(context, routeToView(const MainView()));
                       }
 
                     };
