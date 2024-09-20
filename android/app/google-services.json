@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "317562345526",
+    "project_id": "yukbultr",
+    "storage_bucket": "yukbultr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317562345526:android:0048e0fdc74a45693d6097",
+        "android_client_info": {
+          "package_name": "com.kamyon.kamyon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "317562345526-e9kdafuksru7g214uidddr94ngd0jhft.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kamyon.kamyon",
+            "certificate_hash": "46a48cdc2faadf0b6f2e370dcaf737eb1826cdb9"
+          }
+        },
+        {
+          "client_id": "317562345526-of2f4dhd8jdfsvdhk596d3hbb0bj7ge5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kamyon.kamyon",
+            "certificate_hash": "82d33c56a72a65ef539f47568740b9ebeed28ba0"
+          }
+        },
+        {
+          "client_id": "317562345526-il3o3k9v5fl7bbtf2oq184f90hqoepom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5NDyppKB3hCi9RlyIWrQDO1lhl2kgFG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "317562345526-il3o3k9v5fl7bbtf2oq184f90hqoepom.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "317562345526-oi8ebs0ulnkn072lfd7l31ic7kvb70po.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kamyon.kamyon"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
