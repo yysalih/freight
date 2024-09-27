@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_constants.dart';
 
 Widget searchCardWidget(double width, {required String title, required String hint,
-  bool halfLength = true, bool hasType = false, String type = ""}) {
+  bool halfLength = true, bool hasType = false, String type = "", required Function() onPressed}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -17,9 +17,7 @@ Widget searchCardWidget(double width, {required String title, required String hi
           borderRadius: BorderRadius.circular(10),
           child: MaterialButton(
             color: kLightBlack,
-            onPressed: () {
-
-            },
+            onPressed: onPressed,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

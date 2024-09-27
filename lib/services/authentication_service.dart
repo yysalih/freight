@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kamyon/controllers/auth_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../views/auth_views/login_view.dart';
 import '../views/main_view.dart';
 
 class Authentication {
@@ -89,18 +92,20 @@ class Authentication {
     }
   }
 
-  static Future<void> initializeFirebase({required BuildContext context}) async {
+  static Future<void> initializeFirebase({required BuildContext context, required AuthController authNotifier}) async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     User? user = FirebaseAuth.instance.currentUser;
 
+    bool userExists = await authNotifier.checkIfUserExists();
+
     try {
-      final snapshot = true;
-      if(prefs.getString("uid") != null && snapshot) {
+      if(prefs.getString("uid") != null && userExists) {
+        await authNotifier.getCurrentUser();
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MainView(),), (route) => false);
       }
       else {
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MainView(),), (route) => false);
+       // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginView(),), (route) => false);
 
       }
 

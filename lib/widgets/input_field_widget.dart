@@ -3,7 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/constants/app_constants.dart';
 
 Widget customInputField({required String title, required String hintText, required IconData icon,
-  bool isSecured = false, bool hasTitle = true, double borderRadius = 10, bool isEnable = true, required Function() onTap}) {
+  bool isSecured = false, bool hasTitle = true,
+  double borderRadius = 10, bool isEnable = true, required Function() onTap, required TextEditingController controller}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -14,6 +15,7 @@ Widget customInputField({required String title, required String hintText, requir
         child: Material(
           color: kLightBlack,
           child: TextField(
+            controller: controller,
             enabled: isEnable,
             style: kCustomTextStyle,
             onTap: onTap,

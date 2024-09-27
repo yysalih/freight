@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,8 +17,8 @@ class FillOutView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLanguage = ref.watch(languageStateProvider);
-    ref.watch(authController.notifier);
-    ref.watch(authController);
+    final authNotifier = ref.watch(authController.notifier);
+    final authState = ref.watch(authController);
 
     return Scaffold(
       backgroundColor: kBlack,
@@ -50,7 +51,9 @@ class FillOutView extends ConsumerWidget {
                   CircleAvatar(
                     radius: 40.h,
                     backgroundColor: kLightBlack,
-                    child: Image.asset("assets/icons/photo.png", width: 50.w,),
+                    backgroundImage: CachedNetworkImageProvider(authNotifier.currentUser!.photoURL!),
+                    child: authNotifier.currentUser!.photoURL!.isNotEmpty ? null
+                        : Image.asset("assets/icons/photo.png", width: 50.w,),
                   ),
                   SizedBox(width: 10.w,),
                   TextButton(
@@ -74,25 +77,25 @@ class FillOutView extends ConsumerWidget {
                     hintText: languages[appLanguage]!["input_name"]!,
                     icon: Icons.person, onTap: () {
 
-                    },),
+                    }, controller: authNotifier.nameController..text = authNotifier.currentUser!.displayName!),
                   SizedBox(height: 10.h,),
                   customInputField(title: languages[appLanguage]!["surname"]!,
                     hintText: languages[appLanguage]!["input_surname"]!,
                     icon: Icons.person, onTap: () {
 
-                    },),
+                    }, controller: authNotifier.surnameController),
                   SizedBox(height: 10.h,),
                   customInputField(title: languages[appLanguage]!["email"]!,
                     hintText: languages[appLanguage]!["input_email"]!,
                     icon: Icons.local_post_office, onTap: () {
 
-                    },),
+                    }, controller: authNotifier.emailController..text = authNotifier.currentUser!.email!),
                   SizedBox(height: 10.h,),
                   customInputField(title: languages[appLanguage]!["phone"]!,
                     hintText: languages[appLanguage]!["input_phone"]!,
                     icon: Icons.phone, onTap: () {
 
-                    },),
+                    }, controller: authNotifier.phoneController),
                 ],
               ),
 

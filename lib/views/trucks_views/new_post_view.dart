@@ -84,32 +84,42 @@ class NewPostView extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  searchCardWidget(width, title: languages[language]!["origin"]!, hint: "Ankara, TR"),
-                  searchCardWidget(width, title: languages[language]!["target"]!, hint: "İstanbul, TR"),
+                  searchCardWidget(width, title: languages[language]!["origin"]!, hint: "Ankara, TR", onPressed: () {
+
+                  },),
+                  searchCardWidget(width, title: languages[language]!["target"]!, hint: "İstanbul, TR", onPressed: () {
+
+                  },),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  searchCardWidget(width, title: languages[language]!["start_date"]!, hint: languages[language]!["pick_a_date"]!),
-                  searchCardWidget(width, title: languages[language]!["end_date"]!, hint: languages[language]!["pick_a_date"]!),
+                  searchCardWidget(width, title: languages[language]!["start_date"]!, hint: languages[language]!["pick_a_date"]!, onPressed: () {
+
+                  },),
+                  searchCardWidget(width, title: languages[language]!["end_date"]!, hint: languages[language]!["pick_a_date"]!, onPressed: () {
+
+                  },),
                 ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   customInputField(title: languages[language]!["price"]!, hintText: languages[language]!["enter_price"]!, icon: Icons.monetization_on, onTap: () {
-                  },),
+                  }, controller: TextEditingController()),
                   SizedBox(height: 5.h,),
                   Text("${languages[language]!["per_km"]!} 20 \$", style: kCustomTextStyle,)
                 ],
               ),
               searchCardWidget(width, title: languages[language]!["contact_phone"]!,
-                hint: languages[language]!["enter_contact_phone"]!, halfLength: false,),
+                hint: languages[language]!["enter_contact_phone"]!, halfLength: false, onPressed: () {
+
+                },),
               customInputField(title: languages[language]!["description"]!, hintText: languages[language]!["enter_description"]!,
                   icon: Icons.description, onTap: () {
 
-                  },),
+                  }, controller: TextEditingController()),
               customButton(title: languages[language]!["confirm"]!, onPressed: () {
 
               },)

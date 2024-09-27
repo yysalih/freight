@@ -93,15 +93,17 @@ class AddNewTruckView extends ConsumerWidget {
                   customInputField(title: languages[language]!["truck_name"]!,
                       hintText: languages[language]!["enter_truck_name"]!, icon: Icons.local_shipping_outlined, onTap: () {
 
-                      },),
+                      }, controller: TextEditingController()),
                   SizedBox(height: 20.h,),
                   customInputField(title: languages[language]!["description"]!,
                       hintText: languages[language]!["enter_truck_description"]!, icon: Icons.local_shipping_outlined, onTap: () {
 
-                    },),
+                    }, controller: TextEditingController()),
                   SizedBox(height: 20.h,),
                   searchCardWidget(width, title: languages[language]!["registered_city"]!,
-                      hint: languages[language]!["enter_registered_city"]!, halfLength: false)
+                      hint: languages[language]!["enter_registered_city"]!, halfLength: false, onPressed: () {
+
+                    },)
                 ],
               ),
               Column(

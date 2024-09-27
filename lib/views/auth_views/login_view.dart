@@ -36,13 +36,13 @@ class LoginView extends ConsumerWidget {
                   hintText: languages[appLanguage]!["input_email"]!,
                   icon: Icons.local_post_office_outlined, onTap: () {
 
-                },),
+                }, controller: authNotifier.emailController),
               SizedBox(height: 10.h,),
               customInputField(title: languages[appLanguage]!["password"]!,
                 hintText: languages[appLanguage]!["input_password"]!,
                 icon: Icons.password, onTap: () {
 
-                },),
+                }, controller: authNotifier.passwordController),
               authState.isRegister ? Column(
                 children: [
                   SizedBox(height: 10.h,),
@@ -50,7 +50,7 @@ class LoginView extends ConsumerWidget {
                     hintText: languages[appLanguage]!["input_password_again"]!,
                     icon: Icons.password, onTap: () {
 
-                    },),
+                    }, controller: authNotifier.passwordAgainController),
                 ],
               ) : Container(),
               SizedBox(height: 10.h,),
@@ -73,30 +73,35 @@ class LoginView extends ConsumerWidget {
               ),
               SizedBox(height: 10.h,),
               FutureBuilder(
-                future: Authentication.initializeFirebase(context: context),
+                future: Authentication.initializeFirebase(context: context, authNotifier: authNotifier),
                 builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return customButton(title: authState.isRegister ?
+                    languages[appLanguage]!["sign_up"]! :
+                    languages[appLanguage]!["login"]!, color: kGreen, onPressed: () async {
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      User? user = await Authentication.signInWithGoogle(context: context);
+
+                      if(user != null) {
+                        prefs.setString("uid", user.uid);
+
+                        bool isUserExists = await authNotifier.checkIfUserExists();
+
+                        if(isUserExists) {
+                          Navigator.push(context,
+                              routeToView(const MainView()));
+                        }
+                        else {
+                          //await authWatch.createNewUser(user.uid, user);
+                          Navigator.push(context, routeToView(const FillOutView()));
+                        }
+
+                      }
+                    },);
+                  }
                   return customButton(title: authState.isRegister ?
                   languages[appLanguage]!["sign_up"]! :
-                  languages[appLanguage]!["login"]!, color: kGreen, onPressed: () async {
-                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                    User? user = await Authentication.signInWithGoogle(context: context);
-
-                    if(user != null) {
-                      prefs.setString("uid", user.uid);
-
-                      bool isUserExists = 1 == 1;//await authWatch.checkIfUserExists(user);
-
-                      if(isUserExists) {
-                        Navigator.push(context,
-                            routeToView(const MainView()));
-                      }
-                      else {
-                        //await authWatch.createNewUser(user.uid, user);
-                        Navigator.push(context, routeToView(const MainView()));
-                      }
-
-                    };
-                  },);
+                  languages[appLanguage]!["login"]!, color: kGreen, onPressed: () {}, inProgress: true);
                 }
               ),
               SizedBox(height: 30.h,),
@@ -106,30 +111,96 @@ class LoginView extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FutureBuilder(
-                      future: Authentication.initializeFirebase(context: context),
+                      future: Authentication.initializeFirebase(context: context, authNotifier: authNotifier),
                       builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return ElevatedButton(
+                          onPressed: () async {
+                            await authNotifier.checkIfUserExists();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: const CircleBorder(),
+                            padding: const EdgeInsets.all(20),
+                            backgroundColor: kLightBlack, // <-- Button color
+                            foregroundColor: kWhite, // <-- Splash color
+                          ),
+                          child: Image.asset("assets/icons/google.png", width: 30.w,),
+                        );
+                      };
                       return ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, routeToView(const FillOutView()));
-                        },
+                          onPressed: () async {
+                            await authNotifier.checkIfUserExists();
+                          },
                         style: ElevatedButton.styleFrom(
                           shape: const CircleBorder(),
                           padding: const EdgeInsets.all(20),
                           backgroundColor: kLightBlack, // <-- Button color
                           foregroundColor: kWhite, // <-- Splash color
                         ),
-                        child: Image.asset("assets/icons/google.png", width: 30.w,),
-                      );
+                        child: const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.white
+                        ),
+                      ));
                     }
                   ),
                   SizedBox(width: 20.w,),
                   FutureBuilder(
-                    future: Authentication.initializeFirebase(context: context),
+                    future: Authentication.initializeFirebase(context: context, authNotifier: authNotifier),
                     builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return ElevatedButton(
+                          onPressed: () async {
+
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            User? user = await Authentication.signInWithGoogle(context: context);
+
+                            if(user != null) {
+                              prefs.setString("uid", user.uid);
+
+                              bool isUserExists = await authNotifier.checkIfUserExists();
+
+                              if(isUserExists) {
+                                Navigator.push(context,
+                                    routeToView(const MainView()));
+                              }
+                              else {
+                                //await authWatch.createNewUser(user.uid, user);
+                                Navigator.push(context, routeToView(const FillOutView()));
+                              }
+
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: const CircleBorder(),
+                            padding: const EdgeInsets.all(20),
+                            backgroundColor: kLightBlack, // <-- Button color
+                            foregroundColor: kWhite, // <-- Splash color
+                          ),
+                          child: Image.asset("assets/icons/apple.png", color: kWhite, width: 30.w,),
+                        );
+                      }
                       return ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, routeToView(const FillOutView()));
-                        },
+                        onPressed: () async {
+
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          User? user = await Authentication.signInWithGoogle(context: context);
+
+                          if(user != null) {
+                            prefs.setString("uid", user.uid);
+
+                            bool isUserExists = await authNotifier.checkIfUserExists();
+
+                            if(isUserExists) {
+                              Navigator.push(context,
+                                  routeToView(const MainView()));
+                            }
+                            else {
+                              //await authWatch.createNewUser(user.uid, user);
+                              Navigator.push(context, routeToView(const FillOutView()));
+                            }
+
+                          }                        },
                         style: ElevatedButton.styleFrom(
                           shape: const CircleBorder(),
                           padding: const EdgeInsets.all(20),

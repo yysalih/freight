@@ -40,32 +40,50 @@ class SearchView extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  searchCardWidget(width, title: languages[language]!["origin"]!, hint: "Ankara, TR"),
-                  searchCardWidget(width, title: languages[language]!["target"]!, hint: "İstanbul, TR"),
+                  searchCardWidget(width, title: languages[language]!["origin"]!, hint: "Ankara, TR", onPressed: () {
+
+                  },),
+                  searchCardWidget(width, title: languages[language]!["target"]!, hint: "İstanbul, TR", onPressed: () {
+
+                  },),
                 ],
               ),
               searchCardWidget(width, title: languages[language]!["vehicle_type"]!,
-                  hint: languages[language]!["pick_a_type"]!, halfLength: false),
+                  hint: languages[language]!["pick_a_type"]!, halfLength: false, onPressed: () {
+
+                },),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   searchCardWidget(width, title: languages[language]!["length"]!, hint: "25",
-                      hasType: true, type: "mt"),
+                      hasType: true, type: "mt", onPressed: () {
+
+                    },),
                   searchCardWidget(width, title: languages[language]!["weight"]!, hint: "1604",
-                      hasType: true, type: "kg"),
+                      hasType: true, type: "kg", onPressed: () {
+
+                    },),
                   searchCardWidget(width, title: languages[language]!["equipment_limits"]!, hint: "Kısmi",
-                      hasType: true, type: ""),
+                      hasType: true, type: "", onPressed: () {
+
+                    },),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  searchCardWidget(width, title: languages[language]!["start_date"]!, hint: languages[language]!["pick_a_date"]!),
-                  searchCardWidget(width, title: languages[language]!["end_date"]!, hint: languages[language]!["pick_a_date"]!),
+                  searchCardWidget(width, title: languages[language]!["start_date"]!, hint: languages[language]!["pick_a_date"]!, onPressed: () {
+
+                  },),
+                  searchCardWidget(width, title: languages[language]!["end_date"]!, hint: languages[language]!["pick_a_date"]!, onPressed: () {
+
+                  },),
                 ],
               ),
               searchCardWidget(width, title: languages[language]!["max_age"]!,
-                  hint: languages[language]!["pick_an_age"]!, halfLength: false,),
+                  hint: languages[language]!["pick_an_age"]!, halfLength: false, onPressed: () {
+
+                },),
 
               customButton(title: languages[language]!["search"]!, onPressed: () {
                 Navigator.push(context, routeToView(const SearchResultsView()));

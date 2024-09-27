@@ -66,7 +66,7 @@ class LoadsView extends ConsumerWidget {
                       
                       hasTitle: false, borderRadius: 20, onTap: () {
                     Navigator.push(context, routeToView(const SearchView()));
-                    },),
+                    }, controller: TextEditingController()),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

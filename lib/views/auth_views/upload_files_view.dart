@@ -15,7 +15,7 @@ class UploadFilesView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appLanguage = ref.watch(languageStateProvider);
+    final language = ref.watch(languageStateProvider);
     final authNotifier = ref.watch(authController.notifier);
     final authState = ref.watch(authController);
 
@@ -39,7 +39,7 @@ class UploadFilesView extends ConsumerWidget {
                     },
                     child: const Icon(Icons.arrow_back_outlined, color: kWhite,),
                   ),
-                  Text(languages[appLanguage]!["upload_necessary_files"]!, style: kTitleTextStyle.copyWith(
+                  Text(languages[language]!["upload_necessary_files"]!, style: kTitleTextStyle.copyWith(
                       color: kWhite
                   ),),
                   Container()
@@ -50,10 +50,10 @@ class UploadFilesView extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      fileCardWidget(title: languages[appLanguage]!["id_front"]!,
+                      fileCardWidget(title: languages[language]!["id_front"]!,
                         image: "id", color: kLightBlack, onPressed: () {},),
                       SizedBox(width: 20.w,),
-                      fileCardWidget(title: languages[appLanguage]!["id_back"]!,
+                      fileCardWidget(title: languages[language]!["id_back"]!,
                         image: "id", color: kLightBlack, onPressed: () {},),
                     ],
                   ),
@@ -63,10 +63,10 @@ class UploadFilesView extends ConsumerWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        fileCardWidget(title: languages[appLanguage]!["license_front"]!,
+                        fileCardWidget(title: languages[language]!["license_front"]!,
                           image: "license", color: kLightBlack, onPressed: () {},),
                         SizedBox(width: 20.w,),
-                        fileCardWidget(title: languages[appLanguage]!["license_back"]!,
+                        fileCardWidget(title: languages[language]!["license_back"]!,
                           image: "license", color: kLightBlack, onPressed: () {},),
                       ],
                     ),
@@ -74,15 +74,15 @@ class UploadFilesView extends ConsumerWidget {
                   SizedBox(height: 20.h,),
                   authState.isCarrier ? Column(
                     children: [
-                      fileCardWidget2(title: languages[appLanguage]!["psiko"]!,
+                      fileCardWidget2(title: languages[language]!["psiko"]!,
                           icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {}),
                       SizedBox(height: 20.h,),
-                      fileCardWidget2(title: languages[appLanguage]!["src"]!,
+                      fileCardWidget2(title: languages[language]!["src"]!,
                           icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {}),
                     ],
                   ) : Column(
                     children: [
-                      fileCardWidget2(title: languages[appLanguage]!["registration"]!,
+                      fileCardWidget2(title: languages[language]!["registration"]!,
                           icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {}),
                       SizedBox(height: 20.h,),
                       Row(
@@ -92,15 +92,15 @@ class UploadFilesView extends ConsumerWidget {
                             onChanged: (value) => authNotifier.switchBroker(),
                           ),
                           SizedBox(width: 5.w,),
-                          Text(languages[appLanguage]!["i_am_a_broker"]!, style: kCustomTextStyle,)
+                          Text(languages[language]!["i_am_a_broker"]!, style: kCustomTextStyle,)
                         ],
                       ),
                     ],
                   )
                 ],
               ),
-              customButton(title: languages[appLanguage]!["confirm"]!, color: kGreen, onPressed: () {
-                Navigator.push(context, routeToView(const MainView()));
+              customButton(title: languages[language]!["confirm"]!, color: kGreen, onPressed: () {
+                authNotifier.createUser(context: context, errorTitle: languages[language]!["problem_signing_up"]!);
               },),
             ],
           ),
