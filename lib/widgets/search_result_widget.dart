@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:kamyon/constants/languages.dart';
+import 'package:kamyon/models/load_model.dart';
 
 import '../constants/app_constants.dart';
 
 Widget searchResultWidget(double width, double height, String language,
-    {required Function() onPressed}) {
+    {required Function() onPressed, required LoadModel load}) {
   return Container(
     width: width,
     decoration: BoxDecoration(
@@ -24,13 +26,13 @@ Widget searchResultWidget(double width, double height, String language,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("İstanbul TR\nOcak 28", style: kCustomTextStyle,),
+                  Text("İstanbul TR\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}", style: kCustomTextStyle,),
                   const Icon(Icons.fast_forward_sharp, color: kBlueColor,),
 
                   Icon(Icons.local_shipping, color: kWhite, size: 30.w,),
 
                   const Icon(Icons.fast_forward_sharp, color: kBlueColor,),
-                  const Text("Ankara TR\nOcak 30", style: kCustomTextStyle, textAlign: TextAlign.end,),
+                  Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}", style: kCustomTextStyle, textAlign: TextAlign.end,),
                 ],
               ),
               SizedBox(height: 10.h,),
@@ -42,7 +44,7 @@ Widget searchResultWidget(double width, double height, String language,
                     children: [
                       const Text("Steel Road Inc.", style: kCustomTextStyle,),
                       SizedBox(height: 3.h,),
-                      Text(languages[language]!["request_sent"]!, style: kCustomTextStyle.copyWith(
+                      Text(languages[language]![load.state!]!, style: kCustomTextStyle.copyWith(
                           color: kBlueColor
                       ),)
                     ],
@@ -50,10 +52,11 @@ Widget searchResultWidget(double width, double height, String language,
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      const Text("15000 ₺", style: kCustomTextStyle,),
+                      Text("${load.price} ₺", style: kCustomTextStyle,),
                       SizedBox(height: 3.h,),
-                      Text("${languages[language]!["est"]!} 120₺/KM", style: kCustomTextStyle.copyWith(
-                          color: kBlueColor, fontSize: 13.w
+                      Text("${languages[language]!["est"]!} ${(load.price! / load.distance!).toStringAsFixed(2)}₺/KM",
+                        style: kCustomTextStyle.copyWith(
+                          color: kBlueColor, fontSize: 13.w,
                       ),)
                     ],
                   ),
@@ -85,7 +88,7 @@ Widget searchResultWidget(double width, double height, String language,
                         )
                     ],
                   ),
-                  const Text("1500 KM", style: kCustomTextStyle,),
+                  Text("${load.distance!} KM", style: kCustomTextStyle,),
                 ],
               ),
             ],

@@ -42,7 +42,7 @@ class UserModel implements BaseModel<UserModel> {
     uid: json["uid"] as String?,
     name: json["name"] as String?,
     email: json["email"] as String?,
-    point: double.parse(json["point"]),
+    point: json["point"] == null ? 0.0 : double.parse(json["point"].toString()),
     isBroker: json['isBroker'] == 'true' || json['isBroker'] == "1",
     isCarrier: json['isCarrier'] == 'true' || json['isCarrier'] == "1",
     src: json["src"] as String?,

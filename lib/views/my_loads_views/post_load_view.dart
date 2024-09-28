@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,10 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:kamyon/constants/snackbars.dart';
 import 'package:kamyon/controllers/auth_controller.dart';
 import 'package:kamyon/controllers/load_controller.dart';
+import 'package:kamyon/models/place_model.dart';
+import 'package:kamyon/repos/user_repository.dart';
 import 'package:kamyon/views/loads_views/search_results_view.dart';
 import 'package:kamyon/widgets/custom_button_widget.dart';
 import 'package:kamyon/widgets/input_field_widget.dart';
 import 'package:kamyon/widgets/load_input_dialog_widget.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../constants/app_constants.dart';
 import '../../constants/languages.dart';
@@ -29,7 +33,8 @@ class PostLoadView extends ConsumerWidget {
     final loadNotifier = ref.watch(loadController.notifier);
     final loadState = ref.watch(loadController);
 
-    final authState = ref.watch(authController);
+
+    final userProvider = ref.watch(userStreamProvider(FirebaseAuth.instance.currentUser!.uid));
 
 
     final GlobalKey _menuKey = GlobalKey();
@@ -190,25 +195,51 @@ class PostLoadView extends ConsumerWidget {
                   },),
 
                 SizedBox(height: 15.h,),
-                searchCardWidget(width, title: languages[language]!["contact_phone"]!,
-                    hint: languages[language]!["enter_contact_phone"]!, halfLength: false, onPressed: () {
-                  showContacts(context: context, title: languages[language]!["pick_a_phone_number"]!,
-                    currentUser: authState.currentUser,
-                    actionButtonText: languages[language]!["confirm"]!,);
-                },),
+                userProvider.when(
+                  data: (currentUser) => searchCardWidget(width, title: languages[language]!["contact_phone"]!,
+                    hint: loadState.contact.isNotEmpty ? loadState.contact : languages[language]!["enter_contact_phone"]!,
+
+                    halfLength: false, onPressed: () {
+                      showContacts(context: context, title: languages[language]!["pick_a_phone_number"]!,
+                        currentUser: currentUser, loadNotifier: loadNotifier, loadState: loadState,
+                        actionButtonText: languages[language]!["confirm"]!,
+                        addNewPhoneText: languages[language]!["add_new_phone_number"]!,);
+                    },),
+                  loading: () => Container(),
+                  error: (error, stackTrace) {
+                    debugPrint(error.toString());
+                    debugPrint(stackTrace.toString());
+                    return Container();
+                  },
+                ),
                 SizedBox(height: 15.h,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     customInputField(title: languages[language]!["price"]!, hintText: languages[language]!["enter_price"]!, icon: Icons.monetization_on, onTap: () {
-                        }, controller: TextEditingController()),
+                        }, controller: loadNotifier.priceController),
                     SizedBox(height: 5.h,),
                     Text("${languages[language]!["per_km"]!} 20 \$", style: kCustomTextStyle,)
                   ],
                 ),
                 SizedBox(height: 20.h,),
-                customButton(title: languages[language]!["search"]!, onPressed: () {
-                  Navigator.push(context, routeToView(const SearchResultsView()));
+                customButton(title: languages[language]!["confirm"]!, onPressed: () {
+                  loadNotifier.switchAppPlaceModels(
+                    origin: AppPlaceModel(
+                      uid: const Uuid().v4(),
+                      name: "Name",
+                      latitude: 30.01,
+                      longitude: 30.01,
+                    ),
+                    destination: AppPlaceModel(
+                      uid: const Uuid().v4(),
+                      name: "Name2",
+                      latitude: 30.01,
+                      longitude: 30.01,
+                    ),
+                  );
+                  loadNotifier.createLoad(context, errorTitle: languages[language]!["problem_creating_new_load"]!,
+                      successTitle: languages[language]!["new_load_created"]!);
                 },)
               ],
             ),

@@ -115,6 +115,8 @@ const Map<String, String> tr = {
   "post_new_load" : "Yeni Yük Oluştur",
   "load_volume" : "Yük Hacmi",
   "problem_signing_up" : "Kayıt sırasında bir hata oluştu!",
+  "problem_creating_new_load" : "Yeni yük oluştururken bir hata oluştu!",
+  "new_load_created" : "Yeni yük başarıyla listelendi.",
   "enter_weight" : "Ağırlık giriniz.",
   "enter_length" : "Uzunluk giriniz.",
   "enter_volume" : "Hacim giriniz.",
@@ -124,4 +126,7 @@ const Map<String, String> tr = {
   "truck" : "Kamyon",
   "car" : "Araba",
   "pick_a_phone_number" : "Bir iletişim numarası seçiniz",
+  "add_new_phone_number" : "Yeni numara ekle",
+  "available" : "Aktif",
+  "no_loads_found" : "Henüz bir yük eklemediniz. Yeni bir yük oluşturabilirsiniz.",
 };

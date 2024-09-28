@@ -6,6 +6,7 @@ import 'package:kamyon/constants/languages.dart';
 import 'package:kamyon/views/loads_views/load_inner_view.dart';
 
 import '../../constants/providers.dart';
+import '../../models/load_model.dart';
 import '../../widgets/search_result_widget.dart';
 
 class SearchResultsView extends ConsumerWidget {
@@ -84,13 +85,13 @@ class SearchResultsView extends ConsumerWidget {
               ),
               SizedBox(height: 10.h,),
               searchResultWidget(width, height, language, onPressed: () {
-                Navigator.push(context, routeToView(const LoadInnerView()));
-              },),
+                Navigator.push(context, routeToView(const LoadInnerView(uid: "",)));
+              }, load: LoadModel(),),
               SizedBox(height: 15.h,),
 
               searchResultWidget(width, height, language, onPressed: () {
-                Navigator.push(context, routeToView(const LoadInnerView()));
-              },),
+                Navigator.push(context, routeToView(const LoadInnerView(uid: "",)));
+              }, load: LoadModel()),
             ],
           ),
         ),

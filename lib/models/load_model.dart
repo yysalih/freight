@@ -22,8 +22,10 @@ class LoadModel implements BaseModel<LoadModel> {
   final String? loadType;
   final String? truckType;
   final bool? isPartial;
+  final bool? isPalletized;
   final String? contact;
   final double? price;
+  final double? distance;
   final String? state;
   final DateTime? createdDate;
 
@@ -33,30 +35,32 @@ class LoadModel implements BaseModel<LoadModel> {
     this.weight, this.loadType,
     this.destination, this.volume, this.startDate,
     this.endDate, this.startHour, this.endHour, this.truckType,
-    this.contact, this.price, this.state, this.createdDate,
+    this.contact, this.price, this.state, this.createdDate, this.distance, this.isPalletized
   });
 
   @override
   LoadModel fromJson(Map<String, dynamic> json) => LoadModel(
-    length: json["length"] as double?,
+    length: double.parse(json["length"]),
     ownerUid: json["ownerUid"] as String?,
     description: json["description"] as String?,
     uid: json["uid"] as String?,
     origin: json["origin"] as String?,
-    isPartial: json["isPartial"] as bool?,
+    isPartial: json['isPartial'] == 'true' || json['isPartial'] == "1",
+    isPalletized: json['isPalletized'] == 'true' || json['isPalletized'] == "1",
     loadType: json["loadType"] as String?,
-    weight: json["weight"] as double?,
+    weight: double.parse(json["weight"]),
+    distance: double.parse(json["distance"]),
     state: json["state"] as String?,
     contact: json["contact"] as String?,
     destination: json["destination"] as String?,
     truckType: json["truckType"] as String?,
     startHour: json["startHour"] as String?,
     endHour: json["endHour"] as String?,
-    price: json["price"] as double?,
-    volume: json["volume"] as double?,
-    createdDate: DateTime.fromMillisecondsSinceEpoch(json["createdDate"]),
-    startDate: DateTime.fromMillisecondsSinceEpoch(json["startDate"]),
-    endDate: DateTime.fromMillisecondsSinceEpoch(json["endDate"]),
+    price: double.parse(json["price"]),
+    volume: double.parse(json["volume"]),
+    createdDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["createdDate"])),
+    startDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["startDate"])),
+    endDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["endDate"])),
   );
 
   @override
@@ -80,17 +84,19 @@ class LoadModel implements BaseModel<LoadModel> {
     "createdDate": createdDate!.millisecondsSinceEpoch,
     "startDate": startDate!.millisecondsSinceEpoch,
     "endDate": endDate!.millisecondsSinceEpoch,
+    "distance": distance,
+    "isPalletized": isPalletized,
   };
 
   String getDbFields() {
-    return "length, ownerUid, description, uid, origin, isPartial, loadType, weight, state, contact, destination, truckType, startHour, endHour, price, volume, createdDate, startDate, endDate";
+    return "length, ownerUid, description, uid, origin, isPartial, loadType, weight, state, contact, destination, truckType, startHour, endHour, price, volume, createdDate, startDate, endDate, distance, isPalletized";
   }
 
   String getDbFieldsWithQuestionMark() {
-    return "length = ?, ownerUid = ?, description = ?, uid = ?, origin = ?, isPartial = ?, loadType = ?, weight = ?, state = ?, contact = ?, destination = ?, truckType = ?, startHour = ?, endHour = ?, price = ?, volume = ?, createdDate = ?, startDate = ?, endDate = ?";
+    return "length = ?, ownerUid = ?, description = ?, uid = ?, origin = ?, isPartial = ?, loadType = ?, weight = ?, state = ?, contact = ?, destination = ?, truckType = ?, startHour = ?, endHour = ?, price = ?, volume = ?, createdDate = ?, startDate = ?, endDate = ?, distance = ?, isPalletized = ?";
   }
 
-  String get questionMarks => "?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+  String get questionMarks => "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
 
   List getDbFormat() {
     return [
@@ -113,6 +119,8 @@ class LoadModel implements BaseModel<LoadModel> {
       createdDate!.millisecondsSinceEpoch,
       startDate!.millisecondsSinceEpoch,
       endDate!.millisecondsSinceEpoch,
+      distance,
+      isPalletized,
     ];
   }
 }

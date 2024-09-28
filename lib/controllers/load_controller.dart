@@ -1,9 +1,17 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kamyon/models/load_model.dart';
 import 'package:kamyon/models/place_model.dart';
-import 'package:kamyon/views/loads_views/loads_view.dart';
-import 'package:kamyon/views/my_loads_views/my_loads_view.dart';
-import 'package:kamyon/views/trucks_views/my_trucks_view.dart';
+import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
+
+import '../constants/app_constants.dart';
+import '../constants/providers.dart';
+import '../constants/snackbars.dart';
+import '../models/user_model.dart';
 
 class LoadState {
 
@@ -66,6 +74,82 @@ class LoadController extends StateNotifier<LoadState> {
   switchTimeOfDays({required TimeOfDay startHour, required TimeOfDay endHour}) => state = state.copyWith(startHour: startHour, endHour: endHour);
   switchAppPlaceModels({required AppPlaceModel origin, required AppPlaceModel destination}) => state = state.copyWith(origin: origin, destination: destination);
 
+
+  addNewPhoneNumberToUser({required UserModel currentUser}) async {
+    //UPDATE `users` SET `contacts` = '553 074 77 13;553 074 77 13;' WHERE `users`.`id` = 7;
+    final response = await http.post(
+      url,
+      body: {
+        'executeQuery': "UPDATE users SET contacts = '${currentUser.contacts}${phoneController.text};' WHERE uid = '${currentUser.uid}'",
+
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var data = response.body;
+      if(data.toString().contains("error")) {
+        debugPrint('Error: ${response.statusCode}');
+        debugPrint('Error: ${response.reasonPhrase}');
+      }
+      else {
+        debugPrint('${response.statusCode}');
+        debugPrint('${response.reasonPhrase}');
+        debugPrint('${phoneController.text}');
+        debugPrint('${currentUser.uid}');
+
+      }
+    } else {
+      debugPrint('Error: ${response.statusCode}');
+      debugPrint('Error: ${response.reasonPhrase}');
+    }
+
+  }
+
+  createLoad(BuildContext context, {required String errorTitle, required String successTitle}) async {
+    LoadModel loadModel = LoadModel(
+      isPartial: state.isPartial,
+      contact: state.contact,
+      uid: const Uuid().v4(),
+      description: "",
+      createdDate: DateTime.now(),
+      endDate: state.endDate,
+      destination: state.destination.uid,
+      origin: state.origin.uid,
+      endHour: state.endHour.format(context),
+      startHour: state.startHour.format(context),
+      length: double.parse(lengthController.text),
+      weight: double.parse(weightController.text),
+      volume: double.parse(volumeController.text),
+      price: double.parse(priceController.text),
+      loadType: "Fish",
+      ownerUid: FirebaseAuth.instance.currentUser!.uid,
+      startDate: state.startDate,
+      state: "available",
+      truckType: state.truckType,
+      distance: 1200.50,
+      isPalletized: state.isPalletized
+    );
+    final response = await http.post(
+      url,
+      body: {
+        'executeQuery': "INSERT INTO loads (${loadModel.getDbFields()}) VALUES (${loadModel.questionMarks})",
+        "params": jsonEncode(loadModel.getDbFormat()),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      var data = jsonDecode(response.body);
+      debugPrint('Response: $data');
+      Navigator.pop(context);
+      showSnackbar(title: successTitle, context: context);
+
+    } else {
+      debugPrint('Error: ${response.statusCode}');
+      debugPrint('Error: ${response.reasonPhrase}');
+      showSnackbar(title: errorTitle, context: context);
+    }
+  }
 
 }
 
