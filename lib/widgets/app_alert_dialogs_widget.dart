@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/controllers/load_controller.dart';
+import 'package:kamyon/controllers/truck_controller.dart';
+import 'package:kamyon/models/trailer_model.dart';
 
 import '../constants/app_constants.dart';
 import '../models/user_model.dart';
@@ -85,3 +87,38 @@ showContacts({required BuildContext context, required String title,
     ],
   ));
 }
+
+
+showTrailers({required BuildContext context, required String title,
+   required List<TrailerModel> trailers, required String actionButtonText, required String pickTrailerText,
+  required TruckController truckNotifier, required TruckState truckState}) {
+  showDialog(context: context, builder: (context) => AlertDialog(
+    backgroundColor: kBlack,
+    title: Text(title, style: const TextStyle(color: kWhite),),
+    content: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for(int i = 0; i < trailers.length; i++)
+          MaterialButton(
+            onPressed: () {
+              truckNotifier.changeTrailerUid(trailers[i].uid!);
+              Navigator.pop(context);
+            },
+            child: Row(
+              children: [
+                trailers[i].uid == truckState.trailerUid ? const Icon(Icons.done, color: kGreen,) : Container(),
+                SizedBox(width: 10.w,),
+                Text(trailers[i].name!, style: kCustomTextStyle,),
+              ],
+            ),
+          ),
+
+      ],
+    ),
+    actions: [
+
+    ],
+  ));
+}
+

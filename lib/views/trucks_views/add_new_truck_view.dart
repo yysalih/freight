@@ -5,6 +5,7 @@ import 'package:kamyon/constants/app_constants.dart';
 import 'package:kamyon/constants/languages.dart';
 import 'package:kamyon/widgets/custom_button_widget.dart';
 import 'package:kamyon/widgets/input_field_widget.dart';
+import 'package:kamyon/widgets/pick_city_modal_bottom_sheet.dart';
 import 'package:kamyon/widgets/search_card_widget.dart';
 
 import '../../constants/providers.dart';
@@ -23,6 +24,9 @@ class AddNewTruckView extends ConsumerWidget {
     final truckState = ref.watch(truckController);
     final truckNotifier = ref.watch(truckController.notifier);
 
+    final GlobalKey _menuKey = GlobalKey();
+
+
     return Scaffold(
       backgroundColor: kBlack,
       resizeToAvoidBottomInset: false,
@@ -37,87 +41,177 @@ class AddNewTruckView extends ConsumerWidget {
          style: const TextStyle(color: kWhite),),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(languages[language]!["equipment_limits"]!, style: kCustomTextStyle,),
-                  SizedBox(height: 10.h,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        height: 30.h, width: width * .45,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: MaterialButton(
-                            color: truckState.isPartial ? kLightBlack : kGreen,
-                            onPressed: () {
-                              truckNotifier.changeVehicleLimit();
-                            },
-                            child: Center(
-                              child: Text(languages[language]!["full"]!, style: kCustomTextStyle.copyWith(
-                                color: truckState.isPartial ? kWhite : kBlack
-                              ),),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(languages[language]!["equipment_limits"]!, style: kCustomTextStyle,),
+                    SizedBox(height: 10.h,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          height: 30.h, width: width * .45,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: MaterialButton(
+                              color: truckState.isPartial ? kLightBlack : kGreen,
+                              onPressed: () {
+                                truckNotifier.changeVehicleLimit();
+                              },
+                              child: Center(
+                                child: Text(languages[language]!["full"]!, style: kCustomTextStyle.copyWith(
+                                  color: truckState.isPartial ? kWhite : kBlack
+                                ),),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 30.h, width: width * .45,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: MaterialButton(
-                            color: !truckState.isPartial ? kLightBlack : kGreen,
-                            onPressed: () {
-                              truckNotifier.changeVehicleLimit();
-                            },
-                            child: Center(
-                              child: Text(languages[language]!["partial"]!, style: kCustomTextStyle.copyWith(
-                                  color: !truckState.isPartial ? kWhite : kBlack,
-                              ),),
+                        SizedBox(
+                          height: 30.h, width: width * .45,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: MaterialButton(
+                              color: !truckState.isPartial ? kLightBlack : kGreen,
+                              onPressed: () {
+                                truckNotifier.changeVehicleLimit();
+                              },
+                              child: Center(
+                                child: Text(languages[language]!["partial"]!, style: kCustomTextStyle.copyWith(
+                                    color: !truckState.isPartial ? kWhite : kBlack,
+                                ),),
+                              ),
                             ),
                           ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15.h,),
+                Column(
+                  children: [
+                    customInputField(title: languages[language]!["truck_name"]!,
+                        hintText: languages[language]!["enter_truck_name"]!, icon: Icons.local_shipping_outlined, onTap: () {
+          
+                        }, controller: truckNotifier.nameController),
+                    SizedBox(height: 20.h,),
+                    customInputField(title: languages[language]!["description"]!,
+                        hintText: languages[language]!["enter_truck_description"]!, icon: Icons.local_shipping_outlined, onTap: () {
+          
+                      }, controller: truckNotifier.descriptionController),
+                    SizedBox(height: 20.h,),
+                    searchCardWidget(width, title: languages[language]!["registered_city"]!,
+                        hint: truckState.city.isNotEmpty ? truckState.city : languages[language]!["enter_registered_city"]!,
+                      halfLength: false, onPressed: () {
+                        showModalBottomSheet(context: context, builder: (context) => const PickCityModalBottomSheet(),);
+                      },),
+                    SizedBox(height: 20.h,),
+
+                    PopupMenuButton(
+                      key: _menuKey,
+                      onSelected: (value) {
+                        truckNotifier.changeTruckType(value);
+                      },
+                      child: searchCardWidget(width, halfLength: false,
+                        title: languages[language]!["vehicle_type"]!,
+                        hint: truckState.truckType.isNotEmpty ? languages[language]![truckState.truckType]!
+                            : languages[language]!["pick_a_type"]!, onPressed: () {
+                          final dynamic popupMenu = _menuKey.currentState;
+                          popupMenu.showButtonMenu();
+                        },),
+                      itemBuilder: (context) => <PopupMenuEntry<String>>[
+                        PopupMenuItem<String>(
+                          value: 'truck',
+                          child: Text(languages[language]!["truck"]!),
                         ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  customInputField(title: languages[language]!["truck_name"]!,
-                      hintText: languages[language]!["enter_truck_name"]!, icon: Icons.local_shipping_outlined, onTap: () {
+                        PopupMenuItem<String>(
+                          value: 'bus',
+                          child: Text(languages[language]!["bus"]!),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'car',
+                          child: Text(languages[language]!["car"]!),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15.h,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(languages[language]!["truck_details"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
+                        Tooltip(
+                          showDuration: const Duration(seconds: 4),
+                          message: languages[language]!["trailer_tooltip"]!,
+                          child: IconButton(
+                            onPressed: () {
 
-                      }, controller: TextEditingController()),
-                  SizedBox(height: 20.h,),
-                  customInputField(title: languages[language]!["description"]!,
-                      hintText: languages[language]!["enter_truck_description"]!, icon: Icons.local_shipping_outlined, onTap: () {
+                            },
+                            splashRadius: 20.w,
+                            icon: const Icon(Icons.info_outline, color: kWhite,),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 3.h,),
+                    truckInfoField(width: width, title: languages[language]!["length"]!, suffixIcon: "mt", controller: truckNotifier.lengthController),
+                    truckInfoField(width: width, title: languages[language]!["weight"]!, suffixIcon: "kg", controller: truckNotifier.weightController),
+                    truckInfoField(width: width, title: languages[language]!["price"]!, suffixIcon: "₺", controller: truckNotifier.priceController),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: truckState.hasTrailer,
+                      checkColor: kWhite, hoverColor: kWhite, focusColor: kWhite,
+                      onChanged: (value) => truckNotifier.changeTrailerMode(),
+                    ),
+                    Text(languages[language]!["my_truck_has_trailer"]!, style: kCustomTextStyle,),
+                  ],
+                ),
+                truckState.hasTrailer ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.h,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(languages[language]!["trailer_details"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
+                        TextButton(
+                          child: Text(languages[language]!["pick_existing_trailers"]!,),
+                          onPressed: () {
 
-                    }, controller: TextEditingController()),
-                  SizedBox(height: 20.h,),
-                  searchCardWidget(width, title: languages[language]!["registered_city"]!,
-                      hint: languages[language]!["enter_registered_city"]!, halfLength: false, onPressed: () {
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 3.h,),
 
-                    },)
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(languages[language]!["truck_details"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
-                  SizedBox(height: 3.h,),
-                  truckInfoField(width: width, title: languages[language]!["length"]!, suffixIcon: "mt"),
-                  truckInfoField(width: width, title: languages[language]!["weight"]!, suffixIcon: "kg"),
-                  truckInfoField(width: width, title: languages[language]!["price"]!, suffixIcon: "₺"),
-                ],
-              ),
-              customButton(title: languages[language]!["save"]!, onPressed: () {}),
-            ],
+                    truckInfoField(width: width, title: languages[language]!["length"]!, suffixIcon: "mt", controller: truckNotifier.trailerLengthController),
+                    truckInfoField(width: width, title: languages[language]!["weight"]!, suffixIcon: "kg", controller: truckNotifier.trailerWeightController),
+                    customInputField(title: languages[language]!["trailer_name"]!,
+                        hintText: languages[language]!["enter_trailer_name"]!, icon: Icons.local_shipping_outlined, onTap: () {
+
+                        }, controller: truckNotifier.trailerNameController),
+                  ],
+                ) : Container(),
+                SizedBox(height: truckState.hasTrailer ? 15.h : 5.h,),
+                customButton(title: languages[language]!["save"]!, onPressed: () {
+                  truckNotifier.createTruck(context, errorTitle: languages[language]!["error_creating_truck"]!,
+                      successTitle: languages[language]!["success_creating_truck"]!);
+                }),
+              ],
+            ),
           ),
         ),
       ),

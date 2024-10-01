@@ -26,16 +26,16 @@ class TruckModel implements BaseModel<TruckModel> {
 
   @override
   TruckModel fromJson(Map<String, dynamic> json) => TruckModel(
-    length: json["length"] as double?,
+    length: double.parse(json["length"]),
     ownerUid: json["ownerUid"] as String?,
     trailerUid: json["trailerUid"] as String?,
     description: json["description"] as String?,
     uid: json["uid"] as String?,
     name: json["name"] as String?,
     city: json["city"] as String?,
-    isPartial: json["isPartial"] as bool?,
+    isPartial: json["isPartial"] == 1,
     type: json["type"] as String?,
-    weight: json["weight"] as double?,
+    weight: double.parse(json["weight"]),
   );
 
   @override
@@ -63,10 +63,10 @@ class TruckModel implements BaseModel<TruckModel> {
 
   List getDbFormat() {
     return [
+      trailerUid,
       length,
       description,
       ownerUid,
-      trailerUid,
       uid,
       name,
       city,

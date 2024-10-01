@@ -61,19 +61,19 @@ class MyLoadsView extends ConsumerWidget {
                         : Padding(
                             padding: EdgeInsets.only(top: 15.0.h),
                           child: searchResultWidget(width, height, language, load: loads[index],
-                                                onPressed: () {
-                            Navigator.push(context, routeToView(LoadInnerView(uid: loads[index].uid!)));
-                                                },
-                                              ),
+                            onPressed: () {
+                              Navigator.push(context, routeToView(LoadInnerView(uid: loads[index].uid!)));
+                            },
+                          ),
                         ),
                     itemCount: loads.length,
                   ),
                 ),
-                loading: () => NoLoadsFoundWidget(),
+                loading: () => const NoLoadsFoundWidget(),
                 error: (error, stackTrace) {
                   debugPrint("Error: $error");
                   debugPrint("Error: $stackTrace");
-                  return NoLoadsFoundWidget();
+                  return const NoLoadsFoundWidget();
                 },
               ),
             ],

@@ -1,3 +1,5 @@
 https://colorhunt.co/palette/7bc74d222831393e46eeeeee
 
 https://dribbble.com/shots/24494694-Delivr-Logistic-Mobile-App
+
+Google Maps API: AIzaSyDZg_ZZdVGiLpdwBs3pbnP6sl4JaEquLY8

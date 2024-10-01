@@ -4,7 +4,7 @@ import 'base_model.dart';
 
 @JsonSerializable()
 @immutable
-class TruckModel implements BaseModel<TruckModel> {
+class TrailerModel implements BaseModel<TrailerModel> {
 
   final String? uid;
   final String? name;
@@ -13,7 +13,7 @@ class TruckModel implements BaseModel<TruckModel> {
   final double? weight;
 
 
-  TruckModel({
+  TrailerModel({
     this.uid,
     this.name,
     this.length,
@@ -22,12 +22,12 @@ class TruckModel implements BaseModel<TruckModel> {
   });
 
   @override
-  TruckModel fromJson(Map<String, dynamic> json) => TruckModel(
-    length: json["length"] as double?,
+  TrailerModel fromJson(Map<String, dynamic> json) => TrailerModel(
+    length: double.parse(json["length"]),
     ownerUid: json["ownerUid"] as String?,
     uid: json["uid"] as String?,
     name: json["name"] as String?,
-    weight: json["weight"] as double?,
+    weight: double.parse(json["weight"]),
   );
 
   @override
@@ -55,7 +55,7 @@ class TruckModel implements BaseModel<TruckModel> {
       ownerUid,
       uid,
       name,
-      weight
+      weight,
     ];
   }
 }

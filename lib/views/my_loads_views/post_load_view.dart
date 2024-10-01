@@ -11,13 +11,13 @@ import 'package:kamyon/repos/user_repository.dart';
 import 'package:kamyon/views/loads_views/search_results_view.dart';
 import 'package:kamyon/widgets/custom_button_widget.dart';
 import 'package:kamyon/widgets/input_field_widget.dart';
-import 'package:kamyon/widgets/load_input_dialog_widget.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../constants/app_constants.dart';
 import '../../constants/languages.dart';
 import '../../constants/providers.dart';
 import '../../models/user_model.dart';
+import '../../widgets/app_alert_dialogs_widget.dart';
 import '../../widgets/search_card_widget.dart';
 
 
