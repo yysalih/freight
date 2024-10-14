@@ -7,6 +7,8 @@ import 'package:kamyon/controllers/truck_controller.dart';
 import 'package:kamyon/models/trailer_model.dart';
 
 import '../constants/app_constants.dart';
+import '../controllers/base_notifier.dart';
+import '../models/base_state.dart';
 import '../models/user_model.dart';
 
 showInputDialog({required BuildContext context,
@@ -35,9 +37,11 @@ showInputDialog({required BuildContext context,
   },);
 }
 
-showContacts({required BuildContext context, required String title,
+showContacts<NOTIFIER extends BaseNotifier, STATE extends BaseState>({required BuildContext context, required String title,
    required UserModel currentUser, required String actionButtonText, required String addNewPhoneText,
-  required LoadController loadNotifier, required LoadState loadState}) {
+  required NOTIFIER notifier, required STATE state}) {
+
+
   showDialog(context: context, builder: (context) => AlertDialog(
     backgroundColor: kBlack,
     title: Text(title, style: const TextStyle(color: kWhite),),
@@ -48,12 +52,13 @@ showContacts({required BuildContext context, required String title,
         for(int i = 0; i < currentUser.contactNumbers.length - 1; i++)
           MaterialButton(
             onPressed: () {
-              loadNotifier.switchStrings(truckType: loadState.truckType, contact: currentUser.contactNumbers[i]);
+
+              notifier.switchStrings(truckType: state.truckType!, contact: currentUser.contactNumbers[i]);
               Navigator.pop(context);
             },
             child: Row(
               children: [
-                currentUser.contactNumbers[i] == loadState.contact ? const Icon(Icons.done, color: kGreen,) : Container(),
+                currentUser.contactNumbers[i] == state.contact ? const Icon(Icons.done, color: kGreen,) : Container(),
                 SizedBox(width: 10.w,),
                 Text(currentUser.contactNumbers[i], style: kCustomTextStyle,),
               ],
@@ -66,10 +71,10 @@ showContacts({required BuildContext context, required String title,
                 hint: "+90 553 088 28 98",
                 actionButtonText: actionButtonText,
                 onPressed: () {
-                  loadNotifier.addNewPhoneNumberToUser(currentUser: currentUser);
+                  notifier.addNewPhoneNumberToUser(currentUser: currentUser);
                   Navigator.pop(context);
                 },
-                controller: loadNotifier.phoneController);
+                controller: notifier.phoneController);
           },
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -82,15 +87,12 @@ showContacts({required BuildContext context, required String title,
         ),
       ],
     ),
-    actions: [
-
-    ],
   ));
 }
 
 
 showTrailers({required BuildContext context, required String title,
-   required List<TrailerModel> trailers, required String actionButtonText, required String pickTrailerText,
+   required List<TrailerModel> trailers,
   required TruckController truckNotifier, required TruckState truckState}) {
   showDialog(context: context, builder: (context) => AlertDialog(
     backgroundColor: kBlack,
@@ -102,7 +104,7 @@ showTrailers({required BuildContext context, required String title,
         for(int i = 0; i < trailers.length; i++)
           MaterialButton(
             onPressed: () {
-              truckNotifier.changeTrailerUid(trailers[i].uid!);
+              truckNotifier.changeTrailerModel(trailer: trailers[i]);
               Navigator.pop(context);
             },
             child: Row(
@@ -116,9 +118,24 @@ showTrailers({required BuildContext context, required String title,
 
       ],
     ),
-    actions: [
-
-    ],
   ));
+}
+
+showDeleteDialog({required BuildContext context, required String title, required String content, required Function() onPressed,}) {
+  showDialog(context: context, builder: (context) => AlertDialog(
+    backgroundColor: kBlack,
+    title: Text(title, style: const TextStyle(color: kWhite),),
+    content: Text(content, style: const TextStyle(color: kWhite),),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context),
+        child: const Text("Hayır", style: TextStyle(color: kWhite),),
+      ),
+      TextButton(
+        onPressed: onPressed,
+        child: const Text("Evet", style: TextStyle(color: kWhite),),
+      )
+    ],
+  ),);
 }
 

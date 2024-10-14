@@ -1,19 +1,26 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/constants/app_constants.dart';
 import 'package:kamyon/constants/languages.dart';
+import 'package:kamyon/repos/trailer_repository.dart';
+import 'package:kamyon/repos/truck_repository.dart';
+import 'package:kamyon/widgets/app_alert_dialogs_widget.dart';
 import 'package:kamyon/widgets/custom_button_widget.dart';
 import 'package:kamyon/widgets/input_field_widget.dart';
 import 'package:kamyon/widgets/pick_city_modal_bottom_sheet.dart';
 import 'package:kamyon/widgets/search_card_widget.dart';
 
 import '../../constants/providers.dart';
+import '../../constants/snackbars.dart';
 import '../../controllers/truck_controller.dart';
 import '../../widgets/truck_info_field_widget.dart';
 
 class AddNewTruckView extends ConsumerWidget {
-  const AddNewTruckView({super.key});
+  final bool toEdit;
+  final String truckUid;
+  const AddNewTruckView({super.key, required this.truckUid, this.toEdit = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,6 +33,11 @@ class AddNewTruckView extends ConsumerWidget {
 
     final GlobalKey _menuKey = GlobalKey();
 
+    final trailersProvider = ref.watch(trailersFutureProvider(FirebaseAuth.instance.currentUser!.uid));
+
+    final truckProvider = ref.watch(truckFutureProvider(truckUid));
+
+
 
     return Scaffold(
       backgroundColor: kBlack,
@@ -37,8 +49,29 @@ class AddNewTruckView extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back_outlined),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(languages[language]!["add_new_truck"]!,
+        title: Text(toEdit ? languages[language]!["edit_truck"]! : languages[language]!["add_new_truck"]!,
          style: const TextStyle(color: kWhite),),
+        actions: [
+          if(toEdit) truckProvider.when(
+            data: (truck) => truck.ownerUid == FirebaseAuth.instance.currentUser!.uid ?
+            IconButton(
+              onPressed: () {
+                showDeleteDialog(context: context, title: languages[language]!["delete_truck_title"]!,
+                  content: languages[language]!["delete_truck_content"]!,
+                  onPressed: () {
+                    truckNotifier.deleteTruck(truckUid: truck.uid!,);
+                    Navigator.pop(context);
+                    showSnackbar(context: context, title: languages[language]!["truck_deleted_succesfully"]!);
+                  },);
+
+              },
+              icon: const Icon(Icons.delete, color: kWhite,),
+            ) : Container(),
+
+            loading: () => Container(),
+            error: (error, stackTrace) => Container(),
+          )
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -166,7 +199,7 @@ class AddNewTruckView extends ConsumerWidget {
                     SizedBox(height: 3.h,),
                     truckInfoField(width: width, title: languages[language]!["length"]!, suffixIcon: "mt", controller: truckNotifier.lengthController),
                     truckInfoField(width: width, title: languages[language]!["weight"]!, suffixIcon: "kg", controller: truckNotifier.weightController),
-                    truckInfoField(width: width, title: languages[language]!["price"]!, suffixIcon: "₺", controller: truckNotifier.priceController),
+                    //truckInfoField(width: width, title: languages[language]!["price"]!, suffixIcon: "₺", controller: truckNotifier.priceController),
                   ],
                 ),
                 Row(
@@ -187,12 +220,24 @@ class AddNewTruckView extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(languages[language]!["trailer_details"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
-                        TextButton(
-                          child: Text(languages[language]!["pick_existing_trailers"]!,),
-                          onPressed: () {
+                        trailersProvider.when(
+                          data: (trailers) {
+                            return TextButton(
+                              child: Text(languages[language]!["pick_existing_trailers"]!, style: TextStyle(color: kWhite),),
+                              onPressed: () {
 
+
+                                showTrailers(context: context,
+                                    title: languages[language]!["pick_existing_trailers"]!,
+                                    trailers: trailers,
+                                    truckNotifier: truckNotifier, truckState: truckState);
+                              },
+                            );
                           },
+                          error: (error, stackTrace) => Container(),
+                          loading: () => Container(),
                         ),
+
                       ],
                     ),
                     SizedBox(height: 3.h,),
@@ -207,8 +252,14 @@ class AddNewTruckView extends ConsumerWidget {
                 ) : Container(),
                 SizedBox(height: truckState.hasTrailer ? 15.h : 5.h,),
                 customButton(title: languages[language]!["save"]!, onPressed: () {
-                  truckNotifier.createTruck(context, errorTitle: languages[language]!["error_creating_truck"]!,
+                  if(!toEdit) {
+                    truckNotifier.createTruck(context, errorTitle: languages[language]!["error_creating_truck"]!,
                       successTitle: languages[language]!["success_creating_truck"]!);
+                  }
+                  else {
+                    truckNotifier.editTruck(context, truckUid: truckUid, errorTitle: languages[language]!["error_editing_truck"]!,
+                        successTitle: languages[language]!["success_editing_truck"]!);
+                  }
                 }),
               ],
             ),

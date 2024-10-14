@@ -16,13 +16,18 @@ import 'package:uuid/uuid.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/languages.dart';
 import '../../constants/providers.dart';
+import '../../controllers/place_controller.dart';
 import '../../models/user_model.dart';
 import '../../widgets/app_alert_dialogs_widget.dart';
 import '../../widgets/search_card_widget.dart';
+import '../inner_views/search_place_view.dart';
 
 
 class PostLoadView extends ConsumerWidget {
-  const PostLoadView({super.key});
+
+  final bool toEdit;
+
+  const PostLoadView({super.key, this.toEdit = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,8 +38,10 @@ class PostLoadView extends ConsumerWidget {
     final loadNotifier = ref.watch(loadController.notifier);
     final loadState = ref.watch(loadController);
 
+    final placeState = ref.watch(placeController);
+    final placeNotifier = ref.watch(placeController.notifier);
 
-    final userProvider = ref.watch(userStreamProvider(FirebaseAuth.instance.currentUser!.uid));
+    final userProvider = ref.watch(userFutureProvider(FirebaseAuth.instance.currentUser!.uid));
 
 
     final GlobalKey _menuKey = GlobalKey();
@@ -61,11 +68,17 @@ class PostLoadView extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    searchCardWidget(width, title: languages[language]!["origin"]!, hint: "Ankara, TR", onPressed: () {
-
+                    searchCardWidget(width, title: languages[language]!["origin"]!,
+                      hint: placeState.origin.name!.isNotEmpty ? placeState.origin.name! : "Ankara, TR",
+                      onPressed: () {
+                        //placeNotifier.clear();
+                        Navigator.push(context, routeToView(const SearchPlaceView(isOrigin: true,)));
                     },),
-                    searchCardWidget(width, title: languages[language]!["target"]!, hint: "İstanbul, TR", onPressed: () {
-
+                    searchCardWidget(width, title: languages[language]!["target"]!,
+                      hint: placeState.destination.name!.isNotEmpty ? placeState.destination.name! : "İstanbul, TR",
+                      onPressed: () {
+                        //placeNotifier.clear();
+                        Navigator.push(context, routeToView(const SearchPlaceView(isOrigin: false,)));
                     },),
                   ],
                 ),
@@ -200,8 +213,9 @@ class PostLoadView extends ConsumerWidget {
                     hint: loadState.contact.isNotEmpty ? loadState.contact : languages[language]!["enter_contact_phone"]!,
 
                     halfLength: false, onPressed: () {
-                      showContacts(context: context, title: languages[language]!["pick_a_phone_number"]!,
-                        currentUser: currentUser, loadNotifier: loadNotifier, loadState: loadState,
+                      showContacts<LoadController, LoadState>(context: context,
+                        title: languages[language]!["pick_a_phone_number"]!,
+                        currentUser: currentUser, notifier: loadNotifier, state: loadState,
                         actionButtonText: languages[language]!["confirm"]!,
                         addNewPhoneText: languages[language]!["add_new_phone_number"]!,);
                     },),
@@ -223,21 +237,15 @@ class PostLoadView extends ConsumerWidget {
                   ],
                 ),
                 SizedBox(height: 20.h,),
-                customButton(title: languages[language]!["confirm"]!, onPressed: () {
+                customButton(title: languages[language]!["confirm"]!, onPressed: () async {
                   loadNotifier.switchAppPlaceModels(
-                    origin: AppPlaceModel(
-                      uid: const Uuid().v4(),
-                      name: "Name",
-                      latitude: 30.01,
-                      longitude: 30.01,
-                    ),
-                    destination: AppPlaceModel(
-                      uid: const Uuid().v4(),
-                      name: "Name2",
-                      latitude: 30.01,
-                      longitude: 30.01,
-                    ),
+                    origin: placeState.origin,
+                    destination: placeState.destination
                   );
+
+                  await placeNotifier.createPlace(context, appPlaceModel: placeState.origin,);
+                  await placeNotifier.createPlace(context, appPlaceModel: placeState.destination,);
+
                   loadNotifier.createLoad(context, errorTitle: languages[language]!["problem_creating_new_load"]!,
                       successTitle: languages[language]!["new_load_created"]!);
                 },)

@@ -21,7 +21,7 @@ class TruckPostModel implements BaseModel<TruckPostModel> {
   final DateTime? createdDate;
 
 
-  TruckPostModel({this.uid, this.origin, this.description,
+  const TruckPostModel({this.uid, this.origin, this.description,
     this.ownerUid,
     this.destination, this.startDate,
     this.endDate, this.truckUid,
@@ -38,10 +38,10 @@ class TruckPostModel implements BaseModel<TruckPostModel> {
     state: json["state"] as String?,
     contact: json["contact"] as String?,
     destination: json["destination"] as String?,
-    price: json["price"] as double?,
-    createdDate: DateTime.fromMillisecondsSinceEpoch(json["createdDate"]),
-    startDate: DateTime.fromMillisecondsSinceEpoch(json["startDate"]),
-    endDate: DateTime.fromMillisecondsSinceEpoch(json["endDate"]),
+    price: double.parse(json["price"]),
+    createdDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["createdDate"])),
+    startDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["startDate"])),
+    endDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["endDate"])),
   );
 
   @override

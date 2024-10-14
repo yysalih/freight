@@ -1,9 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:kamyon/constants/snackbars.dart';
+import 'package:kamyon/controllers/load_controller.dart';
+import 'package:kamyon/controllers/place_controller.dart';
+import 'package:kamyon/models/place_model.dart';
 import 'package:kamyon/repos/load_repository.dart';
+import 'package:kamyon/repos/place_repository.dart';
+import 'package:kamyon/views/my_loads_views/post_load_view.dart';
+import 'package:kamyon/widgets/app_alert_dialogs_widget.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,6 +34,11 @@ class LoadInnerView extends ConsumerWidget {
 
     final loadProvider = ref.watch(loadFutureProvider(uid));
 
+    final loadNotifier = ref.watch(loadController.notifier);
+
+    final placeNotifier = ref.watch(placeController.notifier);
+
+
     return Scaffold(
       backgroundColor: kBlack,
       appBar: AppBar(
@@ -37,6 +50,31 @@ class LoadInnerView extends ConsumerWidget {
         ),
         title: Text(languages[language]!["load_details"]!,
           style: const TextStyle(color: kWhite),),
+        actions: [
+          loadProvider.when(
+            data: (load) {
+
+
+              return load.ownerUid == FirebaseAuth.instance.currentUser!.uid ?
+              IconButton(
+                onPressed: () {
+                  showDeleteDialog(context: context, title: languages[language]!["delete_load_title"]!,
+                    content: languages[language]!["delete_load_content"]!,
+                    onPressed: () {
+                      loadNotifier.deleteLoad(loadUid: load.uid!,);
+                      Navigator.pop(context);
+                      showSnackbar(context: context, title: languages[language]!["load_deleted_succesfully"]!);
+                    },);
+
+                },
+                icon: const Icon(Icons.delete, color: kWhite,),
+              ) : Container();
+
+            },
+            loading: () => Container(),
+            error: (error, stackTrace) => Container(),
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(

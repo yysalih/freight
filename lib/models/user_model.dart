@@ -55,7 +55,6 @@ class UserModel implements BaseModel<UserModel> {
     password: json["password"] as String?,
     phone: json["phone"] as String?,
     contacts: json["contacts"] as String?,
-
   );
 
   @override

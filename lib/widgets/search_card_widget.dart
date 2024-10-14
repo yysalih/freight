@@ -21,7 +21,12 @@ Widget searchCardWidget(double width, {required String title, required String hi
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(hint, style: kCustomTextStyle.copyWith(color: kHintColor, fontSize: hasType ? 13.w : 13.w),),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: halfLength ? hasType ? width * .27 : width * .3 : width,),
+                  child: Text(hint, style: kCustomTextStyle.copyWith(color: kHintColor, fontSize: hasType ? 13.w : 13.w),
+                    maxLines: 2, overflow: TextOverflow.ellipsis,
+                  ),
+                ),
                 hasType ? Text(type, style: kCustomTextStyle.copyWith(fontSize: 13.w),)
                     : Icon(Icons.arrow_forward_ios, color: kHintColor, size: 13.w,)
               ],

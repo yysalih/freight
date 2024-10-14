@@ -3,17 +3,17 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kamyon/controllers/base_notifier.dart';
 import 'package:kamyon/models/load_model.dart';
 import 'package:kamyon/models/place_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
-
 import '../constants/app_constants.dart';
-import '../constants/providers.dart';
 import '../constants/snackbars.dart';
+import '../models/base_state.dart';
 import '../models/user_model.dart';
 
-class LoadState {
+class LoadState implements BaseState{
 
   final AppPlaceModel origin;
   final AppPlaceModel destination;
@@ -58,7 +58,7 @@ class LoadState {
   }
 }
 
-class LoadController extends StateNotifier<LoadState> {
+class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
   LoadController(super.state);
 
   final lengthController = TextEditingController();
@@ -94,7 +94,7 @@ class LoadController extends StateNotifier<LoadState> {
       else {
         debugPrint('${response.statusCode}');
         debugPrint('${response.reasonPhrase}');
-        debugPrint('${phoneController.text}');
+        debugPrint(phoneController.text);
         debugPrint('${currentUser.uid}');
 
       }
@@ -151,6 +151,26 @@ class LoadController extends StateNotifier<LoadState> {
     }
   }
 
+  deleteLoad({
+    required String loadUid,
+  }) async {
+    final response = await http.post(
+      url,
+      body: {
+        'executeQuery': "DELETE FROM loads WHERE uid = ?",
+        "params": jsonEncode([loadUid]), // Pass the uid of the load to delete
+      },
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      var data = jsonDecode(response.body);
+      debugPrint('Response: $data');
+    } else {
+      debugPrint('Error: ${response.statusCode}');
+      debugPrint('Error: ${response.reasonPhrase}');
+    }
+  }
 }
 
 final loadController = StateNotifierProvider<LoadController, LoadState>(

@@ -8,20 +8,22 @@ class AppPlaceModel implements BaseModel<AppPlaceModel> {
 
   final String? uid;
   final String? name;
+  final String? address;
   final double? latitude;
   final double? longitude;
 
 
 
-  AppPlaceModel({this.uid, this.name, this.latitude,this.longitude
+  AppPlaceModel({this.uid, this.name, this.latitude,this.longitude, this.address
   });
 
   @override
   AppPlaceModel fromJson(Map<String, dynamic> json) => AppPlaceModel(
-    latitude: json["latitude"] as double?,
+    latitude: double.parse(json["latitude"]),
     uid: json["uid"] as String?,
     name: json["name"] as String?,
-    longitude: json["longitude"] as double?,
+    address: json["address"] as String?,
+    longitude: double.parse(json["longitude"]),
   );
 
   @override
@@ -29,17 +31,18 @@ class AppPlaceModel implements BaseModel<AppPlaceModel> {
     "latitude": latitude,
     "uid": uid,
     "name": name,
+    "address": address,
     "longitude": longitude,
   };
 
   String getDbFields() {
-    return "latitude, uid, name, longitude";
+    return "latitude, uid, name, longitude, address";
   }
 
   String getDbFieldsWithQuestionMark() {
-    return "latitude = ?, uid = ?, name = ?, longitude = ?";
+    return "latitude = ?, uid = ?, name = ?, longitude = ?, address = ?";
   }
-  String get questionMarks => "?, ?, ?, ?";
+  String get questionMarks => "?, ?, ?, ?, ?";
 
   List getDbFormat() {
     return [
@@ -47,6 +50,7 @@ class AppPlaceModel implements BaseModel<AppPlaceModel> {
       uid,
       name,
       longitude,
+      address,
     ];
   }
 

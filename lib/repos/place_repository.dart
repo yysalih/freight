@@ -4,56 +4,56 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../constants/app_constants.dart';
-import '../models/trailer_model.dart';
+import '../models/place_model.dart';
 
-class TrailerRepository {
+class PlaceRepository {
   final String _uid;
 
-  TrailerRepository({String? uid})
+  PlaceRepository({String? uid})
       : _uid = uid ?? "";
 
-  Future<TrailerModel> getTrailer() async {
+  Future<AppPlaceModel> getPlace() async {
     final response = await http.post(
       url,
       body: {
-        'singleQuery': "SELECT * FROM trailers WHERE uid = '$_uid'",
+        'singleQuery': "SELECT * FROM places WHERE uid = '$_uid'",
       },
     );
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      TrailerModel trailerModel = TrailerModel().fromJson(data);
-      debugPrint('TrailerModel: $trailerModel');
+      AppPlaceModel appPlaceModel = AppPlaceModel().fromJson(data);
+      debugPrint('AppPlaceModel: $appPlaceModel');
 
       if(data.toString().contains("error")) {
         debugPrint('Error: ${response.statusCode}');
         debugPrint('Error: ${response.reasonPhrase}');
       } else {
-        return trailerModel;
+        return appPlaceModel;
       }
     } else {
       debugPrint('Error: ${response.statusCode}');
       debugPrint('Error: ${response.reasonPhrase}');
-      return TrailerModel();
+      return AppPlaceModel();
     }
-    return TrailerModel();
+    return AppPlaceModel();
   }
 
-  Future<List<TrailerModel>> getCurrentUserTrailers() async {
+  Future<List<AppPlaceModel>> getPlaces() async {
     final response = await http.post(
       url,
       body: {
-        'multiQuery': "SELECT * FROM trailers WHERE ownerUid = '$_uid'",
+        'multiQuery': "SELECT * FROM places",
       },
     );
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       if (data is List) { // Ensure that data is a List
-        List<TrailerModel> loads = data.map((e) => TrailerModel().fromJson(e as Map<String, dynamic>)).toList();
-        debugPrint('TrailerModel Length: ${loads.length}');
+        List<AppPlaceModel> places = data.map((e) => AppPlaceModel().fromJson(e as Map<String, dynamic>)).toList();
+        debugPrint('AppPlaceModel Length: ${places.length}');
 
-        return loads;
+        return places;
       } else {
         debugPrint('Error: Unexpected data format');
         return [];
@@ -66,22 +66,22 @@ class TrailerRepository {
   }
 }
 
-final trailerFutureProvider = FutureProvider.autoDispose.family<TrailerModel, String?>((ref, uid) {
+final placeFutureProvider = FutureProvider.autoDispose.family<AppPlaceModel, String?>((ref, uid) {
   // get repository from the provider below
-  final trailerRepository = ref.watch(trailerRepositoryProvider(uid));
+  final placeRepository = ref.watch(placeRepositoryProvider(uid));
 
   // call method that returns a Stream<User>
-  return trailerRepository.getTrailer();
+  return placeRepository.getPlace();
 });
 
-final trailersFutureProvider = FutureProvider.autoDispose.family<List<TrailerModel>, String?>((ref, uid) {
+final placesFutureProvider = FutureProvider.autoDispose.family<List<AppPlaceModel>, String?>((ref, uid) {
   // get repository from the provider below
-  final trailerRepository = ref.watch(trailerRepositoryProvider(uid));
+  final placeRepository = ref.watch(placeRepositoryProvider(uid));
 
   // call method that returns a Stream<User>
-  return trailerRepository.getCurrentUserTrailers();
+  return placeRepository.getPlaces();
 });
 
-final trailerRepositoryProvider = Provider.family<TrailerRepository, String?>((ref, uid) {
-  return TrailerRepository(uid: uid);
+final placeRepositoryProvider = Provider.family<PlaceRepository, String?>((ref, uid) {
+  return PlaceRepository(uid: uid);
 });
