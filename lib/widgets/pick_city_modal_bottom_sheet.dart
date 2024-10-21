@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/constants/app_constants.dart';
+import 'package:kamyon/constants/languages.dart';
+import 'package:kamyon/constants/providers.dart';
 import 'package:kamyon/controllers/truck_controller.dart';
 
 class PickCityModalBottomSheet extends ConsumerWidget {
@@ -34,6 +36,54 @@ class PickCityModalBottomSheet extends ConsumerWidget {
         ),
         itemCount: cities.length,
       ),
+    );
+  }
+}
+
+class FileOptionsModalBottomSheet extends ConsumerWidget {
+  const FileOptionsModalBottomSheet({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final height = MediaQuery.of(context).size.height;
+
+    final language = ref.watch(languageStateProvider);
+
+    return Container(
+
+      color: kBlack,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MaterialButton(
+            height: 40.h,
+            onPressed: () {
+
+            },
+            child: Row(
+              children: [
+                const Icon(Icons.upload, color: kWhite),
+                const SizedBox(width: 10,),
+                Text(languages[language]!["upload"]!, style: kCustomTextStyle,),
+              ],
+            ),
+          ),
+
+          MaterialButton(
+            height: 40.h,
+            onPressed: () {
+
+            },
+            child: Row(
+              children: [
+                const Icon(Icons.remove_red_eye, color: kWhite),
+                const SizedBox(width: 10,),
+                Text(languages[language]!["view"]!, style: kCustomTextStyle,),
+              ],
+            ),
+          ),
+        ],
+      )
     );
   }
 }

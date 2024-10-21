@@ -203,7 +203,7 @@ class NewPostView extends ConsumerWidget {
                   Text("${languages[language]!["per_km"]!} 20 \$", style: kCustomTextStyle,)
                 ],
               ),
-              userProvider.when(
+              /*userProvider.when(
                 data: (currentUser) => searchCardWidget(width, title: languages[language]!["contact_phone"]!,
                   hint: truckState.contact.isNotEmpty ? truckState.contact : languages[language]!["enter_contact_phone"]!,
                   halfLength: false, onPressed: () {
@@ -223,7 +223,7 @@ class NewPostView extends ConsumerWidget {
                   debugPrint(stackTrace.toString());
                   return Container();
                 },
-              ),
+              ),*/
 
               customInputField(title: languages[language]!["description"]!, hintText: languages[language]!["enter_description"]!,
                   icon: Icons.description, onTap: () {

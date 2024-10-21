@@ -80,7 +80,7 @@ class AddNewTruckView extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
+                /*Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(languages[language]!["equipment_limits"]!, style: kCustomTextStyle,),
@@ -126,7 +126,7 @@ class AddNewTruckView extends ConsumerWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 15.h,),
+                SizedBox(height: 15.h,),*/
                 Column(
                   children: [
                     customInputField(title: languages[language]!["truck_name"]!,
@@ -134,11 +134,11 @@ class AddNewTruckView extends ConsumerWidget {
           
                         }, controller: truckNotifier.nameController),
                     SizedBox(height: 20.h,),
-                    customInputField(title: languages[language]!["description"]!,
+                    /*customInputField(title: languages[language]!["description"]!,
                         hintText: languages[language]!["enter_truck_description"]!, icon: Icons.local_shipping_outlined, onTap: () {
           
                       }, controller: truckNotifier.descriptionController),
-                    SizedBox(height: 20.h,),
+                    SizedBox(height: 20.h,),*/
                     searchCardWidget(width, title: languages[language]!["registered_city"]!,
                         hint: truckState.city.isNotEmpty ? truckState.city : languages[language]!["enter_registered_city"]!,
                       halfLength: false, onPressed: () {

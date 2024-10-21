@@ -37,7 +37,7 @@ class UserModel implements BaseModel<UserModel> {
   @override
   UserModel fromJson(Map<String, dynamic> json) => UserModel(
     token: json["token"] as String?,
-    lastname: json["username"] as String?,
+    lastname: json["lastname"] as String?,
     image: json["image"] as String?,
     uid: json["uid"] as String?,
     name: json["name"] as String?,
@@ -56,12 +56,11 @@ class UserModel implements BaseModel<UserModel> {
     phone: json["phone"] as String?,
     contacts: json["contacts"] as String?,
   );
-
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
     "token": token,
     "image": image,
-    "username": lastname,
+    "lastname": lastname,
     "uid": uid,
     "name": name,
     "email": email,

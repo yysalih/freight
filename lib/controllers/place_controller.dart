@@ -106,7 +106,7 @@ class PlaceController extends StateNotifier<PlaceState> {
   createPlace(BuildContext context, {required AppPlaceModel appPlaceModel}) async {
 
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'executeQuery': "INSERT INTO places (${appPlaceModel.getDbFields()}) VALUES (${appPlaceModel.questionMarks})",
         "params": jsonEncode(appPlaceModel.getDbFormat()),

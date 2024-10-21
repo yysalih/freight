@@ -54,11 +54,11 @@ class MyLoadsView extends ConsumerWidget {
               ),
 
               loadsProvider.when(
-                data: (loads) => Expanded(
+                data: (loads) => loads.isEmpty ?
+                const NoLoadsFoundWidget()
+                    :  Expanded(
                   child: ListView.builder(
-                    itemBuilder: (context, index) => loads.isEmpty ?
-                        const NoLoadsFoundWidget()
-                        : Padding(
+                    itemBuilder: (context, index) => Padding(
                             padding: EdgeInsets.only(top: 15.0.h),
                           child: searchResultWidget(width, height, language, load: loads[index],
                             onPressed: () {

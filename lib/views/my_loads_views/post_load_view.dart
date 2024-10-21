@@ -141,7 +141,7 @@ class PostLoadView extends ConsumerWidget {
                     },),
                   ],
                 ),
-                SizedBox(height: 15.h,),
+                /*SizedBox(height: 15.h,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -160,7 +160,7 @@ class PostLoadView extends ConsumerWidget {
                       },);
                     },),
                   ],
-                ),
+                ),*/
                 SizedBox(height: 15.h,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -207,7 +207,7 @@ class PostLoadView extends ConsumerWidget {
                     loadNotifier.switchBools(isPartial: loadState.isPartial, isPalletized: !loadState.isPalletized);
                   },),
 
-                SizedBox(height: 15.h,),
+                /*SizedBox(height: 15.h,),
                 userProvider.when(
                   data: (currentUser) => searchCardWidget(width, title: languages[language]!["contact_phone"]!,
                     hint: loadState.contact.isNotEmpty ? loadState.contact : languages[language]!["enter_contact_phone"]!,
@@ -225,7 +225,7 @@ class PostLoadView extends ConsumerWidget {
                     debugPrint(stackTrace.toString());
                     return Container();
                   },
-                ),
+                ),*/
                 SizedBox(height: 15.h,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,

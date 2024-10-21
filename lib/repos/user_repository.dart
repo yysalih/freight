@@ -14,7 +14,7 @@ class UserRepository {
 
   Future<UserModel> getUser() async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'singleQuery': "SELECT * FROM users WHERE uid = '$_uid'",
       },

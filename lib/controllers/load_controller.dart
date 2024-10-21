@@ -17,9 +17,11 @@ class LoadState implements BaseState{
 
   final AppPlaceModel origin;
   final AppPlaceModel destination;
+  @override
   final String truckType;
   final bool isPartial;
   final bool isPalletized;
+  @override
   final String contact;
   final DateTime startDate;
   final DateTime endDate;
@@ -64,21 +66,24 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
   final lengthController = TextEditingController();
   final weightController = TextEditingController();
   final volumeController = TextEditingController();
+  @override
   final phoneController = TextEditingController();
   final priceController = TextEditingController();
 
 
   switchBools({required bool isPartial, required bool isPalletized}) => state = state.copyWith(isPalletized: isPalletized, isPartial: isPartial);
+  @override
   switchStrings({required String truckType, required String contact}) => state = state.copyWith(truckType: truckType, contact: contact);
   switchDateTimes({required DateTime startDate, required DateTime endDate}) => state = state.copyWith(startDate: startDate, endDate: endDate);
   switchTimeOfDays({required TimeOfDay startHour, required TimeOfDay endHour}) => state = state.copyWith(startHour: startHour, endHour: endHour);
   switchAppPlaceModels({required AppPlaceModel origin, required AppPlaceModel destination}) => state = state.copyWith(origin: origin, destination: destination);
 
 
+  @override
   addNewPhoneNumberToUser({required UserModel currentUser}) async {
     //UPDATE `users` SET `contacts` = '553 074 77 13;553 074 77 13;' WHERE `users`.`id` = 7;
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'executeQuery': "UPDATE users SET contacts = '${currentUser.contacts}${phoneController.text};' WHERE uid = '${currentUser.uid}'",
 
@@ -130,7 +135,7 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
       isPalletized: state.isPalletized
     );
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'executeQuery': "INSERT INTO loads (${loadModel.getDbFields()}) VALUES (${loadModel.questionMarks})",
         "params": jsonEncode(loadModel.getDbFormat()),
@@ -155,7 +160,7 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
     required String loadUid,
   }) async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'executeQuery': "DELETE FROM loads WHERE uid = ?",
         "params": jsonEncode([loadUid]), // Pass the uid of the load to delete

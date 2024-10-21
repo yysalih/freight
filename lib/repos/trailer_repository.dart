@@ -14,7 +14,7 @@ class TrailerRepository {
 
   Future<TrailerModel> getTrailer() async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'singleQuery': "SELECT * FROM trailers WHERE uid = '$_uid'",
       },
@@ -41,7 +41,7 @@ class TrailerRepository {
 
   Future<List<TrailerModel>> getCurrentUserTrailers() async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'multiQuery': "SELECT * FROM trailers WHERE ownerUid = '$_uid'",
       },

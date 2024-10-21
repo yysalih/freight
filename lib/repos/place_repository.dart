@@ -14,7 +14,7 @@ class PlaceRepository {
 
   Future<AppPlaceModel> getPlace() async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'singleQuery': "SELECT * FROM places WHERE uid = '$_uid'",
       },
@@ -41,7 +41,7 @@ class PlaceRepository {
 
   Future<List<AppPlaceModel>> getPlaces() async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'multiQuery': "SELECT * FROM places",
       },

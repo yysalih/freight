@@ -14,7 +14,7 @@ class LoadRepository {
 
   Future<LoadModel> getLoad() async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'singleQuery': "SELECT * FROM loads WHERE uid = '$_uid'",
       },
@@ -41,7 +41,7 @@ class LoadRepository {
 
   Future<List<LoadModel>> getCurrentUserLoads() async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'multiQuery': "SELECT * FROM loads WHERE ownerUid = '$_uid'",
       },

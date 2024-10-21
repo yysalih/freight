@@ -14,7 +14,7 @@ class TruckRepository {
 
   Future<TruckModel> getTruck() async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'singleQuery': "SELECT * FROM trucks WHERE uid = '$_uid'",
       },
@@ -41,7 +41,7 @@ class TruckRepository {
 
   Future<List<TruckModel>> getCurrentUserTrucks() async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'multiQuery': "SELECT * FROM trucks WHERE ownerUid = '$_uid'",
       },

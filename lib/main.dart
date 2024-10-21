@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kamyon/controllers/profile_controller.dart';
 import 'package:kamyon/views/auth_views/login_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants/app_constants.dart';
+import 'constants/providers.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -21,8 +24,34 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
+
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+
+  @override
+  void initState() {
+    setLanguage();
+    // TODO: implement initState
+    super.initState();
+
+  }
+
+  setLanguage() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String value = prefs.getString("language")!;
+      ref.read(languageStateProvider.notifier).state = value;
+    }
+    catch(E) {
+      ref.read(languageStateProvider.notifier).state = "tr";
+
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -142,7 +142,7 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
 
 
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'executeQuery': "UPDATE trucks SET ${truckModel.getDbFieldsWithQuestionMark()} WHERE uid = ?",
         "params": jsonEncode(truckModel.getDbFormat()..add(truckUid)),
@@ -189,7 +189,7 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
 
 
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'executeQuery': "INSERT INTO trucks (${truckModel.getDbFields()}) VALUES (${truckModel.questionMarks})",
         "params": jsonEncode(truckModel.getDbFormat()),
@@ -222,7 +222,7 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
     );
 
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'executeQuery': "INSERT INTO trailers (${trailerModel.getDbFields()}) VALUES (${trailerModel.questionMarks})",
         "params": jsonEncode(trailerModel.getDbFormat()),
@@ -262,7 +262,7 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
     );
 
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'executeQuery': "INSERT INTO truck_posts (${truckPostModel.getDbFields()}) VALUES (${truckPostModel.questionMarks})",
         "params": jsonEncode(truckPostModel.getDbFormat()),
@@ -285,7 +285,7 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
 
   void deleteTruck({required String truckUid}) async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'executeQuery': "DELETE FROM trucks WHERE uid = ?",
         "params": jsonEncode([truckUid]), // Pass the uid of the load to delete
@@ -304,7 +304,7 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
 
   void deleteTruckPost({required String truckPostUid}) async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'executeQuery': "DELETE FROM truck_posts WHERE uid = ?",
         "params": jsonEncode([truckPostUid]), // Pass the uid of the load to delete

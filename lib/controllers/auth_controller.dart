@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamyon/constants/snackbars.dart';
+import 'package:kamyon/controllers/profile_controller.dart';
 
 import '../constants/providers.dart';
 import '../models/user_model.dart';
@@ -147,6 +148,77 @@ class AuthController extends StateNotifier<AuthState> {
       return false;
     }
   }
+
+  editUser({required BuildContext context, required String image, required ProfileState profileState,
+    required String errorTitle, required String succesTitle}) async {
+
+    // Update UserModel with the required fields
+    UserModel userModel = UserModel(
+        name: nameController.text,
+        email: emailController.text,
+        phone: phoneController.text,
+        isCarrier: profileState.carrierCheck,
+        isBroker: profileState.brokerCheck,
+        image: image,
+        // These fields are not being updated but may still be in the model
+        uid: currentUser!.uid, // Required for the WHERE clause
+        password: state.currentUser.password,
+        lastname: state.currentUser.lastname,
+        token: state.currentUser.token,
+        point: state.currentUser.point,
+        contacts: state.currentUser.contacts,
+        idBack: state.currentUser.idBack, idFront: state.currentUser.idFront,
+        licenseBack: state.currentUser.licenseBack,
+        licenseFront: state.currentUser.licenseFront, psiko: state.currentUser.psiko,
+        registration: state.currentUser.registration, src: state.currentUser.src
+    );
+
+    // Create the SQL update query, updating only the necessary fields
+    final response = await http.post(
+      url,
+      body: {
+        'executeQuery': """
+        UPDATE users 
+        SET 
+          name = ?,
+          isBroker = ?,
+          isCarrier = ?,
+          email = ?,
+          phone = ?
+        WHERE 
+          uid = '${currentUser!.uid}'
+      """,
+        "params": jsonEncode([
+          userModel.name,
+          userModel.isBroker,
+          userModel.isCarrier,
+          userModel.email,
+          userModel.phone
+        ]),
+      },
+    );
+
+    // Handle the response
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      var data = jsonDecode(response.body);
+      debugPrint('Response: $data');
+
+      if (!data.toString().contains("error")) {
+        state = state.copyWith(currentUser: userModel);
+        Navigator.push(context, routeToView(const MainView()));
+        showSnackbar(title: succesTitle, context: context);
+
+      } else {
+        showSnackbar(title: errorTitle, context: context);
+      }
+    } else {
+      debugPrint('Error: ${response.statusCode}');
+      debugPrint('Error: ${response.reasonPhrase}');
+      showSnackbar(title: errorTitle, context: context);
+    }
+  }
+
 }
 
 final authController = StateNotifierProvider<AuthController, AuthState>(

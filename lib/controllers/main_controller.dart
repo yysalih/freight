@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kamyon/models/user_model.dart';
 import 'package:kamyon/views/loads_views/loads_view.dart';
 import 'package:kamyon/views/my_loads_views/my_loads_view.dart';
+import 'package:kamyon/views/profile_views/profile_view.dart';
 import 'package:kamyon/views/trucks_views/my_trucks_view.dart';
 import 'package:http/http.dart' as http;
 
@@ -35,7 +36,7 @@ class MainController extends StateNotifier<MainState> {
 
 
 
-  final List<Widget> pages = [const LoadsView(), const MyLoadsView(), const MyTrucksView(), Container(), Container()];
+  final List<Widget> pages = [const LoadsView(), const MyLoadsView(), const MyTrucksView(), Container(), const ProfileView()];
 
   List<Map<String, dynamic>> pageInfo = [
     {"label" : "Yük Listesi", "icon" : Icons.format_list_bulleted_outlined},
@@ -52,7 +53,7 @@ class MainController extends StateNotifier<MainState> {
 
   getCurrentUser() async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'singleQuery': "SELECT * FROM users WHERE uid = '${FirebaseAuth.instance.currentUser!.uid}'",
       },

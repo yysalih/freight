@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kamyon/controllers/profile_controller.dart';
 import 'package:kamyon/views/auth_views/pick_role_view.dart';
 
 import '../../constants/app_constants.dart';
@@ -12,13 +13,17 @@ import '../../widgets/custom_button_widget.dart';
 import '../../widgets/input_field_widget.dart';
 
 class FillOutView extends ConsumerWidget {
-  const FillOutView({super.key});
+  final bool toEdit;
+  const FillOutView({super.key, this.toEdit = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appLanguage = ref.watch(languageStateProvider);
+    final language = ref.watch(languageStateProvider);
     final authNotifier = ref.watch(authController.notifier);
     final authState = ref.watch(authController);
+
+    final profileNotifier = ref.watch(profileController.notifier);
+    final profileState = ref.watch(profileController);
 
     return Scaffold(
       backgroundColor: kBlack,
@@ -39,7 +44,7 @@ class FillOutView extends ConsumerWidget {
                     },
                     child: const Icon(Icons.close, color: kWhite,),
                   ),
-                  Text(languages[appLanguage]!["fill_out"]!, style: kTitleTextStyle.copyWith(
+                  Text(languages[language]!["fill_out"]!, style: kTitleTextStyle.copyWith(
                       color: kWhite
                   ),),
                   Container()
@@ -53,6 +58,7 @@ class FillOutView extends ConsumerWidget {
                     backgroundColor: kLightBlack,
                     backgroundImage: CachedNetworkImageProvider(authNotifier.currentUser!.photoURL!),
                     child: authNotifier.currentUser!.photoURL!.isNotEmpty ? null
+                        : toEdit ? CachedNetworkImage(imageUrl: authState.currentUser.image!)
                         : Image.asset("assets/icons/photo.png", width: 50.w,),
                   ),
                   SizedBox(width: 10.w,),
@@ -60,12 +66,12 @@ class FillOutView extends ConsumerWidget {
                     child: Row(
                       children: [
                         const Icon(Icons.add, color: kWhite,),
-                         SizedBox(width: 10.w,),
-                        Text(languages[appLanguage]!["add_photo"]!, style: kCustomTextStyle,),
+                        SizedBox(width: 10.w,),
+                        Text(languages[language]!["add_photo"]!, style: kCustomTextStyle,),
                       ],
                     ),
                     onPressed: () {
-
+                      profileNotifier.showPicker(context, language: language);
                     },
                   ),
                 ],
@@ -73,34 +79,83 @@ class FillOutView extends ConsumerWidget {
 
               Column(
                 children: [
-                  customInputField(title: languages[appLanguage]!["name"]!,
-                    hintText: languages[appLanguage]!["input_name"]!,
+                  customInputField(title: languages[language]!["name"]!,
+                    hintText: languages[language]!["input_name"]!,
                     icon: Icons.person, onTap: () {
 
-                    }, controller: authNotifier.nameController..text = authNotifier.currentUser!.displayName!),
+                    }, controller: authNotifier.nameController..text = toEdit ? authState.currentUser.name! :
+                      authNotifier.currentUser!.displayName!),
                   SizedBox(height: 10.h,),
-                  customInputField(title: languages[appLanguage]!["surname"]!,
-                    hintText: languages[appLanguage]!["input_surname"]!,
+                  customInputField(title: languages[language]!["surname"]!,
+                    hintText: languages[language]!["input_surname"]!,
                     icon: Icons.person, onTap: () {
 
-                    }, controller: authNotifier.surnameController),
+                    }, controller: authNotifier.surnameController..text = toEdit ? authState.currentUser.lastname! :
+                      ""),
                   SizedBox(height: 10.h,),
-                  customInputField(title: languages[appLanguage]!["email"]!,
-                    hintText: languages[appLanguage]!["input_email"]!,
+                  customInputField(title: languages[language]!["email"]!,
+                    hintText: languages[language]!["input_email"]!,
                     icon: Icons.local_post_office, onTap: () {
 
-                    }, controller: authNotifier.emailController..text = authNotifier.currentUser!.email!),
+                    }, controller: authNotifier.emailController..text = toEdit ? authState.currentUser.email! :
+                      authNotifier.currentUser!.email!),
                   SizedBox(height: 10.h,),
-                  customInputField(title: languages[appLanguage]!["phone"]!,
-                    hintText: languages[appLanguage]!["input_phone"]!,
+                  customInputField(title: languages[language]!["phone"]!,
+                    hintText: languages[language]!["input_phone"]!,
                     icon: Icons.phone, onTap: () {
 
-                    }, controller: authNotifier.phoneController),
+                    }, controller: authNotifier.phoneController..text = toEdit ? authState.currentUser.phone! : ""),
                 ],
               ),
 
-              customButton(title: languages[appLanguage]!["continue"]!, color: kGreen, onPressed: () {
-                Navigator.push(context, routeToView(const PickRoleView()));
+              if(toEdit) Column(
+                children: [
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: profileState.carrierCheck,
+                        onChanged: (value) => profileNotifier.switchCarrier(),
+                      ),
+                      Text(languages[language]!["i_am_a_carrier"]!, style: kCustomTextStyle,),
+
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: profileState.shipperCheck,
+                        onChanged: (value) => profileNotifier.switchShipper(),
+                      ),
+                      Text(languages[language]!["i_am_a_shipper"]!, style: kCustomTextStyle,),
+
+                    ],
+                  ),
+
+                  if(!profileState.carrierCheck) Row(
+                    children: [
+                      Checkbox(
+                        value: profileState.brokerCheck,
+                        onChanged: (value) => profileNotifier.switchBroker(),
+                      ),
+                      Text(languages[language]!["i_am_a_broker"]!, style: kCustomTextStyle,),
+
+                    ],
+                  ),
+                ],
+              ),
+
+
+              customButton(title: languages[language]![toEdit ? "save" : "continue"]!, color: kGreen, onPressed: () {
+
+                if(!toEdit) {
+                  Navigator.push(context, routeToView(const PickRoleView()));
+                }
+                else {
+                  authNotifier.editUser(context: context, profileState: profileState,
+                      image: profileState.image.isNotEmpty ? profileState.image : authState.currentUser.image!,
+                      errorTitle: languages[language]!["error_editing_user"]!,
+                      succesTitle: languages[language]!["success_editing_user"]!);
+                }
               },),
             ],
           ),

@@ -134,8 +134,7 @@ class LoadInnerView extends ConsumerWidget {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text("Steel Road Inc.", style: kCustomTextStyle,),
-                                  SizedBox(height: 3.h,),
+                                  
                                   Row(
                                     children: [
                                       for(int i = 0; i < 3; i++)
@@ -192,8 +191,8 @@ class LoadInnerView extends ConsumerWidget {
                           loadInfoWidget(width, height, title: languages[language]!["full_partial"]!,
                               description: load.isPartial! ?
                               languages[language]!["partial"]! : languages[language]!["full"]!),
-                          loadInfoWidget(width, height, title: languages[language]!["vehicle_type"]!,
-                              description: languages[language]![load.truckType]!),
+                          /*loadInfoWidget(width, height, title: languages[language]!["vehicle_type"]!,
+                              description: languages[language]![load.truckType]!),*/
                           loadInfoWidget(width, height, title: languages[language]!["length"]!,
                               description: "${load.length} MT"),
                           loadInfoWidget(width, height, title: languages[language]!["weight"]!,
@@ -217,7 +216,7 @@ class LoadInnerView extends ConsumerWidget {
                               description: load.description!),
                         ],
                       ),
-                      SizedBox(height: 15.h,),
+                      /*SizedBox(height: 15.h,),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -231,7 +230,7 @@ class LoadInnerView extends ConsumerWidget {
                           loadInfoWidget(width, height, title: languages[language]!["load_volume"]!,
                               description: "${load.volume} m3"),
                         ],
-                      ),
+                      ),*/
                       SizedBox(height: 15.h,),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,13 +248,12 @@ class LoadInnerView extends ConsumerWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(languages[language]!["company_details"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
-                          loadInfoWidget(width, height, title: languages[language]!["company_name"]!,
+                          Text(languages[language]!["user_details"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
+                          loadInfoWidget(width, height, title: languages[language]!["user_name"]!,
                               description: "Steel Road Inc."),
                           loadInfoWidget(width, height, title: languages[language]!["phone"]!,
                               description: load.contact!),
-                          loadInfoWidget(width, height, title: languages[language]!["location"]!,
-                              description: "Akdeniz Cd. No:31, 06570"),
+                          //loadInfoWidget(width, height, title: languages[language]!["location"]!, description: "Akdeniz Cd. No:31, 06570"),
                           loadInfoWidget(width, height, title: languages[language]!["rating"]!,
                               description: "Akdeniz Cd. No:31, 06570"),
                         ],

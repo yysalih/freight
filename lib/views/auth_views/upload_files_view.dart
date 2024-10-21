@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/constants/providers.dart';
 import 'package:kamyon/views/main_view.dart';
 import 'package:kamyon/widgets/file_card_widget.dart';
+import 'package:kamyon/widgets/pick_city_modal_bottom_sheet.dart';
 
 import '../../constants/app_constants.dart';
 import '../../constants/languages.dart';
@@ -11,7 +12,8 @@ import '../../controllers/auth_controller.dart';
 import '../../widgets/custom_button_widget.dart';
 
 class UploadFilesView extends ConsumerWidget {
-  const UploadFilesView({super.key});
+  final bool toEdit;
+  const UploadFilesView({super.key, this.toEdit = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,10 +53,18 @@ class UploadFilesView extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       fileCardWidget(title: languages[language]!["id_front"]!,
-                        image: "id", color: kLightBlack, onPressed: () {},),
+                        image: "id", color: kLightBlack, onPressed: () {
+                          if(toEdit) {
+                            showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                          }
+                        },),
                       SizedBox(width: 20.w,),
                       fileCardWidget(title: languages[language]!["id_back"]!,
-                        image: "id", color: kLightBlack, onPressed: () {},),
+                        image: "id", color: kLightBlack, onPressed: () {
+                          if(toEdit) {
+                            showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                          }
+                        },),
                     ],
                   ),
 
@@ -64,10 +74,18 @@ class UploadFilesView extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         fileCardWidget(title: languages[language]!["license_front"]!,
-                          image: "license", color: kLightBlack, onPressed: () {},),
+                          image: "license", color: kLightBlack, onPressed: () {
+                          if(toEdit) {
+                            showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                          }
+                          },),
                         SizedBox(width: 20.w,),
                         fileCardWidget(title: languages[language]!["license_back"]!,
-                          image: "license", color: kLightBlack, onPressed: () {},),
+                          image: "license", color: kLightBlack, onPressed: () {
+                          if(toEdit) {
+                            showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                          }
+                          },),
                       ],
                     ),
                   ) : const SizedBox(),
@@ -75,15 +93,27 @@ class UploadFilesView extends ConsumerWidget {
                   authState.isCarrier ? Column(
                     children: [
                       fileCardWidget2(title: languages[language]!["psiko"]!,
-                          icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {}),
+                          icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
+                            if(toEdit) {
+                              showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                            }
+                          }),
                       SizedBox(height: 20.h,),
                       fileCardWidget2(title: languages[language]!["src"]!,
-                          icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {}),
+                          icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
+                            if(toEdit) {
+                              showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                            }
+                          }),
                     ],
                   ) : Column(
                     children: [
                       fileCardWidget2(title: languages[language]!["registration"]!,
-                          icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {}),
+                          icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
+                            if(toEdit) {
+                              showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                            }
+                          }),
                       SizedBox(height: 20.h,),
                       Row(
                         children: [
@@ -100,7 +130,11 @@ class UploadFilesView extends ConsumerWidget {
                 ],
               ),
               customButton(title: languages[language]!["confirm"]!, color: kGreen, onPressed: () {
-                authNotifier.createUser(context: context, errorTitle: languages[language]!["problem_signing_up"]!);
+                if(toEdit) {
+                  Navigator.pop(context);
+                } else {
+                  authNotifier.createUser(context: context, errorTitle: languages[language]!["problem_signing_up"]!);
+                }
               },),
             ],
           ),
@@ -109,3 +143,4 @@ class UploadFilesView extends ConsumerWidget {
     );
   }
 }
+
