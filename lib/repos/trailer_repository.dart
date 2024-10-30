@@ -49,7 +49,7 @@ class TrailerRepository {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      if (data is List) { // Ensure that data is a List
+      if (data is List) {
         List<TrailerModel> loads = data.map((e) => TrailerModel().fromJson(e as Map<String, dynamic>)).toList();
         debugPrint('TrailerModel Length: ${loads.length}');
 
@@ -67,18 +67,12 @@ class TrailerRepository {
 }
 
 final trailerFutureProvider = FutureProvider.autoDispose.family<TrailerModel, String?>((ref, uid) {
-  // get repository from the provider below
   final trailerRepository = ref.watch(trailerRepositoryProvider(uid));
-
-  // call method that returns a Stream<User>
   return trailerRepository.getTrailer();
 });
 
 final trailersFutureProvider = FutureProvider.autoDispose.family<List<TrailerModel>, String?>((ref, uid) {
-  // get repository from the provider below
   final trailerRepository = ref.watch(trailerRepositoryProvider(uid));
-
-  // call method that returns a Stream<User>
   return trailerRepository.getCurrentUserTrailers();
 });
 

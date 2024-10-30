@@ -41,10 +41,7 @@ class UserRepository {
 }
 
 final userFutureProvider = FutureProvider.autoDispose.family<UserModel, String?>((ref, uid) {
-  // get repository from the provider below
   final userRepository = ref.watch(userRepositoryProvider(uid));
-
-  // call method that returns a Stream<User>
   return userRepository.getUser();
 });
 

@@ -67,18 +67,12 @@ class TruckRepository {
 }
 
 final truckFutureProvider = FutureProvider.autoDispose.family<TruckModel, String?>((ref, uid) {
-  // get repository from the provider below
   final truckRepository = ref.watch(truckRepositoryProvider(uid));
-
-  // call method that returns a Stream<User>
   return truckRepository.getTruck();
 });
 
 final trucksFutureProvider = FutureProvider.autoDispose.family<List<TruckModel>, String?>((ref, uid) {
-  // get repository from the provider below
   final truckRepository = ref.watch(truckRepositoryProvider(uid));
-
-  // call method that returns a Stream<User>
   return truckRepository.getCurrentUserTrucks();
 });
 

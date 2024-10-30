@@ -49,7 +49,7 @@ class PlaceRepository {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      if (data is List) { // Ensure that data is a List
+      if (data is List) {
         List<AppPlaceModel> places = data.map((e) => AppPlaceModel().fromJson(e as Map<String, dynamic>)).toList();
         debugPrint('AppPlaceModel Length: ${places.length}');
 
@@ -67,18 +67,12 @@ class PlaceRepository {
 }
 
 final placeFutureProvider = FutureProvider.autoDispose.family<AppPlaceModel, String?>((ref, uid) {
-  // get repository from the provider below
   final placeRepository = ref.watch(placeRepositoryProvider(uid));
-
-  // call method that returns a Stream<User>
   return placeRepository.getPlace();
 });
 
 final placesFutureProvider = FutureProvider.autoDispose.family<List<AppPlaceModel>, String?>((ref, uid) {
-  // get repository from the provider below
   final placeRepository = ref.watch(placeRepositoryProvider(uid));
-
-  // call method that returns a Stream<User>
   return placeRepository.getPlaces();
 });
 

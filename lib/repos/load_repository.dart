@@ -49,7 +49,7 @@ class LoadRepository {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      if (data is List) { // Ensure that data is a List
+      if (data is List) {
         List<LoadModel> loads = data.map((e) => LoadModel().fromJson(e as Map<String, dynamic>)).toList();
         debugPrint('Loads Length: ${loads.length}');
 
@@ -67,18 +67,12 @@ class LoadRepository {
 }
 
 final loadFutureProvider = FutureProvider.autoDispose.family<LoadModel, String?>((ref, uid) {
-  // get repository from the provider below
   final loadRepository = ref.watch(loadRepositoryProvider(uid));
-
-  // call method that returns a Stream<User>
   return loadRepository.getLoad();
 });
 
 final loadsFutureProvider = FutureProvider.autoDispose.family<List<LoadModel>, String?>((ref, uid) {
-  // get repository from the provider below
   final loadRepository = ref.watch(loadRepositoryProvider(uid));
-
-  // call method that returns a Stream<User>
   return loadRepository.getCurrentUserLoads();
 });
 

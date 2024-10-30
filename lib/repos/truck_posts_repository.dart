@@ -49,7 +49,7 @@ class TruckPostRepository {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      if (data is List) { // Ensure that data is a List
+      if (data is List) {
         List<TruckPostModel> truckPostModels = data.map((e) => const TruckPostModel().fromJson(e as Map<String, dynamic>)).toList();
         debugPrint('TruckPosts Length: ${truckPostModels.length}');
 
@@ -67,18 +67,12 @@ class TruckPostRepository {
 }
 
 final truckPostFutureProvider = FutureProvider.autoDispose.family<TruckPostModel, String?>((ref, uid) {
-  // get repository from the provider below
   final truckPostRepository = ref.watch(truckPostRepositoryProvider(uid));
-
-  // call method that returns a Stream<User>
   return truckPostRepository.getTruckPosts();
 });
 
 final truckPostsFutureProvider = FutureProvider.autoDispose.family<List<TruckPostModel>, String?>((ref, uid) {
-  // get repository from the provider below
   final truckPostRepository = ref.watch(truckPostRepositoryProvider(uid));
-
-  // call method that returns a Stream<User>
   return truckPostRepository.getCurrentUserTrucksPosts();
 });
 
