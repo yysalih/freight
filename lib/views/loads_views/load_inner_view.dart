@@ -7,10 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:kamyon/constants/snackbars.dart';
 import 'package:kamyon/controllers/load_controller.dart';
 import 'package:kamyon/controllers/place_controller.dart';
-import 'package:kamyon/models/place_model.dart';
 import 'package:kamyon/repos/load_repository.dart';
-import 'package:kamyon/repos/place_repository.dart';
-import 'package:kamyon/views/my_loads_views/post_load_view.dart';
 import 'package:kamyon/widgets/app_alert_dialogs_widget.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -35,8 +32,6 @@ class LoadInnerView extends ConsumerWidget {
     final loadProvider = ref.watch(loadFutureProvider(uid));
 
     final loadNotifier = ref.watch(loadController.notifier);
-
-    final placeNotifier = ref.watch(placeController.notifier);
 
 
     return Scaffold(
@@ -85,23 +80,21 @@ class LoadInnerView extends ConsumerWidget {
                   width: width, height: height * .25,
                   child: FlutterMap(
                     options: const MapOptions(
-                      initialCenter: LatLng(51.509364, -0.128928), // Center the map over London
+                      initialCenter: LatLng(51.509364, -0.128928),
                       initialZoom: 9.2,
                     ),
                     children: [
-                      TileLayer( // Display map tiles from any source
-                        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // OSMF's Tile Server
+                      TileLayer(
+                        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                         userAgentPackageName: 'com.kamyon',
-                        maxNativeZoom: 19, // Scale tiles when the server doesn't support higher zoom levels
-                        // And many more recommended properties!
+                        maxNativeZoom: 19,
                       ),
-                      RichAttributionWidget( // Include a stylish prebuilt attribution widget that meets all requirments
+                      RichAttributionWidget(
                         attributions: [
                           TextSourceAttribution(
                             'OpenStreetMap contributors',
-                            onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')), // (external)
+                            onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
                           ),
-                          // Also add images...
                         ],
                       ),
                     ],
@@ -118,12 +111,14 @@ class LoadInnerView extends ConsumerWidget {
                             children: [
                               Text("İstanbul TR\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}",
                                 style: kCustomTextStyle,),
+                              //TODO Place name should be added just like in the AddTruckPostView (edit mode)
                               const Icon(Icons.fast_forward_sharp, color: kBlueColor,),
 
                               Icon(Icons.local_shipping, color: kWhite, size: 30.w,),
 
                               const Icon(Icons.fast_forward_sharp, color: kBlueColor,),
-                              Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}",
+                              Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}", //TODO Place name should be added just like in the AddTruckPostView (edit mode)
+
                                 style: kCustomTextStyle, textAlign: TextAlign.end,),
                             ],
                           ),
@@ -150,7 +145,8 @@ class LoadInnerView extends ConsumerWidget {
                                               padding: const EdgeInsets.symmetric(horizontal: 12),
                                               child: Center(
                                                 child: Text(["Fast", "Reliable", "Heavy"][i], style: kCustomTextStyle.copyWith(fontSize: 11.w, color: kLightBlack),),
-                                              ),
+                                              ), //TODO Tags should be added just like in the AddTruckPostView (edit mode)
+
                                             ),
                                           ),
                                         )

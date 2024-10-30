@@ -84,27 +84,37 @@ class FillOutView extends ConsumerWidget {
                     icon: Icons.person, onTap: () {
 
                     }, controller: authNotifier.nameController..text = toEdit ? authState.currentUser.name! :
-                      authNotifier.currentUser!.displayName!),
+                      authNotifier.currentUser!.displayName!,
+                   onChanged: (value) {
+
+                   },),
                   SizedBox(height: 10.h,),
                   customInputField(title: languages[language]!["surname"]!,
                     hintText: languages[language]!["input_surname"]!,
                     icon: Icons.person, onTap: () {
 
                     }, controller: authNotifier.surnameController..text = toEdit ? authState.currentUser.lastname! :
-                      ""),
+                      "", onChanged: (value) {
+
+                      },),
                   SizedBox(height: 10.h,),
                   customInputField(title: languages[language]!["email"]!,
                     hintText: languages[language]!["input_email"]!,
                     icon: Icons.local_post_office, onTap: () {
 
                     }, controller: authNotifier.emailController..text = toEdit ? authState.currentUser.email! :
-                      authNotifier.currentUser!.email!),
+                      authNotifier.currentUser!.email!, onChanged: (value) {
+
+                      },),
                   SizedBox(height: 10.h,),
                   customInputField(title: languages[language]!["phone"]!,
                     hintText: languages[language]!["input_phone"]!,
                     icon: Icons.phone, onTap: () {
 
-                    }, controller: authNotifier.phoneController..text = toEdit ? authState.currentUser.phone! : ""),
+                    }, controller: authNotifier.phoneController..text = toEdit ? authState.currentUser.phone! : "",
+                  onChanged: (value) {
+
+                  },),
                 ],
               ),
 

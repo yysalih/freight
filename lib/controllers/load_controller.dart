@@ -63,6 +63,7 @@ class LoadState implements BaseState{
 class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
   LoadController(super.state);
 
+  final descriptionController = TextEditingController();
   final lengthController = TextEditingController();
   final weightController = TextEditingController();
   final volumeController = TextEditingController();
@@ -80,8 +81,7 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
 
 
   @override
-  addNewPhoneNumberToUser({required UserModel currentUser}) async {
-    //UPDATE `users` SET `contacts` = '553 074 77 13;553 074 77 13;' WHERE `users`.`id` = 7;
+  addNewPhoneNumberToUser({required UserModel currentUser}) async {//TODO doesn't work, needs to be fixed - 30/10/2024 15:03
     final response = await http.post(
       appUrl,
       body: {
@@ -110,7 +110,7 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
 
   }
 
-  createLoad(BuildContext context, {required String errorTitle, required String successTitle}) async {
+  createLoad(BuildContext context, {required String errorTitle, required String successTitle, bool fromMainView = false}) async {
     LoadModel loadModel = LoadModel(
       isPartial: state.isPartial,
       contact: state.contact,
@@ -122,11 +122,11 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
       origin: state.origin.uid,
       endHour: state.endHour.format(context),
       startHour: state.startHour.format(context),
-      length: double.parse(lengthController.text),
-      weight: double.parse(weightController.text),
-      volume: double.parse(volumeController.text),
+      length: double.parse(lengthController.text.isEmpty ? "0.0" : lengthController.text),
+      weight: double.parse(weightController.text.isEmpty ? "0.0" : weightController.text),
+      volume: double.parse(volumeController.text.isEmpty ? "0.0" : volumeController.text),
       price: double.parse(priceController.text),
-      loadType: "Fish",
+      loadType: "",
       ownerUid: FirebaseAuth.instance.currentUser!.uid,
       startDate: state.startDate,
       state: "available",
@@ -146,7 +146,7 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
       debugPrint(response.body);
       var data = jsonDecode(response.body);
       debugPrint('Response: $data');
-      Navigator.pop(context);
+      if(!fromMainView) Navigator.pop(context);
       showSnackbar(title: successTitle, context: context);
 
     } else {
@@ -175,6 +175,12 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
       debugPrint('Error: ${response.statusCode}');
       debugPrint('Error: ${response.reasonPhrase}');
     }
+  }
+
+  clear() {
+    state = state.copyWith(origin: AppPlaceModel(), destination: AppPlaceModel());
+    priceController.clear();
+    descriptionController.clear();
   }
 }
 

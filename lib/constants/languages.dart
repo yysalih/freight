@@ -1,10 +1,11 @@
 
 const Map<String, Map<String, String>> languages = {
   "tr" : tr,
-  "en" : en
+  "en" : en,
 };
 
 const Map<String, String> tr = {
+  "pick_truck" : "Araç seç",
   "user_name" : "İletişim Adı",
   "user_details" : "İletişim Detayları",
   "upload" : "Yükle",
@@ -65,6 +66,8 @@ const Map<String, String> tr = {
   "enter_truck_name" : "Araç ismi giriniz.",
   "enter_trailer_name" : "Dorse ismi giriniz.",
   "enter_description" : "Bir açıklama yazınız",
+  "enter_load" : "Yükünüzü ekleyin.",
+  "enter_truck_post" : "Aracınızı ilana verin.",
   "description" : "Açıklama",
   "enter_truck_description" : "Araç için bir açıklama yazınız.",
   "truck_details" : "Araç Detayları",

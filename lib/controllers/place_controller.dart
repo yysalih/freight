@@ -29,7 +29,8 @@ class PlaceState {
 class PlaceController extends StateNotifier<PlaceState> {
   PlaceController(super.state);
 
-  final searchController =  TextEditingController();
+  final originSearchController =  TextEditingController();
+  final destinationSearchController =  TextEditingController();
   var uuid =  const Uuid();
   String sessionToken = '1234567890';
 
@@ -60,13 +61,13 @@ class PlaceController extends StateNotifier<PlaceState> {
   }
 
   Future<void> fetchPlaceDetails(String placeName) async {
-    // Define your API key (Replace with your actual key)
+
     const String apiKey = 'AIzaSyDZg_ZZdVGiLpdwBs3pbnP6sl4JaEquLY8';
 
-    // Define the base URL for the Places API request
+
     const String baseUrl = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json';
 
-    // Create the full URL with parameters
+
     final Uri url = Uri.parse(
       '$baseUrl?fields=formatted_address,name,rating,opening_hours,geometry'
           '&input=${Uri.encodeComponent(placeName)}'
@@ -75,23 +76,22 @@ class PlaceController extends StateNotifier<PlaceState> {
     );
 
     try {
-      // Send the HTTP GET request
+
       final response = await http.get(url);
 
-      // Check for successful response
+
       if (response.statusCode == 200) {
-        // Parse the JSON response
+
         final Map<String, dynamic> data = jsonDecode(response.body);
         print('Place details: $data');
         state = state.copyWith(placeList: data['candidates']);
 
-        // Here, you can extract and use specific fields from the response
         if (data['candidates'] != null && data['candidates'].isNotEmpty) {
           final place = data['candidates'][0];
           print('Place name: ${place['name']}');
           print('Address: ${place['formatted_address']}');
           print('Rating: ${place['rating']}');
-          // Add more data handling as needed
+
         } else {
           print('No place found for the input.');
         }
@@ -129,7 +129,11 @@ class PlaceController extends StateNotifier<PlaceState> {
     state = state.copyWith(destination: destination, origin: origin);
   }
 
-  //clear() => state = state.copyWith(origin: AppPlaceModel(), destination: AppPlaceModel(), placeList: []);
+  clear() {
+    state = state.copyWith(placeList: []);
+    destinationSearchController.clear();
+    originSearchController.clear();
+  }
 
 }
 

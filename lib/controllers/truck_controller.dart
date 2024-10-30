@@ -22,10 +22,12 @@ class TruckState implements BaseState {
   final bool hasTrailer;
   final String city;
   final String trailerUid;
+  @override
   final String truckType;
 
   final AppPlaceModel origin;
   final AppPlaceModel destination;
+  @override
   final String contact;
   final DateTime startDate;
   final DateTime endDate;
@@ -80,6 +82,7 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
   final priceController = TextEditingController();
   final descriptionController = TextEditingController();
 
+  @override
   final phoneController = TextEditingController();
 
   final trailerNameController = TextEditingController();
@@ -241,7 +244,7 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
     }
   }
 
-  createTruckPost(BuildContext context, {required String truckUid, required String errorTitle, required String successTitle}) async {
+  createTruckPost(BuildContext context, {required String truckUid, required String errorTitle, required String successTitle, bool fromMainView = false}) async {
 
     String uid = const Uuid().v4();
 
@@ -273,7 +276,9 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
       debugPrint(response.body);
       var data = jsonDecode(response.body);
       debugPrint('Response: $data');
-      Navigator.pop(context);
+      if(!fromMainView) {
+        Navigator.pop(context);
+      }
       showSnackbar(title: successTitle, context: context);
     } else {
       debugPrint('Error: ${response.statusCode}');
@@ -288,7 +293,7 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
       appUrl,
       body: {
         'executeQuery': "DELETE FROM trucks WHERE uid = ?",
-        "params": jsonEncode([truckUid]), // Pass the uid of the load to delete
+        "params": jsonEncode([truckUid]),
       },
     );
 
@@ -307,7 +312,7 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
       appUrl,
       body: {
         'executeQuery': "DELETE FROM truck_posts WHERE uid = ?",
-        "params": jsonEncode([truckPostUid]), // Pass the uid of the load to delete
+        "params": jsonEncode([truckPostUid]),
       },
     );
 
@@ -323,6 +328,10 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
 
   switchToTruckPosts() => state = state.copyWith(showTruckPosts: !state.showTruckPosts);
 
+  clear() {
+    priceController.clear();
+    descriptionController.clear();
+  }
 }
 
 final truckController = StateNotifierProvider<TruckController, TruckState>(

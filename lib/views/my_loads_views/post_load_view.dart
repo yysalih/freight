@@ -231,7 +231,9 @@ class PostLoadView extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     customInputField(title: languages[language]!["price"]!, hintText: languages[language]!["enter_price"]!, icon: Icons.monetization_on, onTap: () {
-                        }, controller: loadNotifier.priceController),
+                        }, controller: loadNotifier.priceController, onChanged: (value) {
+
+                    },),
                     SizedBox(height: 5.h,),
                     Text("${languages[language]!["per_km"]!} 20 \$", style: kCustomTextStyle,)
                   ],

@@ -36,13 +36,17 @@ class LoginView extends ConsumerWidget {
                   hintText: languages[appLanguage]!["input_email"]!,
                   icon: Icons.local_post_office_outlined, onTap: () {
 
-                }, controller: authNotifier.emailController),
+                }, controller: authNotifier.emailController, onChanged: (value) {
+
+                },),
               SizedBox(height: 10.h,),
               customInputField(title: languages[appLanguage]!["password"]!,
                 hintText: languages[appLanguage]!["input_password"]!,
                 icon: Icons.password, onTap: () {
 
-                }, controller: authNotifier.passwordController),
+                }, controller: authNotifier.passwordController, onChanged: (value) {
+
+                },),
               authState.isRegister ? Column(
                 children: [
                   SizedBox(height: 10.h,),
@@ -50,7 +54,9 @@ class LoginView extends ConsumerWidget {
                     hintText: languages[appLanguage]!["input_password_again"]!,
                     icon: Icons.password, onTap: () {
 
-                    }, controller: authNotifier.passwordAgainController),
+                    }, controller: authNotifier.passwordAgainController, onChanged: (value) {
+
+                    },),
                 ],
               ) : Container(),
               SizedBox(height: 10.h,),
@@ -196,7 +202,6 @@ class LoginView extends ConsumerWidget {
                                   routeToView(const MainView()));
                             }
                             else {
-                              //await authWatch.createNewUser(user.uid, user);
                               Navigator.push(context, routeToView(const FillOutView()));
                             }
 

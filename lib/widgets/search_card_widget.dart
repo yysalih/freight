@@ -5,12 +5,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_constants.dart';
 
 Widget searchCardWidget(double width, {required String title, required String hint,
-  bool halfLength = true, bool hasType = false, String type = "", required Function() onPressed}) {
+  bool halfLength = true, bool hasType = false,
+  bool hasTitle = true,
+  String type = "", required Function() onPressed}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(title, style: kTitleTextStyle.copyWith(color: kWhite),),
-      SizedBox(height: 5.h,),
+      if(hasTitle) ...[
+        Text(title, style: kTitleTextStyle.copyWith(color: kWhite),),
+        SizedBox(height: 5.h,),
+      ],
       SizedBox(
         width: halfLength ? hasType ? width * .275 : width * .43 : width, height: 40.h,
         child: ClipRRect(

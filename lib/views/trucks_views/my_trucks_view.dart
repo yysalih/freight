@@ -12,8 +12,7 @@ import 'package:kamyon/widgets/trucks_view_body_widget.dart';
 
 import '../../constants/languages.dart';
 import '../../constants/providers.dart';
-import '../../widgets/truck_card_widget.dart';
-import '../../widgets/warning_info_widget.dart';
+
 
 class MyTrucksView extends ConsumerWidget {
   const MyTrucksView({super.key});

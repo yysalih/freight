@@ -55,14 +55,14 @@ class UploadFilesView extends ConsumerWidget {
                       fileCardWidget(title: languages[language]!["id_front"]!,
                         image: "id", color: kLightBlack, onPressed: () {
                           if(toEdit) {
-                            showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                            showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
                           }
                         },),
                       SizedBox(width: 20.w,),
                       fileCardWidget(title: languages[language]!["id_back"]!,
                         image: "id", color: kLightBlack, onPressed: () {
                           if(toEdit) {
-                            showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                            showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
                           }
                         },),
                     ],
@@ -76,14 +76,14 @@ class UploadFilesView extends ConsumerWidget {
                         fileCardWidget(title: languages[language]!["license_front"]!,
                           image: "license", color: kLightBlack, onPressed: () {
                           if(toEdit) {
-                            showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                            showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
                           }
                           },),
                         SizedBox(width: 20.w,),
                         fileCardWidget(title: languages[language]!["license_back"]!,
                           image: "license", color: kLightBlack, onPressed: () {
                           if(toEdit) {
-                            showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                            showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
                           }
                           },),
                       ],
@@ -95,14 +95,14 @@ class UploadFilesView extends ConsumerWidget {
                       fileCardWidget2(title: languages[language]!["psiko"]!,
                           icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
                             if(toEdit) {
-                              showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                              showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
                             }
                           }),
                       SizedBox(height: 20.h,),
                       fileCardWidget2(title: languages[language]!["src"]!,
                           icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
                             if(toEdit) {
-                              showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                              showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
                             }
                           }),
                     ],
@@ -111,7 +111,7 @@ class UploadFilesView extends ConsumerWidget {
                       fileCardWidget2(title: languages[language]!["registration"]!,
                           icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
                             if(toEdit) {
-                              showModalBottomSheet(context: context, builder: (context) => FileOptionsModalBottomSheet());
+                              showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
                             }
                           }),
                       SizedBox(height: 20.h,),

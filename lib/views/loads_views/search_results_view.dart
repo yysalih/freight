@@ -16,8 +16,6 @@ class SearchResultsView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final language = ref.watch(languageStateProvider);
 
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: kBlack,
@@ -84,14 +82,7 @@ class SearchResultsView extends ConsumerWidget {
                 ],
               ),
               SizedBox(height: 10.h,),
-              searchResultWidget(width, height, language, onPressed: () {
-                Navigator.push(context, routeToView(const LoadInnerView(uid: "",)));
-              }, load: LoadModel(),),
-              SizedBox(height: 15.h,),
-
-              searchResultWidget(width, height, language, onPressed: () {
-                Navigator.push(context, routeToView(const LoadInnerView(uid: "",)));
-              }, load: LoadModel()),
+              //TODO Search Results with Listview
             ],
           ),
         ),

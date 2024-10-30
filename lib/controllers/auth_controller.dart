@@ -70,8 +70,7 @@ class AuthController extends StateNotifier<AuthState> {
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       debugPrint(data.runtimeType.toString());
-      //UserModel userModel = UserModel().fromJson(data);
-      //debugPrint('UserModel: $userModel');
+
       if(data.toString().contains("error")) {
         return false;
       } else {
@@ -105,7 +104,7 @@ class AuthController extends StateNotifier<AuthState> {
     final response = await http.post(
       url,
       body: {
-        //'executeQuery': "INSERT INTO users (token, image, lastname, uid, name, email, point, isBroker, isCarrier, src, registration, psiko, licenseFront, licenseBack, idFront, idBack, password, phone) VALUES (?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+
         'executeQuery': "INSERT INTO users (${userModel.getDbFields()}) VALUES (${userModel.questionMarks})",
         "params": jsonEncode(userModel.getDbFormat()),
       },
@@ -152,7 +151,7 @@ class AuthController extends StateNotifier<AuthState> {
   editUser({required BuildContext context, required String image, required ProfileState profileState,
     required String errorTitle, required String succesTitle}) async {
 
-    // Update UserModel with the required fields
+
     UserModel userModel = UserModel(
         name: nameController.text,
         email: emailController.text,
@@ -160,8 +159,7 @@ class AuthController extends StateNotifier<AuthState> {
         isCarrier: profileState.carrierCheck,
         isBroker: profileState.brokerCheck,
         image: image,
-        // These fields are not being updated but may still be in the model
-        uid: currentUser!.uid, // Required for the WHERE clause
+        uid: currentUser!.uid,
         password: state.currentUser.password,
         lastname: state.currentUser.lastname,
         token: state.currentUser.token,
@@ -173,7 +171,6 @@ class AuthController extends StateNotifier<AuthState> {
         registration: state.currentUser.registration, src: state.currentUser.src
     );
 
-    // Create the SQL update query, updating only the necessary fields
     final response = await http.post(
       url,
       body: {
@@ -198,7 +195,6 @@ class AuthController extends StateNotifier<AuthState> {
       },
     );
 
-    // Handle the response
     if (response.statusCode == 200) {
       debugPrint(response.body);
       var data = jsonDecode(response.body);

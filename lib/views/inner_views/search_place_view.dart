@@ -10,6 +10,8 @@ import '../../constants/app_constants.dart';
 import '../../constants/languages.dart';
 import '../../constants/providers.dart';
 
+//TODO This view isn't used. Should be replaced with SearchPlaceFieldWidget wherever it's placed.
+
 class SearchPlaceView extends ConsumerStatefulWidget {
   final bool isOrigin;
   const SearchPlaceView({super.key, required this.isOrigin});
@@ -26,9 +28,9 @@ class _SearchPlaceViewState extends ConsumerState<SearchPlaceView> {
     // TODO: implement initState
     super.initState();
     final placeNotifier = ref.read(placeController.notifier);
-    placeNotifier.searchController.clear();
+    placeNotifier.originSearchController.clear();
 
-    placeNotifier.searchController.addListener(() {
+    placeNotifier.originSearchController.addListener(() {
       _onChanged();
     },);
   }
@@ -39,9 +41,12 @@ class _SearchPlaceViewState extends ConsumerState<SearchPlaceView> {
     // setState(() {
     //   placeNotifier.sessionToken = placeNotifier.uuid.v4();
     // });
-    placeNotifier.fetchPlaceDetails(placeNotifier.searchController.text);
+    placeNotifier.fetchPlaceDetails(placeNotifier.originSearchController.text);
    // placeNotifier.getSuggestion(placeNotifier.searchController.text);
   }
+
+  final overlayController = OverlayPortalController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,52 +56,67 @@ class _SearchPlaceViewState extends ConsumerState<SearchPlaceView> {
 
     final width = MediaQuery.of(context).size.width;
 
+
     return Scaffold(
       backgroundColor: kBlack,
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        leading: IconButton(
-          color: kWhite,
-          icon: const Icon(Icons.arrow_back_outlined),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(languages[language]!["search_places"]!,
-          style: const TextStyle(color: kWhite),),
-      ),
+
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Align(
-            alignment: Alignment.topCenter,
-            child: 1 == 1 ?
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: customInputField(title: "", hintText: languages[language]!["search_places"]!,
-                    icon: Icons.map, controller: placeNotifier.searchController,
-                    onTap: () {
+            alignment: Alignment.topLeft,
+            child:  SizedBox(
+              width: width * .43,
+              child: OverlayPortal(
+                controller: overlayController,
+                overlayChildBuilder: (context) => ListView.builder(
+                  padding: EdgeInsets.only(top: 65.h,),
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: placeState.placeList.length,
 
-                    },
-                  ),
-                )
-                : TextField(
-              controller: placeNotifier.searchController,
-              decoration: InputDecoration(
-                hintText: "Search your location here",
-                hintStyle: kCustomTextStyle,
-                contentPadding: EdgeInsets.all(10),
-                focusColor: Colors.white,
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                prefixIcon: const Icon(Icons.map, color: kWhite,),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.cancel, color: kWhite,),
-                  onPressed: () {
-                    placeNotifier.searchController.clear();
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 10.0.h, right: 10.w, left: 10.w),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: MaterialButton(
+                          color: kLightBlack,
+                          height: 60.h,
+                          onPressed: () {
+                            AppPlaceModel appPlaceModel = AppPlaceModel(
+                                name: placeState.placeList[index]["name"],
+                                latitude: placeState.placeList[index]["geometry"]["location"]["lat"],
+                                longitude: placeState.placeList[index]["geometry"]["location"]["lng"],
+                                uid: const Uuid().v4(),
+                                address: placeState.placeList[index]["formatted_address"]
+                            );
+                            placeNotifier.setPlaceModels(origin: widget.isOrigin ? appPlaceModel : placeState.origin,
+                              destination: !widget.isOrigin ? appPlaceModel : placeState.destination,);
+
+                            placeNotifier.clear();
+                            Navigator.pop(context);
+                          },
+                          child: Text("${placeState.placeList[index]["name"]}\n\n${placeState.placeList[index]["formatted_address"]}",
+                            textAlign: TextAlign.start,
+                            style: kCustomTextStyle,),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                child: customInputField(title: "", hintText: languages[language]!["search_places"]!,
+                  icon: Icons.map, controller: placeNotifier.originSearchController,
+                  onTap: () {
+                    overlayController.toggle();
+                  }, onChanged: (value) {
+
                   },
                 ),
               ),
             ),
           ),
-          Expanded(
+          /*Expanded(
             child: ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -139,7 +159,7 @@ class _SearchPlaceViewState extends ConsumerState<SearchPlaceView> {
                 );
               },
             ),
-          )
+          )*/
         ],
       ),
     );

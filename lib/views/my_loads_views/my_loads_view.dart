@@ -12,6 +12,7 @@ import 'package:kamyon/views/my_loads_views/post_load_view.dart';
 import 'package:http/http.dart' as http;
 import '../../constants/providers.dart';
 import '../../models/load_model.dart';
+import '../../repos/place_repository.dart';
 import '../../widgets/search_result_widget.dart';
 import '../../widgets/warning_info_widget.dart';
 
@@ -58,14 +59,36 @@ class MyLoadsView extends ConsumerWidget {
                 const NoLoadsFoundWidget()
                     :  Expanded(
                   child: ListView.builder(
-                    itemBuilder: (context, index) => Padding(
+                    itemBuilder: (context, index) {
+                      final originProvider = ref.watch(placeFutureProvider(loads[index].origin!));
+                      final destinationProvider = ref.watch(placeFutureProvider(loads[index].destination!));
+
+                      return originProvider.when(
+                        data: (origin) => destinationProvider.when(
+                          data: (destination) => Padding(
                             padding: EdgeInsets.only(top: 15.0.h),
-                          child: searchResultWidget(width, height, language, load: loads[index],
-                            onPressed: () {
-                              Navigator.push(context, routeToView(LoadInnerView(uid: loads[index].uid!)));
-                            },
+                            child: searchResultWidget(width, height, language, load: loads[index],
+                              destination: destination, origin: origin,
+                              onPressed: () {
+                                Navigator.push(context, routeToView(LoadInnerView(uid: loads[index].uid!)));
+                              },
+                            ),
                           ),
+                          loading: () => Container(),
+                          error: (error, stackTrace) {
+                            debugPrint("Error: $error");
+                            debugPrint("Error: $stackTrace");
+                            return const NoLoadsFoundWidget();
+                          },
                         ),
+                        loading: () => Container(),
+                        error: (error, stackTrace) {
+                          debugPrint("Error: $error");
+                          debugPrint("Error: $stackTrace");
+                          return const NoLoadsFoundWidget();
+                        },
+                      );
+                    },
                     itemCount: loads.length,
                   ),
                 ),

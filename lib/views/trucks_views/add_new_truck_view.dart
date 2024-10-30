@@ -80,70 +80,22 @@ class AddNewTruckView extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                /*Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(languages[language]!["equipment_limits"]!, style: kCustomTextStyle,),
-                    SizedBox(height: 10.h,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          height: 30.h, width: width * .45,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: MaterialButton(
-                              color: truckState.isPartial ? kLightBlack : kGreen,
-                              onPressed: () {
-                                truckNotifier.changeVehicleLimit();
-                              },
-                              child: Center(
-                                child: Text(languages[language]!["full"]!, style: kCustomTextStyle.copyWith(
-                                  color: truckState.isPartial ? kWhite : kBlack
-                                ),),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30.h, width: width * .45,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: MaterialButton(
-                              color: !truckState.isPartial ? kLightBlack : kGreen,
-                              onPressed: () {
-                                truckNotifier.changeVehicleLimit();
-                              },
-                              child: Center(
-                                child: Text(languages[language]!["partial"]!, style: kCustomTextStyle.copyWith(
-                                    color: !truckState.isPartial ? kWhite : kBlack,
-                                ),),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: 15.h,),*/
+
                 Column(
                   children: [
                     customInputField(title: languages[language]!["truck_name"]!,
                         hintText: languages[language]!["enter_truck_name"]!, icon: Icons.local_shipping_outlined, onTap: () {
           
-                        }, controller: truckNotifier.nameController),
+                        }, controller: truckNotifier.nameController, onChanged: (value) {
+
+                      },),
                     SizedBox(height: 20.h,),
-                    /*customInputField(title: languages[language]!["description"]!,
-                        hintText: languages[language]!["enter_truck_description"]!, icon: Icons.local_shipping_outlined, onTap: () {
-          
-                      }, controller: truckNotifier.descriptionController),
-                    SizedBox(height: 20.h,),*/
+
                     searchCardWidget(width, title: languages[language]!["registered_city"]!,
                         hint: truckState.city.isNotEmpty ? truckState.city : languages[language]!["enter_registered_city"]!,
                       halfLength: false, onPressed: () {
                         showModalBottomSheet(context: context, builder: (context) => const PickCityModalBottomSheet(),);
-                      },),
+                      }, ),
                     SizedBox(height: 20.h,),
 
                     PopupMenuButton(
@@ -247,7 +199,9 @@ class AddNewTruckView extends ConsumerWidget {
                     customInputField(title: languages[language]!["trailer_name"]!,
                         hintText: languages[language]!["enter_trailer_name"]!, icon: Icons.local_shipping_outlined, onTap: () {
 
-                        }, controller: truckNotifier.trailerNameController),
+                        }, controller: truckNotifier.trailerNameController, onChanged: (value) {
+
+                      },),
                   ],
                 ) : Container(),
                 SizedBox(height: truckState.hasTrailer ? 15.h : 5.h,),

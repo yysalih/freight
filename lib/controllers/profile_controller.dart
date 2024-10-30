@@ -209,12 +209,11 @@ class ProfileController extends StateNotifier<ProfileState> {
   }
 
   deleteContact(UserModel currentUser, {required BuildContext context, required String contactToDelete}) async {
-    // Split the contacts into a list, remove the contact to delete, and rejoin the list
+    //TODO doesn't work, needs to be fixed - 30/10/2024 - 15:05
     List<String> contactsList = currentUser.contacts!.split(';');
-    contactsList.removeWhere((contact) => contact == contactToDelete);  // Remove the contact
-    String updatedContacts = contactsList.join(';') + ';';  // Rebuild the contacts string with semicolons
+    contactsList.removeWhere((contact) => contact == contactToDelete);
+    String updatedContacts = contactsList.join(';') + ';';
 
-    // Send the updated contacts back to the server
     final response = await http.post(
       appUrl,
       body: {
@@ -222,7 +221,6 @@ class ProfileController extends StateNotifier<ProfileState> {
       },
     );
 
-    // Handle the server response
     if (response.statusCode == 200) {
       var data = response.body;
       if (data.toString().contains("error")) {

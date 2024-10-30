@@ -15,100 +15,125 @@ import '../controllers/place_controller.dart';
 import '../models/truck_post_model.dart';
 
 Widget searchResultWidget(double width, double height, String language,
-    {required Function() onPressed, required LoadModel load}) {
-  return Container(
-    width: width,
-    decoration: BoxDecoration(
-      color: kLightBlack,
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: MaterialButton(
-        onPressed: onPressed,
-        color: kLightBlack,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 20.0.h),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("İstanbul TR\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}", style: kCustomTextStyle,),
-                  const Icon(Icons.fast_forward_sharp, color: kBlueColor,),
+    {required Function() onPressed, required LoadModel load,
+      required AppPlaceModel destination, required AppPlaceModel origin}) {
+  return Consumer(
+    builder: (context, ref, child) {
 
-                  Icon(Icons.local_shipping, color: kWhite, size: 30.w,),
+      final userProvider = ref.watch(userFutureProvider(load.ownerUid));
 
-                  const Icon(Icons.fast_forward_sharp, color: kBlueColor,),
-                  Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}", style: kCustomTextStyle, textAlign: TextAlign.end,),
-                ],
-              ),
-              SizedBox(height: 10.h,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("Steel Road Inc.", style: kCustomTextStyle,),
-                      SizedBox(height: 3.h,),
-                      Text(languages[language]![load.state!]!, style: kCustomTextStyle.copyWith(
-                          color: kBlueColor
-                      ),)
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text("${load.price} ₺", style: kCustomTextStyle,),
-                      SizedBox(height: 3.h,),
-                      Text("${languages[language]!["est"]!} ${(load.price! / load.distance!).toStringAsFixed(2)}₺/KM",
-                        style: kCustomTextStyle.copyWith(
-                          color: kBlueColor, fontSize: 13.w,
-                      ),)
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 10.h,),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      return Container(
+        width: width,
+        decoration: BoxDecoration(
+          color: kLightBlack,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: MaterialButton(
+            onPressed: onPressed,
+            color: kLightBlack,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.0.h),
+              child: Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      for(int i = 0; i < 3; i++)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: Container(
-                            height: 20.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: kWhite,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              child: Center(
-                                child: Text(["Fast", "Reliable", "Heavy"][i], style: kCustomTextStyle.copyWith(fontSize: 11.w, color: kLightBlack),),
-                              ),
-                            ),
-                          ),
-                        )
+                      Text(origin.name!//\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}"
+                        , style: kCustomTextStyle,),
+                      const Icon(Icons.fast_forward_sharp, color: kWhite,),
+
+                      Icon(Icons.local_shipping, color: kBlueColor, size: 30.w,),
+
+                      const Icon(Icons.fast_forward_sharp, color: kWhite,),
+                      Text(destination.name!//\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}",
+                        ,style: kCustomTextStyle, textAlign: TextAlign.end,),
                     ],
                   ),
-                  Text("${load.distance!} KM", style: kCustomTextStyle,),
+                  SizedBox(height: 10.h,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          userProvider.when(
+                            data: (owner) => Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage: CachedNetworkImageProvider(owner.image!),
+                                  radius: 15.w,
+                                ),
+                                SizedBox(width: 7.5.w,),
+                                Text(owner.name!, style: kCustomTextStyle,),
+                              ],
+                            ),
+                            loading: () => Container(),
+                            error: (error, stackTrace) => Container(),
+                          ),
+                          SizedBox(height: 3.h,),
+                          Text(languages[language]![load.state!]!, style: kCustomTextStyle.copyWith(
+                              color: kBlueColor
+                          ),)
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text("${load.price} ₺", style: kCustomTextStyle,),
+                          SizedBox(height: 3.h,),
+                          Text("${languages[language]!["est"]!} ${(load.price! / load.distance!).toStringAsFixed(2)}₺/KM",
+                            style: kCustomTextStyle.copyWith(
+                              color: kBlueColor, fontSize: 13.w,
+                            ),)
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h,),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          for(int i = 0; i < 3; i++)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 5.0),
+                              child: Container(
+                                height: 20.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: kWhite,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  child: Center(
+                                    child: Text(["${load.length} mt", "${load.weight} kg", "${languages[language]![load.isPartial! ? "partial" : "full"]}"][i], style: kCustomTextStyle.copyWith(fontSize: 11.w, color: kLightBlack),),
+                                  ),
+                                ),
+                              ),
+                            )
+                        ],
+                      ),
+                      Text("${load.distance!} KM", style: kCustomTextStyle,),
+                    ],
+                  ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
+      );
+    },
+    child: Container(),
   );
 }
 
 Widget truckPostsWidget(double width, double height, String language,
-    {required Function() onPressed, required TruckPostModel truckPost, required AppPlaceModel origin, required AppPlaceModel destination}) {
+    {required Function() onPressed, required TruckPostModel truckPost,
+      required AppPlaceModel origin, required AppPlaceModel destination}) {
 
   return Consumer(
     builder: (context, ref, child) {
@@ -134,13 +159,21 @@ Widget truckPostsWidget(double width, double height, String language,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("${origin.name!}\n${DateFormat("dd.MM.yyyy").format(truckPost.startDate!)}", style: kCustomTextStyle,),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: width * .25),
+                        child: Text(origin.name!//\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}"
+                          , style: kCustomTextStyle, overflow: TextOverflow.ellipsis,),
+                      ),
                       const Icon(Icons.fast_forward_sharp, color: kWhite,),
 
                       Icon(Icons.local_shipping, color: kWhite, size: 30.w,),
 
                       const Icon(Icons.fast_forward_sharp, color: kWhite,),
-                      Text("${destination.name!}\n${DateFormat("dd.MM.yyyy").format(truckPost.endDate!)}", style: kCustomTextStyle, textAlign: TextAlign.end,),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: width * .25),
+                        child: Text(destination.name!//\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}"
+                          , style: kCustomTextStyle, overflow: TextOverflow.ellipsis, textAlign: TextAlign.end,),
+                      ),
                     ],
                   ),
                   SizedBox(height: 10.h,),

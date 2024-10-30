@@ -198,37 +198,21 @@ class NewPostView extends ConsumerWidget {
                   customInputField(title: languages[language]!["price"]!,
                       hintText: languages[language]!["enter_price"]!, icon: Icons.monetization_on, onTap: () {
 
-                  }, controller: truckNotifier.priceController),
+                  }, controller: truckNotifier.priceController, onChanged: (value) {
+
+                    },),
                   SizedBox(height: 5.h,),
                   Text("${languages[language]!["per_km"]!} 20 \$", style: kCustomTextStyle,)
                 ],
               ),
-              /*userProvider.when(
-                data: (currentUser) => searchCardWidget(width, title: languages[language]!["contact_phone"]!,
-                  hint: truckState.contact.isNotEmpty ? truckState.contact : languages[language]!["enter_contact_phone"]!,
-                  halfLength: false, onPressed: () {
 
-                      if(!toEdit) {
-                        showContacts<TruckController, TruckState>(context: context, title: languages[language]!["pick_a_phone_number"]!,
-                            currentUser: currentUser, state: truckState, notifier: truckNotifier,
-                            actionButtonText: languages[language]!["confirm"]!,
-                            addNewPhoneText: languages[language]!["add_new_phone_number"]!,);
-                      }
-
-                    },
-                ),
-                loading: () => Container(),
-                error: (error, stackTrace) {
-                  debugPrint(error.toString());
-                  debugPrint(stackTrace.toString());
-                  return Container();
-                },
-              ),*/
 
               customInputField(title: languages[language]!["description"]!, hintText: languages[language]!["enter_description"]!,
                   icon: Icons.description, onTap: () {
 
-                  }, controller: truckNotifier.descriptionController),
+                  }, controller: truckNotifier.descriptionController, onChanged: (value) {
+
+                },),
 
               if(!toEdit) customButton(title: languages[language]!["confirm"]!, onPressed: () async {
                 truckNotifier.switchAppPlaceModels(
