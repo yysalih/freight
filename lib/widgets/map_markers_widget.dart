@@ -9,6 +9,7 @@ import 'package:kamyon/models/truck_post_model.dart';
 import 'package:kamyon/repos/place_repository.dart';
 import 'package:kamyon/views/loads_views/load_inner_view.dart';
 import 'package:kamyon/views/trucks_views/new_post_view.dart';
+import 'package:kamyon/views/trucks_views/truck_post_inner_view.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -32,8 +33,7 @@ Marker truckPostMarker(TruckPostModel truckPost, {required BuildContext context}
     point: LatLng(truckPost.originLat!, truckPost.originLong!),
     width: 40.w, height: 40.h,
     child: GestureDetector(
-      onTap: () => Navigator.push(context, routeToView(NewPostView(truckUid: truckPost.truckUid!,
-          truckPostUid: truckPost.uid!, toEdit: true))),
+      onTap: () => Navigator.push(context, routeToView(TruckPostInnerView(uid: truckPost.uid!,))),
       child: CircleAvatar(
         radius: 25,
         backgroundColor: Colors.white,

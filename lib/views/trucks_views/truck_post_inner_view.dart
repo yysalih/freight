@@ -19,12 +19,15 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/languages.dart';
 import '../../constants/providers.dart';
+import '../../controllers/truck_controller.dart';
+import '../../repos/truck_posts_repository.dart';
+import '../../repos/truck_repository.dart';
 import '../../widgets/load_action_button.dart';
 import '../../widgets/load_info_widget.dart';
 
-class LoadInnerView extends ConsumerWidget {
+class TruckPostInnerView extends ConsumerWidget {
   final String uid;
-  const LoadInnerView({super.key, required this.uid});
+  const TruckPostInnerView({super.key, required this.uid});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,9 +36,9 @@ class LoadInnerView extends ConsumerWidget {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
-    final loadProvider = ref.watch(loadFutureProvider(uid));
+    final truckPostProvider = ref.watch(truckPostFutureProvider(uid));
 
-    final loadNotifier = ref.watch(loadController.notifier);
+    final truckNotifier = ref.watch(truckController.notifier);
 
 
     return Scaffold(
@@ -50,19 +53,19 @@ class LoadInnerView extends ConsumerWidget {
         title: Text(languages[language]!["load_details"]!,
           style: const TextStyle(color: kWhite),),
         actions: [
-          loadProvider.when(
-            data: (load) {
+          truckPostProvider.when(
+            data: (truckPost) {
 
 
-              return load.ownerUid == FirebaseAuth.instance.currentUser!.uid ?
+              return truckPost.ownerUid == FirebaseAuth.instance.currentUser!.uid ?
               IconButton(
                 onPressed: () {
-                  showDeleteDialog(context: context, title: languages[language]!["delete_load_title"]!,
+                  showDeleteDialog(context: context, title: languages[language]!["delete_truck_post_title"]!,
                     content: languages[language]!["delete_load_content"]!,
                     onPressed: () {
-                      loadNotifier.deleteLoad(loadUid: load.uid!,);
+                      truckNotifier.deleteTruckPost(truckPostUid: truckPost.uid!,);
                       Navigator.pop(context);
-                      showSnackbar(context: context, title: languages[language]!["load_deleted_succesfully"]!);
+                      showSnackbar(context: context, title: languages[language]!["truck_post_deleted_succesfully"]!);
                     },);
 
                 },
@@ -77,18 +80,20 @@ class LoadInnerView extends ConsumerWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: loadProvider.when(
-            data: (load) {
-              final ownerUser = ref.watch(userFutureProvider(load.ownerUid!));
-              final originProvider = ref.watch(placeFutureProvider(load.origin!));
-              final destinationProvider = ref.watch(placeFutureProvider(load.destination!));
+          child: truckPostProvider.when(
+            data: (truckPost) {
+              final ownerUser = ref.watch(userFutureProvider(truckPost.ownerUid!));
+              final originProvider = ref.watch(placeFutureProvider(truckPost.origin!));
+              final destinationProvider = ref.watch(placeFutureProvider(truckPost.destination!));
+
+              final truckProvider = ref.watch(truckFutureProvider(truckPost.truckUid));
               return Column(
                 children: [
                   SizedBox(
                     width: width, height: height * .25,
                     child: FlutterMap(
                       options: MapOptions(
-                        initialCenter: LatLng(load.originLat!, load.originLong!),
+                        initialCenter: LatLng(truckPost.originLat!, truckPost.originLong!),
                         initialZoom: 9.2,
                       ),
                       children: [
@@ -107,11 +112,63 @@ class LoadInnerView extends ConsumerWidget {
                         ),
                         MarkerLayer(
                           markers: [
-                            loadMarker(load, context: context),
+                            truckPostMarker(truckPost, context: context),
                           ],
                         )
                       ],
                     ),
+                  ),
+                  truckProvider.when(
+                    data: (truck) => Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Container(
+                        width: width,
+                        decoration: BoxDecoration(
+                            color: kLightBlack,
+                            borderRadius: BorderRadius.circular(10.h)
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0.h, vertical: 25.h),
+                          child: Row(
+                            children: [
+                              Icon(Icons.local_shipping, color: kBlueColor, size: 40.h,),
+                              SizedBox(width: 20.w,),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(truck.name!, style: kTitleTextStyle.copyWith(color: kWhite),),
+                                  SizedBox(height: 5.h,),
+                                  Row(
+                                    children: [
+                                      for(int i = 0; i < 3; i++)
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 5.0),
+                                          child: Container(
+                                            height: 20.h,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              color: kWhite,
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                                              child: Center(
+                                                child: Text(["${truck.length} mt", "${truck.weight} kg", "${languages[language]![truck.isPartial! ? "partial" : "full"]}"][i],
+                                                  style: kCustomTextStyle.copyWith(fontSize: 11.w, color: kLightBlack),),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    error: (error, stackTrace) => Container(),
+                    loading: () => Container(),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 15.0.h, right: 15.w, left: 15.w),
@@ -126,14 +183,14 @@ class LoadInnerView extends ConsumerWidget {
                                   data: (origin) => ConstrainedBox(
                                     constraints: BoxConstraints(maxWidth: width * .3),
                                     child: Text("${origin.name!}\n"
-                                        "${DateFormat("dd.MM.yyyy").format(load.startDate!)}",
+                                        "${DateFormat("dd.MM.yyyy").format(truckPost.startDate!)}",
                                       style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,),
                                   ),
                                   error: (error, stackTrace) => Text("İstanbul TR\n"
-                                      "${DateFormat("dd.MM.yyyy").format(load.startDate!)}",
+                                      "${DateFormat("dd.MM.yyyy").format(truckPost.startDate!)}",
                                     style: kCustomTextStyle,),
                                   loading: () => Text("İstanbul TR\n"
-                                      "${DateFormat("dd.MM.yyyy").format(load.startDate!)}",
+                                      "${DateFormat("dd.MM.yyyy").format(truckPost.startDate!)}",
                                     style: kCustomTextStyle,),
                                 ),
                                 //TODO Place name should be added just like in the AddTruckPostView (edit mode)
@@ -145,15 +202,15 @@ class LoadInnerView extends ConsumerWidget {
                                 destinationProvider.when(
                                   data: (destination) => ConstrainedBox(
                                     constraints: BoxConstraints(maxWidth: width * .3),
-                                    child: Text("${destination.name}\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}",
+                                    child: Text("${destination.name}\n${DateFormat("dd.MM.yyyy").format(truckPost.endDate!)}",
 
                                       style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.end,),
                                   ),
-                                  loading: () => Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}",
+                                  loading: () => Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(truckPost.endDate!)}",
 
                                     style: kCustomTextStyle, textAlign: TextAlign.end,),
-                                  error: (error, stackTrace) => Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}",
+                                  error: (error, stackTrace) => Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(truckPost.endDate!)}",
 
                                     style: kCustomTextStyle, textAlign: TextAlign.end,),
                                 ),
@@ -163,40 +220,13 @@ class LoadInnerView extends ConsumerWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-
-                                    Row(
-                                      children: [
-                                        for(int i = 0; i < 3; i++)
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 5.0),
-                                            child: Container(
-                                              height: 20.h,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(10),
-                                                color: kWhite,
-                                              ),
-                                              child: Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 12),
-                                                child: Center(
-                                                  child: Text(["${load.length} mt", "${load.weight} kg", "${languages[language]![load.isPartial! ? "partial" : "full"]}"][i], style: kCustomTextStyle.copyWith(fontSize: 11.w, color: kLightBlack),),
-                                                ), //TODO Tags should be added just like in the AddTruckPostView (edit mode)
-
-                                              ),
-                                            ),
-                                          )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
                                     Text(languages[language]!["published_date"]!,
                                       style: kCustomTextStyle,),
-                                    Text(DateFormat("dd.MM.yyyy").format(load.createdDate!), style: kCustomTextStyle,),
+                                    Text(DateFormat("dd.MM.yyyy").format(truckPost.createdDate!), style: kCustomTextStyle,),
                                   ],
                                 ),
                               ],
@@ -209,14 +239,14 @@ class LoadInnerView extends ConsumerWidget {
                           children: [
 
                             loadActionButton(width, language, icon: Icons.monetization_on_rounded,
-                                description2: "${load.price}\$",
+                                description2: "${truckPost.price}\$",
                                 title: languages[language]!["take_the_job"]!, description: languages[language]!["total"]!,
                             onPressed: () {
 
                             },),
                             ownerUser.when(
                               data: (owner) => loadActionButton(width, language, icon: Icons.add_ic_call_rounded,
-                                description2: "${load.distance} KM",
+                                description2: "${truckPost.distance} KM",
 
                                 title: languages[language]!["call"]!, description: languages[language]!["distance"]!,
                                 onPressed: () {
@@ -233,61 +263,30 @@ class LoadInnerView extends ConsumerWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(languages[language]!["vehicle_details"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
-                            loadInfoWidget(width, height, title: languages[language]!["full_partial"]!,
-                                description: load.isPartial! ?
-                                languages[language]!["partial"]! : languages[language]!["full"]!),
-                            /*loadInfoWidget(width, height, title: languages[language]!["vehicle_type"]!,
-                              description: languages[language]![load.truckType]!),*/
-                            loadInfoWidget(width, height, title: languages[language]!["length"]!,
-                                description: "${load.length} MT"),
-                            loadInfoWidget(width, height, title: languages[language]!["weight"]!,
-                                description: "${load.weight} KG"),
-
-                          ],
-                        ),
-                        SizedBox(height: 15.h,),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
                             Text(languages[language]!["shipping_details"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
                             loadInfoWidget(width, height, title: languages[language]!["pick_up_date"]!,
-                                description: "${DateFormat("dd.MM.yyyy").format(load.startDate!)}, ${load.startHour}"),
+                                description: DateFormat("dd.MM.yyyy").format(truckPost.startDate!)),
                             loadInfoWidget(width, height, title: languages[language]!["dock_date"]!,
-                                description: "${DateFormat("dd.MM.yyyy").format(load.endDate!)}, ${load.endHour}"),
+                                description: DateFormat("dd.MM.yyyy").format(truckPost.endDate!)),
                             loadInfoWidget(width, height, title: languages[language]!["reference"]!,
                                 description: "#1K00F9886"),
 
                             loadInfoWidget(width, height, title: languages[language]!["description"]!,
-                                description: load.description!),
+                                description: truckPost.description!),
                           ],
                         ),
-                        /*SizedBox(height: 15.h,),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(languages[language]!["load_details"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
 
-                          loadInfoWidget(width, height, title: languages[language]!["shipping_type"]!,
-                              description: load.loadType!),
-                          loadInfoWidget(width, height, title: languages[language]!["load_type"]!,
-                              description: load.isPalletized! ? languages[language]!["palletized"]! :
-                              languages[language]!["bulk"]!),
-                          loadInfoWidget(width, height, title: languages[language]!["load_volume"]!,
-                              description: "${load.volume} m3"),
-                        ],
-                      ),*/
                         SizedBox(height: 15.h,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(languages[language]!["rate_details"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
                             loadInfoWidget(width, height, title: languages[language]!["total"]!,
-                                description: "${load.price} ₺"),
+                                description: "${truckPost.price} ₺"),
                             loadInfoWidget(width, height, title: languages[language]!["distance"]!,
-                                description: "${load.distance} KM"),
+                                description: "${truckPost.distance} KM"),
                             loadInfoWidget(width, height, title: languages[language]!["per_km"]!,
-                                description: "${(load.price! / load.distance!).toStringAsFixed(2)} ₺"),
+                                description: "${(truckPost.price! / truckPost.distance!).toStringAsFixed(2)} ₺"),
                           ],
                         ),
                         SizedBox(height: 15.h,),
