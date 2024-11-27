@@ -64,6 +64,32 @@ class LoadRepository {
       return [];
     }
   }
+
+  Future<List<LoadModel>> getAvailableLoads() async {
+    final response = await http.post(
+      appUrl,
+      body: {
+        'multiQuery': "SELECT * FROM loads",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      if (data is List) {
+        List<LoadModel> loads = data.map((e) => LoadModel().fromJson(e as Map<String, dynamic>)).toList();
+        debugPrint('Loads Length: ${loads.length}');
+
+        return loads;
+      } else {
+        debugPrint('Error: Unexpected data format');
+        return [];
+      }
+    }
+    else {
+      debugPrint('Error: ${response.statusCode} : ${response.reasonPhrase}');
+      return [];
+    }
+  }
 }
 
 final loadFutureProvider = FutureProvider.autoDispose.family<LoadModel, String?>((ref, uid) {
@@ -74,6 +100,11 @@ final loadFutureProvider = FutureProvider.autoDispose.family<LoadModel, String?>
 final loadsFutureProvider = FutureProvider.autoDispose.family<List<LoadModel>, String?>((ref, uid) {
   final loadRepository = ref.watch(loadRepositoryProvider(uid));
   return loadRepository.getCurrentUserLoads();
+});
+
+final availableLoadsFutureProvider = FutureProvider.autoDispose.family<List<LoadModel>, String?>((ref, uid) {
+  final loadRepository = ref.watch(loadRepositoryProvider(uid));
+  return loadRepository.getAvailableLoads();
 });
 
 final loadRepositoryProvider = Provider.family<LoadRepository, String?>((ref, uid) {

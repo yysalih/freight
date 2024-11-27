@@ -86,7 +86,6 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
       appUrl,
       body: {
         'executeQuery': "UPDATE users SET contacts = '${currentUser.contacts}${phoneController.text};' WHERE uid = '${currentUser.uid}'",
-
       },
     );
 
@@ -125,6 +124,10 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
       length: double.parse(lengthController.text.isEmpty ? "0.0" : lengthController.text),
       weight: double.parse(weightController.text.isEmpty ? "0.0" : weightController.text),
       volume: double.parse(volumeController.text.isEmpty ? "0.0" : volumeController.text),
+      destinationLat: state.destination.latitude,
+      destinationLong: state.destination.longitude,
+      originLat: state.origin.latitude,
+      originLong: state.origin.longitude,
       price: double.parse(priceController.text),
       loadType: "",
       ownerUid: FirebaseAuth.instance.currentUser!.uid,

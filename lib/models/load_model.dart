@@ -10,6 +10,10 @@ class LoadModel implements BaseModel<LoadModel> {
   final String? uid;
   final String? origin;
   final String? destination;
+  final double? originLat;
+  final double? originLong;
+  final double? destinationLat;
+  final double? destinationLong;
   final String? ownerUid;
   final String? description;
   final double? length;
@@ -35,7 +39,8 @@ class LoadModel implements BaseModel<LoadModel> {
     this.weight, this.loadType,
     this.destination, this.volume, this.startDate,
     this.endDate, this.startHour, this.endHour, this.truckType,
-    this.contact, this.price, this.state, this.createdDate, this.distance, this.isPalletized
+    this.contact, this.price, this.state, this.createdDate, this.distance, this.isPalletized,
+    this.originLat, this.destinationLat, this.destinationLong, this.originLong
   });
 
   @override
@@ -50,6 +55,10 @@ class LoadModel implements BaseModel<LoadModel> {
     loadType: json["loadType"] as String?,
     weight: double.parse(json["weight"]),
     distance: double.parse(json["distance"]),
+    destinationLat: double.parse(json["destinationLat"]),
+    destinationLong: double.parse(json["destinationLong"]),
+    originLat: double.parse(json["originLat"]),
+    originLong: double.parse(json["originLong"]),
     state: json["state"] as String?,
     contact: json["contact"] as String?,
     destination: json["destination"] as String?,
@@ -86,17 +95,21 @@ class LoadModel implements BaseModel<LoadModel> {
     "endDate": endDate!.millisecondsSinceEpoch,
     "distance": distance,
     "isPalletized": isPalletized,
+    "originLat" : originLat,
+    "destinationLat" : destinationLat,
+    "destinationLong" : destinationLong,
+    "originLong" : originLong,
   };
 
   String getDbFields() {
-    return "length, ownerUid, description, uid, origin, isPartial, loadType, weight, state, contact, destination, truckType, startHour, endHour, price, volume, createdDate, startDate, endDate, distance, isPalletized";
+    return "length, ownerUid, description, uid, origin, isPartial, loadType, weight, state, contact, destination, truckType, startHour, endHour, price, volume, createdDate, startDate, endDate, distance, isPalletized, originLat, destinationLat, originLong, destinationLong";
   }
 
   String getDbFieldsWithQuestionMark() {
-    return "length = ?, ownerUid = ?, description = ?, uid = ?, origin = ?, isPartial = ?, loadType = ?, weight = ?, state = ?, contact = ?, destination = ?, truckType = ?, startHour = ?, endHour = ?, price = ?, volume = ?, createdDate = ?, startDate = ?, endDate = ?, distance = ?, isPalletized = ?";
+    return "length = ?, ownerUid = ?, description = ?, uid = ?, origin = ?, isPartial = ?, loadType = ?, weight = ?, state = ?, contact = ?, destination = ?, truckType = ?, startHour = ?, endHour = ?, price = ?, volume = ?, createdDate = ?, startDate = ?, endDate = ?, distance = ?, isPalletized = ?, originLat = ?, destinationLat = ?, originLong = ?, destinationLong = ?";
   }
 
-  String get questionMarks => "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+  String get questionMarks => "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
 
   List getDbFormat() {
     return [
@@ -121,6 +134,10 @@ class LoadModel implements BaseModel<LoadModel> {
       endDate!.millisecondsSinceEpoch,
       distance,
       isPalletized,
+      originLat,
+      destinationLat,
+      originLong,
+      destinationLong
     ];
   }
 }

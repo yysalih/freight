@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "317562345526",
     "project_id": "yukbultr",
-    "storage_bucket": "yukbultr.appspot.com"
+    "storage_bucket": "yukbultr.firebasestorage.app"
   },
   "client": [
     {
@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "317562345526-e9kdafuksru7g214uidddr94ngd0jhft.apps.googleusercontent.com",
+          "client_id": "317562345526-o32q125hec1ofmpg5kpadd13gr852sg3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.kamyon.kamyon",
-            "certificate_hash": "46a48cdc2faadf0b6f2e370dcaf737eb1826cdb9"
+            "certificate_hash": "148d32b4fd32ec273adcf8845a609cd97ed78db7"
           }
         },
         {
@@ -47,10 +47,10 @@
               "client_type": 3
             },
             {
-              "client_id": "317562345526-oi8ebs0ulnkn072lfd7l31ic7kvb70po.apps.googleusercontent.com",
+              "client_id": "317562345526-j3bmodr3rjch6m94iaea1q8uas4v9gpg.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.kamyon.kamyon"
+                "bundle_id": "ss"
               }
             }
           ]

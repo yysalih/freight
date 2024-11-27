@@ -12,7 +12,7 @@ class TruckPostRepository {
   TruckPostRepository({String? uid})
       : _uid = uid ?? "";
 
-  Future<TruckPostModel> getTruckPosts() async {
+  Future<TruckPostModel> getTruckPost() async {
     final response = await http.post(
       appUrl,
       body: {
@@ -64,16 +64,47 @@ class TruckPostRepository {
       return [];
     }
   }
+
+  Future<List<TruckPostModel>> getAvailableTrucksPosts() async {
+    final response = await http.post(
+      appUrl,
+      body: {
+        'multiQuery': "SELECT * FROM truck_posts",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      if (data is List) {
+        List<TruckPostModel> truckPostModels = data.map((e) => const TruckPostModel().fromJson(e as Map<String, dynamic>)).toList();
+        debugPrint('TruckPosts Length: ${truckPostModels.length}');
+
+        return truckPostModels;
+      } else {
+        debugPrint('Error: Unexpected data format');
+        return [];
+      }
+    }
+    else {
+      debugPrint('Error: ${response.statusCode} : ${response.reasonPhrase}');
+      return [];
+    }
+  }
 }
 
 final truckPostFutureProvider = FutureProvider.autoDispose.family<TruckPostModel, String?>((ref, uid) {
   final truckPostRepository = ref.watch(truckPostRepositoryProvider(uid));
-  return truckPostRepository.getTruckPosts();
+  return truckPostRepository.getTruckPost();
 });
 
 final truckPostsFutureProvider = FutureProvider.autoDispose.family<List<TruckPostModel>, String?>((ref, uid) {
   final truckPostRepository = ref.watch(truckPostRepositoryProvider(uid));
   return truckPostRepository.getCurrentUserTrucksPosts();
+});
+
+final availableTruckPostsFutureProvider = FutureProvider.autoDispose.family<List<TruckPostModel>, String?>((ref, uid) {
+  final truckPostRepository = ref.watch(truckPostRepositoryProvider(uid));
+  return truckPostRepository.getAvailableTrucksPosts();
 });
 
 final truckPostRepositoryProvider = Provider.family<TruckPostRepository, String?>((ref, uid) {

@@ -14,7 +14,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform
+      //options: DefaultFirebaseOptions.currentPlatform
   );
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -36,7 +36,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     setLanguage();
-    // TODO: implement initState
+
     super.initState();
 
   }
@@ -55,8 +55,10 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return ScreenUtilInit(
-      designSize: const Size(360, 690),
+      designSize:  MediaQuery.of(context).size, //const Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_ , child) {

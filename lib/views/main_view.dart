@@ -23,6 +23,7 @@ class _MainViewState extends ConsumerState<MainView> {
 
     return Scaffold(
       backgroundColor: kBlack,
+      //resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: mainNotifier.pages[mainState.bottomIndex],
       ),

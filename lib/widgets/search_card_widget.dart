@@ -16,7 +16,7 @@ Widget searchCardWidget(double width, {required String title, required String hi
         SizedBox(height: 5.h,),
       ],
       SizedBox(
-        width: halfLength ? hasType ? width * .275 : width * .43 : width, height: 40.h,
+        width: halfLength ? hasType ? width * .275 : width * .43 : width * .9, height: 45.h,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: MaterialButton(

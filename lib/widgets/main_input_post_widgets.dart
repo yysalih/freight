@@ -41,7 +41,7 @@ class MainInputPostWidgets extends ConsumerWidget{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SearchPlaceFieldWidget(isOrigin: true, top: 200.h,),
             SizedBox(width: 10.w,),
@@ -64,6 +64,7 @@ class MainInputPostWidgets extends ConsumerWidget{
                       color: kBlack,
                       key: _menuKey,
                       child: searchCardWidget(width, hasTitle: false,
+                        halfLength: false,
                         title: languages[language]!["pick_truck"]!,
                         hint: mainState.truck.name!.isNotEmpty ?
                         mainState.truck.name!
@@ -87,34 +88,6 @@ class MainInputPostWidgets extends ConsumerWidget{
                   );
                 },
                 child: const SizedBox(),
-              ),
-              SizedBox(width: 10.w,),
-              PopupMenuButton(
-                key: _menuKey2,
-                onSelected: (value) {
-                  truckNotifier.changeTruckType(value);
-                },
-                child: searchCardWidget(width, hasTitle: false,
-                  title: languages[language]!["vehicle_type"]!,
-                  hint: truckState.truckType.isNotEmpty ? languages[language]![truckState.truckType]!
-                      : languages[language]!["pick_a_type"]!, onPressed: () {
-                    final dynamic popupMenu = _menuKey2.currentState;
-                    popupMenu.showButtonMenu();
-                  },),
-                itemBuilder: (context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    value: 'truck',
-                    child: Text(languages[language]!["truck"]!),
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'bus',
-                    child: Text(languages[language]!["bus"]!),
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'car',
-                    child: Text(languages[language]!["car"]!),
-                  ),
-                ],
               ),
             ],
           ),

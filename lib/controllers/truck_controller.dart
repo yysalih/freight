@@ -260,7 +260,11 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
       endDate: state.endDate,
       createdDate: DateTime.now(),
       contact: state.contact,
-      truckUid: truckUid
+      truckUid: truckUid,
+      destinationLat: state.destination.latitude,
+      destinationLong: state.destination.longitude,
+      originLat: state.origin.latitude,
+      originLong: state.origin.longitude,
 
     );
 
