@@ -135,7 +135,11 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
       state: "available",
       truckType: state.truckType,
       distance: 1200.50,
-      isPalletized: state.isPalletized
+      isPalletized: state.isPalletized,
+      destinationAddress: state.destination.address,
+      destinationName: state.destination.name,
+      originAddress: state.origin.address,
+      originName: state.origin.name,
     );
     final response = await http.post(
       appUrl,

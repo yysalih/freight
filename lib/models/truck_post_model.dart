@@ -24,6 +24,10 @@ class TruckPostModel implements BaseModel<TruckPostModel> {
   final double? destinationLat;
   final double? destinationLong;
   final double? distance;
+  final String? originName;
+  final String? originAddress;
+  final String? destinationName;
+  final String? destinationAddress;
 
 
   const TruckPostModel({this.uid, this.origin, this.description,
@@ -32,7 +36,8 @@ class TruckPostModel implements BaseModel<TruckPostModel> {
     this.endDate, this.truckUid,
     this.contact, this.price, this.state, this.createdDate,
     this.originLat, this.destinationLat, this.destinationLong, this.originLong,
-    this.distance
+    this.distance, this.originName, this.originAddress,
+    this.destinationName, this.destinationAddress,
   });
 
   @override
@@ -54,7 +59,10 @@ class TruckPostModel implements BaseModel<TruckPostModel> {
     originLat: double.parse(json["originLat"]),
     originLong: double.parse(json["originLong"]),
     distance: double.parse(json["distance"]),
-
+    originName : json["originName"] as String?,
+    originAddress : json["originAddress"] as String?,
+    destinationName : json["destinationName"] as String?,
+    destinationAddress : json["destinationAddress"] as String?,
   );
 
   @override
@@ -76,17 +84,21 @@ class TruckPostModel implements BaseModel<TruckPostModel> {
     "destinationLong" : destinationLong,
     "originLong" : originLong,
     "distance" : distance,
+    "originName" : originName,
+    "originAddress" : originAddress,
+    "destinationName" : destinationName,
+    "destinationAddress" : destinationAddress,
   };
 
   String getDbFields() {
-    return "truckUid, ownerUid, description, uid, origin, state, contact, destination, price, createdDate, startDate, endDate, originLat, destinationLat, originLong, destinationLong, distance";
+    return "truckUid, ownerUid, description, uid, origin, state, contact, destination, price, createdDate, startDate, endDate, originLat, destinationLat, originLong, destinationLong, distance, originName, originAddress, destinationName, destinationAddress";
   }
 
   String getDbFieldsWithQuestionMark() {
-    return "truckUid = ?, ownerUid = ?, description = ?, uid = ?, origin = ?, state = ?, contact = ?, destination = ?, price = ?, createdDate = ?, startDate = ?, endDate = ?, originLat = ?, destinationLat = ?, originLong = ?, destinationLong = ?, distance = ?";
+    return "truckUid = ?, ownerUid = ?, description = ?, uid = ?, origin = ?, state = ?, contact = ?, destination = ?, price = ?, createdDate = ?, startDate = ?, endDate = ?, originLat = ?, destinationLat = ?, originLong = ?, destinationLong = ?, distance = ?, originName = ?, originAddress = ?, destinationName = ?, destinationAddress = ?";
   }
 
-  String get questionMarks => "?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+  String get questionMarks => "?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
 
   List getDbFormat() {
     return [
@@ -106,7 +118,11 @@ class TruckPostModel implements BaseModel<TruckPostModel> {
       destinationLat,
       originLong,
       destinationLong,
-      distance
+      distance,
+      originName,
+      originAddress,
+      destinationName,
+      destinationAddress
     ];
   }
 }

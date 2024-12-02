@@ -5,6 +5,8 @@ const Map<String, Map<String, String>> languages = {
 };
 
 const Map<String, String> tr = {
+  "show_results" : "Sonuçları Göster",
+  "hide_results" : "Sonuçları Gizle",
   "pick_truck" : "Araç seç",
   "user_name" : "İletişim Adı",
   "user_details" : "İletişim Detayları",
@@ -180,6 +182,8 @@ const Map<String, String> tr = {
   "switch_language" : "Dili Değiştir",
 };
 const Map<String, String> en = {
+  "show_results" : "Show Results",
+  "hide_results" : "Hide Results",
   "email" : "Email",
   "phone" : "Telefon",
   "password" : "Şifre",

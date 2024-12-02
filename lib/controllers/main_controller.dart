@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kamyon/models/truck_model.dart';
 import 'package:kamyon/models/user_model.dart';
@@ -24,6 +25,8 @@ class MainState {
   final bool isTruckPostExpanded;
 
   final String searchString;
+  final List filteredItems;
+  final bool itemsOpened;
 
   MainState({
     required this.bottomIndex,
@@ -33,6 +36,8 @@ class MainState {
     required this.isTruckPostExpanded,
     required this.truck,
     required this.searchString,
+    required this.filteredItems,
+    required this.itemsOpened,
   });
 
   MainState copyWith({
@@ -43,6 +48,8 @@ class MainState {
     bool? isTruckPostExpanded,
     bool? isLoadExpanded,
     TruckModel? truck,
+    List? filteredItems,
+    bool? itemsOpened,
   }) {
     return MainState(
       bottomIndex: bottomIndex ?? this.bottomIndex,
@@ -52,6 +59,8 @@ class MainState {
       isTruckPostExpanded: isTruckPostExpanded ?? this.isTruckPostExpanded,
       truck: truck ?? this.truck,
       searchString: searchString ?? this.searchString,
+      filteredItems: filteredItems ?? this.filteredItems,
+      itemsOpened: itemsOpened ?? this.itemsOpened,
     );
   }
 }
@@ -60,6 +69,7 @@ class MainController extends StateNotifier<MainState> {
   MainController(super.state);
 
   final searchController = TextEditingController();
+  final mapController = MapController();
 
 
   final List<Widget> pages = [const LoadsView(), const MyLoadsView(), const MyTrucksView(), Container(), const ProfileView()];
@@ -112,8 +122,13 @@ class MainController extends StateNotifier<MainState> {
   changeTruck({required TruckModel value}) => state = state.copyWith(truck: value);
 
   changeSearchString({required String value}) => state = state.copyWith(searchString: value);
+  showSearchItems({required bool value}) => state = state.copyWith(itemsOpened: value);
+
+  updateFilteredList(List list) => state = state.copyWith(filteredItems: list);
+
 }
 
 final mainController = StateNotifierProvider<MainController, MainState>(
       (ref) => MainController(MainState(bottomIndex: 0, selectedTab: "", isLoadExpanded: false, isTruckPostExpanded: false,
-      currentUser: UserModel(), truck: TruckModel(name: ""), searchString: ""),),);
+      currentUser: UserModel(), truck: TruckModel(name: ""),
+          searchString: "", filteredItems: [], itemsOpened: false),),);
