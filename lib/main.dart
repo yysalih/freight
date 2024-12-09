@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kamyon/controllers/location_controller.dart';
 
 import 'package:kamyon/views/auth_views/login_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,6 +37,9 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     setLanguage();
+
+    final locationNotifier = ref.read(locationController.notifier);
+    locationNotifier.getContinuousLocation();
 
     super.initState();
 

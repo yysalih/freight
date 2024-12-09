@@ -6,6 +6,7 @@ import 'package:kamyon/constants/app_constants.dart';
 import 'package:kamyon/constants/languages.dart';
 import 'package:kamyon/constants/providers.dart';
 import 'package:kamyon/controllers/load_controller.dart';
+import 'package:kamyon/controllers/location_controller.dart';
 import 'package:kamyon/controllers/main_controller.dart';
 import 'package:kamyon/controllers/truck_controller.dart';
 import 'package:kamyon/models/truck_post_model.dart';
@@ -40,6 +41,11 @@ class LoadsView extends ConsumerWidget {
     final mainState = ref.watch(mainController);
     final placeState = ref.watch(placeController);
 
+    final locationNotifier = ref.watch(locationController.notifier);
+
+    final latlng = LatLng(locationNotifier.locationData.latitude ?? 41.0082376,
+        locationNotifier.locationData.longitude ?? 28.9783589);
+
     final availableLoadsNotifier = ref.watch(availableLoadsFutureProvider(""));
     final availableTruckPostsNotifier = ref.watch(availableTruckPostsFutureProvider(""));
 
@@ -49,8 +55,8 @@ class LoadsView extends ConsumerWidget {
           children: [
             FlutterMap(
               mapController: mainNotifier.mapController,
-              options: const MapOptions(
-                initialCenter: LatLng(41.0082376, 28.9783589),
+              options: MapOptions(
+                initialCenter: latlng,
                 initialZoom: 9.2,
               ),
               children: [
@@ -75,6 +81,12 @@ class LoadsView extends ConsumerWidget {
 
                     for(TruckPostModel truckPost in availableTruckPosts)
                       truckPostMarker(truckPost, context: context),
+
+
+                    Marker(
+                      point: latlng,
+                      child: Icon(Icons.my_location, color: Colors.red, size: 30.w,)
+                    )
                   ],
                 ),
               ],
@@ -223,11 +235,11 @@ class LoadsView extends ConsumerWidget {
             ),
           ],
         ),
-        loading: () => emptyFlutterMap(),
-        error: (error, stackTrace) => emptyFlutterMap(),
+        loading: () => emptyFlutterMap(latlng),
+        error: (error, stackTrace) => emptyFlutterMap(latlng),
       ),
-      loading: () => emptyFlutterMap(),
-      error: (error, stackTrace) => emptyFlutterMap(),
+      loading: () => emptyFlutterMap(latlng),
+      error: (error, stackTrace) => emptyFlutterMap(latlng),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/controllers/auth_controller.dart';
+import 'package:kamyon/controllers/location_controller.dart';
 import 'package:kamyon/controllers/profile_controller.dart';
 import 'package:kamyon/repos/user_repository.dart';
 import 'package:kamyon/views/auth_views/fill_out_view.dart';
@@ -30,6 +31,8 @@ class ProfileView extends ConsumerWidget {
     final userProvider = ref.watch(userFutureProvider(FirebaseAuth.instance.currentUser!.uid));
 
     final profileNotifier = ref.watch(profileController.notifier);
+
+    final locationNotifier = ref.watch(locationController.notifier);
 
     return Padding(
       padding: EdgeInsets.only(top: 10.h, right: 15.w, left: 15.w),
@@ -67,10 +70,16 @@ class ProfileView extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Center(
-                            child: CircleAvatar(
-                              backgroundImage: CachedNetworkImageProvider(user.image!),
-                              radius: 50.h,
+                          GestureDetector(
+                            onTap: () {
+                              debugPrint("${locationNotifier.locationData.latitude} , "
+                                  "${locationNotifier.locationData.longitude}");
+                            },
+                            child: Center(
+                              child: CircleAvatar(
+                                backgroundImage: CachedNetworkImageProvider(user.image!),
+                                radius: 50.h,
+                              ),
                             ),
                           ),
                           SizedBox(height: 10.h,),

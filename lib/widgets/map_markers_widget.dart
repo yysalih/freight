@@ -44,10 +44,10 @@ Marker truckPostMarker(TruckPostModel truckPost, {required BuildContext context}
 }
 
 
-Widget emptyFlutterMap() {
+Widget emptyFlutterMap(LatLng initial) {
   return FlutterMap(
-    options: const MapOptions(
-      initialCenter: LatLng(41.0082376, 28.9783589),
+    options: MapOptions(
+      initialCenter: initial,//LatLng(41.0082376, 28.9783589),
       initialZoom: 9.2,
     ),
     children: [
@@ -65,6 +65,12 @@ Widget emptyFlutterMap() {
           // Also add images...
         ],
       ),
+      MarkerLayer(markers: [
+        Marker(
+            point: initial,
+            child: Icon(Icons.my_location, color: Colors.red, size: 30.w,)
+        )
+      ])
     ],
   );
 }
