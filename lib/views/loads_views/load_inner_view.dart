@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:kamyon/constants/snackbars.dart';
+import 'package:kamyon/controllers/chat_controller.dart';
 import 'package:kamyon/controllers/load_controller.dart';
 import 'package:kamyon/controllers/place_controller.dart';
 import 'package:kamyon/repos/load_repository.dart';
@@ -37,6 +38,7 @@ class LoadInnerView extends ConsumerWidget {
 
     final loadNotifier = ref.watch(loadController.notifier);
 
+    final chatNotifier = ref.watch(chatController.notifier);
 
     return Scaffold(
       backgroundColor: kBlack,
@@ -212,7 +214,7 @@ class LoadInnerView extends ConsumerWidget {
                                 description2: "${load.price}\$",
                                 title: languages[language]!["take_the_job"]!, description: languages[language]!["total"]!,
                             onPressed: () {
-
+                              chatNotifier.createChat(context, to: load.ownerUid!, errorTitle: languages[language]!["error_creating_chat"]!);
                             },),
                             ownerUser.when(
                               data: (owner) => loadActionButton(width, language, icon: Icons.add_ic_call_rounded,

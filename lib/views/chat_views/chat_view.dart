@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/models/chat_model.dart';
 import 'package:kamyon/repos/message_repository.dart';
 import 'package:kamyon/repos/user_repository.dart';
+import 'package:kamyon/views/chat_views/message_view.dart';
 import 'package:kamyon/widgets/warning_info_widget.dart';
 
 import '../../constants/app_constants.dart';
@@ -31,13 +32,17 @@ class ChatsView extends ConsumerWidget {
             style: kTitleTextStyle.copyWith(color: kWhite),),
           chatsProvider.when(
             data: (chats) {
+
               if(chats.isEmpty) {
                 return const NoChatsFoundWidget();
               }
               return Expanded(
                 child: ListView.builder(
                   itemCount: chats.length,
-                  itemBuilder: (context, index) => ChatCardWidget(chat: chats[index],),
+                  itemBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: ChatCardWidget(chat: chats[index],),
+                  ),
                 ),
               );
             },
@@ -57,11 +62,12 @@ class ChatCardWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final toUserProvider = ref.watch(userFutureProvider(chat.toUid));
-    final lastMessageProvider = ref.watch(messageFutureProvider(chat.allMessages.last.toString()));
+    debugPrint("${chat.messages}");
+    final lastMessageProvider = ref.watch(messageFutureProvider(chat.allMessages.last));
     return toUserProvider.when(
       data: (user) => MaterialButton(
         onPressed: () {
-
+          Navigator.push(context, routeToView(MessageView(chatModel: chat)));
         },
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 10.h),
@@ -69,13 +75,13 @@ class ChatCardWidget extends ConsumerWidget {
             children: [
               CircleAvatar(
                 backgroundImage: CachedNetworkImageProvider(user.image!),
-                radius: 25.h,
+                radius: 20.h,
               ),
               SizedBox(width: 10.w,),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(user.name!, style: kTitleTextStyle.copyWith(color: Colors.white),),
+                  Text(user.name!, style: kCustomTextStyle,),
                   lastMessageProvider.when(
                     data: (message) => Text(message.message!, style: kCustomTextStyle,),
                     loading: () => Container(),

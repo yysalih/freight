@@ -64,7 +64,7 @@ class MessageModel implements BaseModel<MessageModel> {
       fromUid,
       chatUid,
       message,
-      date,
+      date!.millisecondsSinceEpoch,
       type,
       seen
     ];

@@ -23,7 +23,7 @@ class ChatModel implements BaseModel<ChatModel> {
     uid: json["uid"] as String?,
     fromUid: json["fromUid"] as String?,
     lastCount: json["lastCount"] == null ? 0 : int.parse(json["lastCount"].toString()),
-    messages: json["contacts"] as String?,
+    messages: json["messages"] as String?,
   );
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{

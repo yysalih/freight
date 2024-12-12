@@ -39,6 +39,36 @@ class ChatRepository {
     return ChatModel();
   }
 
+  Stream<ChatModel> getChatStream() async* {
+    while (true) {
+      try {
+        final response = await http.post(
+          appUrl,
+          body: {
+            'singleQuery': "SELECT * FROM chats WHERE uid = '$_uid'",
+          },
+        );
+
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          if (!data.toString().contains("error")) {
+            yield ChatModel().fromJson(data);
+          } else {
+            debugPrint('Error: ${response.statusCode}');
+          }
+        } else {
+          debugPrint('Error: ${response.statusCode}');
+        }
+      } catch (e) {
+        debugPrint('Error fetching chat: $e');
+      }
+
+      // Wait before fetching the next update
+      await Future.delayed(const Duration(seconds: 2));
+    }
+  }
+
+
   Future<List<ChatModel>> getCurrentUserChats() async {
     final response = await http.post(
       appUrl,
@@ -105,6 +135,11 @@ final chatsFutureProvider = FutureProvider.autoDispose.family<List<ChatModel>, S
 final availableChatsFutureProvider = FutureProvider.autoDispose.family<List<ChatModel>, String?>((ref, uid) {
   final chatRepository = ref.watch(chatRepositoryProvider(uid));
   return chatRepository.getAvailableChats();
+});
+
+final chatStreamProvider = StreamProvider.autoDispose.family<ChatModel, String?>((ref, uid) {
+  final chatRepository = ref.watch(chatRepositoryProvider(uid));
+  return chatRepository.getChatStream();
 });
 
 final chatRepositoryProvider = Provider.family<ChatRepository, String?>((ref, uid) {

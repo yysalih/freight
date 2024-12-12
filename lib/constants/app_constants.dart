@@ -24,6 +24,16 @@ const InputDecoration kInputDecoration = InputDecoration(
   focusedErrorBorder: InputBorder.none,
 );
 
+const InputDecoration kInputDecorationWithNoBorder = InputDecoration(
+  border: InputBorder.none,
+  errorBorder: InputBorder.none,
+  disabledBorder: InputBorder.none,
+  enabledBorder: InputBorder.none,
+  focusedBorder: InputBorder.none,
+  focusedErrorBorder: InputBorder.none,
+);
+
+
 Uri appUrl = Uri.parse('https://coral-lemur-335530.hostingersite.com/get.php');
 
 

@@ -6,6 +6,7 @@ const Map<String, Map<String, String>> languages = {
 
 const Map<String, String> tr = {
   "no_chats_found" : "Herhangi bir mesaj bulunmadı.",
+  "error_creating_chat" : "Mesajlarda bir sorun oluştu!",
   "chats" : "Mesajlar",
   "show_results" : "Sonuçları Göster",
   "hide_results" : "Sonuçları Gizle",
