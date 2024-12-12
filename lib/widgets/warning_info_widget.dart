@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/constants/app_constants.dart';
 
 import '../constants/languages.dart';
@@ -13,5 +14,19 @@ class NoLoadsFoundWidget extends ConsumerWidget {
     final language = ref.watch(languageStateProvider);
 
     return Text(languages[language]!["no_loads_found"]!, style: kCustomTextStyle,);
+  }
+}
+
+class NoChatsFoundWidget extends ConsumerWidget {
+  const NoChatsFoundWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final language = ref.watch(languageStateProvider);
+
+    return Padding(
+      padding: EdgeInsets.only(top: 10.0.h),
+      child: Text(languages[language]!["no_chats_found"]!, style: kCustomTextStyle,),
+    );
   }
 }

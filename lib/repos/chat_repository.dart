@@ -43,7 +43,7 @@ class ChatRepository {
     final response = await http.post(
       appUrl,
       body: {
-        'multiQuery': "SELECT * FROM loads WHERE from = '$_uid' OR to = '$_uid'",
+        'multiQuery': "SELECT * FROM chats WHERE fromUid = '$_uid' OR toUid = '$_uid'",
       },
     );
 
@@ -69,7 +69,7 @@ class ChatRepository {
     final response = await http.post(
       appUrl,
       body: {
-        'multiQuery': "SELECT * FROM loads",
+        'multiQuery': "SELECT * FROM chats",
       },
     );
 

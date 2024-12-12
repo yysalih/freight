@@ -6,6 +6,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kamyon/models/truck_model.dart';
 import 'package:kamyon/models/user_model.dart';
+import 'package:kamyon/views/chat_views/chat_view.dart';
 import 'package:kamyon/views/loads_views/loads_view.dart';
 import 'package:kamyon/views/my_loads_views/my_loads_view.dart';
 import 'package:kamyon/views/profile_views/profile_view.dart';
@@ -72,13 +73,13 @@ class MainController extends StateNotifier<MainState> {
   final mapController = MapController();
 
 
-  final List<Widget> pages = [const LoadsView(), const MyLoadsView(), const MyTrucksView(), Container(), const ProfileView()];
+  final List<Widget> pages = [const LoadsView(), const MyLoadsView(), const MyTrucksView(), const ChatsView(), const ProfileView()];
 
   List<Map<String, dynamic>> pageInfo = [
     {"label" : "Yük Listesi", "icon" : Icons.format_list_bulleted_outlined}, //TODO needs to be replaced with language provider - 30/10/2024 15:04
     {"label" : "Yüklerim", "icon" : Icons.card_membership}, //TODO needs to be replaced with language provider - 30/10/2024 15:04
     {"label" : "Araçlarım", "icon" : Icons.local_shipping_outlined}, //TODO needs to be replaced with language provider - 30/10/2024 15:04
-    {"label" : "Harita", "icon" : Icons.public_outlined}, //TODO needs to be replaced with language provider - 30/10/2024 15:04
+    {"label" : "Mesajlar", "icon" : Icons.chat_bubble_outline}, //TODO needs to be replaced with language provider - 30/10/2024 15:04
     {"label" : "Profilim", "icon" : Icons.person_4_outlined}, //TODO needs to be replaced with language provider - 30/10/2024 15:04
   ];
 

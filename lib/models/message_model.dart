@@ -7,8 +7,8 @@ import 'base_model.dart';
 class MessageModel implements BaseModel<MessageModel> {
 
   final String? uid;
-  final String? from;
-  final String? to;
+  final String? fromUid;
+  final String? toUid;
   final String? chatUid;
   final String? message;
   final DateTime? date;
@@ -16,16 +16,16 @@ class MessageModel implements BaseModel<MessageModel> {
   final bool? seen;
 
 
-  MessageModel({this.uid, this.from,
-    this.chatUid, this.to, this.message, this.date,
+  MessageModel({this.uid, this.fromUid,
+    this.chatUid, this.toUid, this.message, this.date,
     this.type, this.seen
   });
 
   @override
   MessageModel fromJson(Map<String, dynamic> json) => MessageModel(
-    to: json["to"] as String?,
+    toUid: json["toUid"] as String?,
     uid: json["uid"] as String?,
-    from: json["from"] as String?,
+    fromUid: json["fromUid"] as String?,
     chatUid: json["chatUid"] as String?,
     message: json["message"] as String?,
     date: DateTime.fromMillisecondsSinceEpoch(int.parse(json["date"])),
@@ -36,9 +36,9 @@ class MessageModel implements BaseModel<MessageModel> {
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
 
-    "to": to,
+    "toUid": toUid,
     "uid": uid,
-    "from": from,
+    "fromUid": fromUid,
     "chatUid": chatUid,
     "message": message,
     "date": date!.millisecondsSinceEpoch,
@@ -48,20 +48,20 @@ class MessageModel implements BaseModel<MessageModel> {
   };
 
   String getDbFields() {
-    return "to, uid, from, chatUid, messages, date, type, seen";
+    return "toUid, uid, fromUid, chatUid, messages, date, type, seen";
   }
 
   String getDbFieldsWithQuestionMark() {
-    return "to = ?, uid = ?, from = ?, chatUid = ?, messages = ?, date = ?, type = ?, seen = ?";
+    return "toUid = ?, uid = ?, fromUid = ?, chatUid = ?, messages = ?, date = ?, type = ?, seen = ?";
   }
 
   String get questionMarks => "?, ?, ?, ?, ?, ?, ?, ?";
 
   List getDbFormat() {
     return [
-      to,
+      toUid,
       uid,
-      from,
+      fromUid,
       chatUid,
       message,
       date,

@@ -7,49 +7,49 @@ import 'base_model.dart';
 class ChatModel implements BaseModel<ChatModel> {
 
   final String? uid;
-  final String? from;
-  final String? to;
+  final String? fromUid;
+  final String? toUid;
   final int? lastCount;
   final String? messages;
 
 
-  ChatModel({this.uid, this.from,
-    this.lastCount, this.to, this.messages
+  ChatModel({this.uid, this.fromUid,
+    this.lastCount, this.toUid, this.messages
   });
 
   @override
   ChatModel fromJson(Map<String, dynamic> json) => ChatModel(
-    to: json["to"] as String?,
+    toUid: json["toUid"] as String?,
     uid: json["uid"] as String?,
-    from: json["from"] as String?,
+    fromUid: json["fromUid"] as String?,
     lastCount: json["lastCount"] == null ? 0 : int.parse(json["lastCount"].toString()),
     messages: json["contacts"] as String?,
   );
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
 
-    "to": to,
+    "toUid": toUid,
     "uid": uid,
-    "from": from,
+    "fromUid": fromUid,
     "lastCount": lastCount,
     "messages": messages,
   };
 
   String getDbFields() {
-    return "to, uid, from, lastCount, messages";
+    return "toUid, uid, fromUid, lastCount, messages";
   }
 
   String getDbFieldsWithQuestionMark() {
-    return "to = ?, uid = ?, from = ?, lastCount = ?, messages = ?";
+    return "toUid = ?, uid = ?, fromUid = ?, lastCount = ?, messages = ?";
   }
 
   String get questionMarks => "?, ?, ?, ?, ?";
 
   List getDbFormat() {
     return [
-      to,
+      toUid,
       uid,
-      from,
+      fromUid,
       lastCount,
       messages
     ];
