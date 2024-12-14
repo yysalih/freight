@@ -95,6 +95,40 @@ class ChatRepository {
     }
   }
 
+  Stream<List<ChatModel>> getCurrentUserChatsStream() async* {
+    while (true) {
+      try {
+        final response = await http.post(
+          appUrl,
+          body: {
+            'multiQuery': "SELECT * FROM chats WHERE fromUid = '$_uid' OR toUid = '$_uid'",
+          },
+        );
+
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          if (data is List) {
+            List<ChatModel> chats = data.map((e) => ChatModel().fromJson(e as Map<String, dynamic>)).toList();
+            yield chats;
+          } else {
+            debugPrint('Error: Unexpected data format');
+            yield [];
+          }
+        } else {
+          debugPrint('Error: ${response.statusCode} : ${response.reasonPhrase}');
+          yield [];
+        }
+      } catch (e) {
+        debugPrint('Error fetching chats: $e');
+        yield [];
+      }
+
+      // Add a delay to avoid rapid polling
+      await Future.delayed(const Duration(seconds: 2));
+    }
+  }
+
+
   Future<List<ChatModel>> getAvailableChats() async {
     final response = await http.post(
       appUrl,
@@ -140,6 +174,11 @@ final availableChatsFutureProvider = FutureProvider.autoDispose.family<List<Chat
 final chatStreamProvider = StreamProvider.autoDispose.family<ChatModel, String?>((ref, uid) {
   final chatRepository = ref.watch(chatRepositoryProvider(uid));
   return chatRepository.getChatStream();
+});
+
+final chatsStreamProvider = StreamProvider.autoDispose.family<List<ChatModel>, String?>((ref, uid) {
+  final chatRepository = ref.watch(chatRepositoryProvider(uid));
+  return chatRepository.getCurrentUserChatsStream();
 });
 
 final chatRepositoryProvider = Provider.family<ChatRepository, String?>((ref, uid) {

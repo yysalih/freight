@@ -48,11 +48,11 @@ class MessageModel implements BaseModel<MessageModel> {
   };
 
   String getDbFields() {
-    return "toUid, uid, fromUid, chatUid, messages, date, type, seen";
+    return "toUid, uid, fromUid, chatUid, message, date, type, seen";
   }
 
   String getDbFieldsWithQuestionMark() {
-    return "toUid = ?, uid = ?, fromUid = ?, chatUid = ?, messages = ?, date = ?, type = ?, seen = ?";
+    return "toUid = ?, uid = ?, fromUid = ?, chatUid = ?, message = ?, date = ?, type = ?, seen = ?";
   }
 
   String get questionMarks => "?, ?, ?, ?, ?, ?, ?, ?";

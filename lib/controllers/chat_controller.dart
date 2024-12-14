@@ -57,7 +57,7 @@ class ChatController extends StateNotifier<ChatState> {
       uid: uid,
       fromUid: FirebaseAuth.instance.currentUser!.uid,
       lastCount: 0,
-      messages: "first;",
+      messages: " ",
       toUid: to,
     );
 
@@ -69,10 +69,13 @@ class ChatController extends StateNotifier<ChatState> {
       },
     );
 
+
+
     if (response.statusCode == 200) {
       debugPrint(response.body);
       var data = jsonDecode(response.body);
       debugPrint('Response: $data');
+
       Navigator.push(
         context,
         routeToView(MessageView(chatModel: ChatModel().fromJson(data),),),
@@ -81,6 +84,7 @@ class ChatController extends StateNotifier<ChatState> {
     } else {
       debugPrint('Error: ${response.statusCode}');
       debugPrint('Error: ${response.reasonPhrase}');
+
       showSnackbar(title: errorTitle, context: context);
     }
   }
@@ -101,6 +105,8 @@ class ChatController extends StateNotifier<ChatState> {
       toUid: to,
     );
 
+    debugPrint("Active MessageModel:\n ${messageModel.toJson()}");
+
     final response = await http.post(
       appUrl,
       body: {
@@ -109,15 +115,33 @@ class ChatController extends StateNotifier<ChatState> {
       },
     );
 
+    final response2 = await http.post(
+      appUrl,
+      body: {
+        'executeQuery': "UPDATE chats SET messages = CONCAT(messages, ';', ?) WHERE uid = ?",
+        "params": jsonEncode([uid, chatUid]),
+      },
+    );
+
     if (response.statusCode == 200) {
+
       debugPrint(response.body);
+      debugPrint("Response 2 : ${response2.body}");
+
       var data = jsonDecode(response.body);
       debugPrint('Response: $data');
+
+      var data2 = jsonDecode(response2.body);
+      debugPrint('Response2: $data2');
 
 
     } else {
       debugPrint('Error: ${response.statusCode}');
       debugPrint('Error: ${response.reasonPhrase}');
+
+      debugPrint('Error2: ${response2.statusCode}');
+      debugPrint('Error2: ${response2.reasonPhrase}');
+
       showSnackbar(title: errorTitle, context: context);
     }
 

@@ -21,7 +21,7 @@ class ChatsView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final language = ref.watch(languageStateProvider);
 
-    final chatsProvider = ref.watch(chatsFutureProvider(FirebaseAuth.instance.currentUser!.uid));
+    final chatsProvider = ref.watch(chatsStreamProvider(FirebaseAuth.instance.currentUser!.uid));
 
     return Padding(
       padding: EdgeInsets.only(top: 10.h, right: 15.w, left: 15.w),
@@ -66,6 +66,7 @@ class ChatCardWidget extends ConsumerWidget {
     final lastMessageProvider = ref.watch(messageFutureProvider(chat.allMessages.last));
     return toUserProvider.when(
       data: (user) => MaterialButton(
+
         onPressed: () {
           Navigator.push(context, routeToView(MessageView(chatModel: chat)));
         },

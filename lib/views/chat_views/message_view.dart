@@ -24,7 +24,7 @@ class MessageView extends ConsumerWidget {
     final language = ref.watch(languageStateProvider);
 
 
-    final chatProvider = ref.watch(chatStreamProvider(chatModel.uid));
+    final chatStream = ref.watch(chatStreamProvider(chatModel.uid));
     final chatUserProvider = ref.watch(userFutureProvider(chatModel.toUid));
 
     final chatNotifier = ref.watch(chatController.notifier);
@@ -42,30 +42,37 @@ class MessageView extends ConsumerWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: chatUserProvider.when(
-          data: (user) => Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                radius: 20.h,
-                backgroundImage: CachedNetworkImageProvider(user.image!),
-              ),
-              SizedBox(width: 10.w,),
-              Text(user.name!, style: kCustomTextStyle,),
-            ],
-          ),
+          data: (user) {
+            try {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 20.h,
+                    backgroundImage: CachedNetworkImageProvider(user.image!),
+                  ),
+                  SizedBox(width: 10.w,),
+                  Text(user.name!, style: kCustomTextStyle,),
+                ],
+              );
+            }
+            catch(e) {
+              return Container();
+            }
+          },
           loading: () => Container(),
           error: (error, stackTrace) => Container(),
         )
       ),
-      body: chatProvider.when(
+      body: chatStream.when(
         data: (chat) => Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             //MessageStreamWidget(chatModel: chat,),
             Expanded(
               child: ListView.builder(
-                itemCount: chatModel.allMessages.length,
-                itemBuilder: (context, index) => MessageBubbleWidget(messageUid: chatModel.allMessages[index],),
+                itemCount: chat.allMessages.length,
+                itemBuilder: (context, index) => MessageBubbleWidget(messageUid: chat.allMessages[index],),
               ),
             ),
             Container(
@@ -103,7 +110,11 @@ class MessageView extends ConsumerWidget {
             ),
           ],
         ),
-        error: (error, stackTrace) => const NoChatsFoundWidget(),
+        error: (error, stackTrace) {
+          debugPrint("Error: $error");
+          debugPrint("Stacktrace: $stackTrace");
+          return const NoChatsFoundWidget();
+        },
         loading: () => const NoChatsFoundWidget(),
       ),
     );
@@ -138,31 +149,44 @@ class MessageBubbleWidget extends ConsumerWidget {
     final messageProvider = ref.watch(messageFutureProvider(messageUid));
 
     return messageProvider.when(
-      data: (message) => Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Container(
-          alignment: message.fromUid == currentUserUid ?
-          Alignment.centerRight : Alignment.centerLeft,
+      data: (message) => GestureDetector(
+        onTap: () => debugPrint("${message.date}"),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Align(
+            alignment: message.fromUid != currentUserUid ?
+            Alignment.centerRight : Alignment.centerLeft,
+            child: Container(
 
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              topRight: Radius.circular(1),
-              bottomRight: Radius.circular(10),
-              topLeft: Radius.circular(10)
+
+              decoration: BoxDecoration(
+                borderRadius: message.fromUid != currentUserUid ?
+                const BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    topRight: Radius.circular(1),
+                    bottomRight: Radius.circular(15),
+                    topLeft: Radius.circular(15)
+                )
+                    : const BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                  topLeft: Radius.circular(1)
+                ),
+                color: message.fromUid == currentUserUid ? kLightBlack : kBlueColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(message.message!, style: kCustomTextStyle),
+              ),
             ),
-            color: message.fromUid == currentUserUid ? kLightBlack : kBlueColor,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Text(message.message!, style: kCustomTextStyle),
           ),
         ),
       ),
       loading: () => Container(),
       error: (error, stackTrace) {
-        debugPrint(error.toString());
-        debugPrint(stackTrace.toString());
+        //debugPrint(error.toString());
+        //debugPrint(stackTrace.toString());
         return Container();
       },
     );

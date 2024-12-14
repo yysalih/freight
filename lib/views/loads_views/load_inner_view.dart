@@ -214,7 +214,9 @@ class LoadInnerView extends ConsumerWidget {
                                 description2: "${load.price}\$",
                                 title: languages[language]!["take_the_job"]!, description: languages[language]!["total"]!,
                             onPressed: () {
-                              chatNotifier.createChat(context, to: load.ownerUid!, errorTitle: languages[language]!["error_creating_chat"]!);
+                              chatNotifier.createChat(context, to: load.ownerUid!,
+
+                                  errorTitle: languages[language]!["error_creating_chat"]!);
                             },),
                             ownerUser.when(
                               data: (owner) => loadActionButton(width, language, icon: Icons.add_ic_call_rounded,
