@@ -61,38 +61,54 @@ class ChatCardWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    double width = MediaQuery.of(context).size.width;
+
+
     final toUserProvider = ref.watch(userFutureProvider(chat.toUid));
     debugPrint("${chat.messages}");
     final lastMessageProvider = ref.watch(messageFutureProvider(chat.allMessages.last));
-    return toUserProvider.when(
-      data: (user) => MaterialButton(
 
-        onPressed: () {
-          Navigator.push(context, routeToView(MessageView(chatModel: chat)));
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10.h),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(user.image!),
-                radius: 20.h,
-              ),
-              SizedBox(width: 10.w,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return toUserProvider.when(
+      data: (user) => Column(
+        children: [
+          MaterialButton(
+
+            onPressed: () {
+              Navigator.push(context, routeToView(MessageView(chatModel: chat)));
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.h),
+              child: Row(
                 children: [
-                  Text(user.name!, style: kCustomTextStyle,),
-                  lastMessageProvider.when(
-                    data: (message) => Text(message.message!, style: kCustomTextStyle,),
-                    loading: () => Container(),
-                    error: (error, stackTrace) => Container(),
+                  CircleAvatar(
+                    backgroundImage: CachedNetworkImageProvider(user.image!),
+                    radius: 20.h,
+                  ),
+                  SizedBox(width: 10.w,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(user.name!, style: kCustomTextStyle,),
+                      lastMessageProvider.when(
+                        data: (message) => Text(message.message!, style: kCustomTextStyle,),
+                        loading: () => Container(),
+                        error: (error, stackTrace) => Container(),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
+          Padding(
+          padding: EdgeInsets.only(top: 5),
+            child: Container(
+              width: width * .9,
+              height: 1,
+              color: kLightBlack,
+            ),
+          ),
+        ],
       ),
       loading: () => Container(),
       error: (error, stackTrace) => Container(),

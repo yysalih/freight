@@ -92,7 +92,8 @@ class MessageView extends ConsumerWidget {
                           style: kCustomTextStyle,
                           controller: chatNotifier.messageController,
                           decoration: kInputDecorationWithNoBorder.copyWith(
-
+                            hintText: languages[language]!["send_a_message"],
+                            hintStyle: TextStyle(color: Colors.grey.shade300)
                           ),
                         ),
                       ),

@@ -128,11 +128,11 @@ class LoadsView extends ConsumerWidget {
                         hasTitle: false, borderRadius: 20, controller: mainNotifier.searchController, onChanged: (value) {
                           mainNotifier.changeSearchString(value: value);
 
-                          List loadList = availableLoads.where((element) => element.originName!.contains(value)
-                              || element.originAddress!.contains(value)).toList();
+                          List loadList = availableLoads.where((element) => element.originName!.toLowerCase().contains(value.toLowerCase())
+                              || element.originAddress!.toLowerCase().toLowerCase().contains(value.toLowerCase())).toList();
 
-                          List truckPostList = availableTruckPosts.where((element) => element.originName!.contains(value)
-                              || element.originAddress!.contains(value)).toList();
+                          List truckPostList = availableTruckPosts.where((element) => element.originName!.contains(value.toLowerCase())
+                              || element.originAddress!.toLowerCase().contains(value.toLowerCase())).toList();
 
                           List<dynamic> combinedList = [...truckPostList, ...loadList];
 

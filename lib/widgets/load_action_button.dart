@@ -6,7 +6,8 @@ import '../constants/app_constants.dart';
 
 Widget loadActionButton(double width, String language,
     {required IconData icon, required String title, required Function() onPressed,
-      required String description, required String description2}) {
+      required String description, required String description2,
+    }) {
   return SizedBox(
     width: width * .435, height: 80.h,
     child: ClipRRect(
