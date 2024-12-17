@@ -36,6 +36,8 @@ const InputDecoration kInputDecorationWithNoBorder = InputDecoration(
 
 Uri appUrl = Uri.parse('https://coral-lemur-335530.hostingersite.com/get.php');
 
+const String kApiKey = "AIzaSyDZg_ZZdVGiLpdwBs3pbnP6sl4JaEquLY8";
+
 
 const List<String> cities = [
   "Adana",

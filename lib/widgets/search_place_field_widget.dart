@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/controllers/place_controller.dart';
 import 'package:kamyon/models/place_model.dart';
+import 'package:kamyon/repos/place_repository.dart';
 import 'package:kamyon/widgets/input_field_widget.dart';
+import 'package:kamyon/widgets/warning_info_widget.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../constants/app_constants.dart';
@@ -57,75 +59,85 @@ class _SearchPlaceViewState extends ConsumerState<SearchPlaceFieldWidget> {
 
     final width = MediaQuery.of(context).size.width;
 
+    final placesProvider = ref.watch(placesFutureProvider(""));
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child:  SizedBox(
-            width: width * .43,
-            child: OverlayPortal(
-              controller: overlayController,
-              overlayChildBuilder: (context) => ListView.builder(
-                padding: EdgeInsets.only(top: widget.top,),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: placeState.placeList.length,
+    return placesProvider.when(
+      data: (places) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child:  SizedBox(
+              width: width * .43,
+              child: OverlayPortal(
+                controller: overlayController,
+                overlayChildBuilder: (context) => ListView.builder(
+                  padding: EdgeInsets.only(top: widget.top,),
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: places.isNotEmpty ? places.length : placeState.placeList.length,
 
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(top: 10.0.h, right: 10.w, left: 10.w),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: MaterialButton(
-                        color: kBlack,
-                        height: 40.h,
-                        onPressed: () {
-                          AppPlaceModel appPlaceModel = AppPlaceModel(
-                              name: placeState.placeList[index]["name"],
-                              latitude: placeState.placeList[index]["geometry"]["location"]["lat"],
-                              longitude: placeState.placeList[index]["geometry"]["location"]["lng"],
-                              uid: const Uuid().v4(),
-                              address: placeState.placeList[index]["formatted_address"]
-                          );
-                          placeNotifier.setPlaceModels(origin: widget.isOrigin ? appPlaceModel : placeState.origin,
-                            destination: !widget.isOrigin ? appPlaceModel : placeState.destination,);
-                          if(widget.isOrigin) {
-                            placeNotifier.originSearchController.text = placeState.placeList[index]["name"];
-                          } else {
-                            placeNotifier.destinationSearchController.text = placeState.placeList[index]["name"];
-                          }
-                          placeNotifier.clear();
-                          overlayController.hide();
-                        },
-                        child: Text("${placeState.placeList[index]["name"]}\n\n${placeState.placeList[index]["formatted_address"]}",
-                          textAlign: TextAlign.start,
-                          style: kCustomTextStyle,),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 10.0.h, right: 10.w, left: 10.w),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: MaterialButton(
+                          color: kBlack,
+                          height: 40.h,
+                          onPressed: () {
+                            AppPlaceModel appPlaceModel = AppPlaceModel(
+                              name: places.isNotEmpty ? places[index].name
+                                  : placeState.placeList[index]["name"],
+                              latitude: places.isNotEmpty ? places[index].latitude
+                                  : placeState.placeList[index]["geometry"]["location"]["lat"],
+                              longitude: places.isNotEmpty ? places[index].longitude
+                                  : placeState.placeList[index]["geometry"]["location"]["lng"],
+                              address: places.isNotEmpty ? places[index].address
+                                  : placeState.placeList[index]["formatted_address"],
+                              uid: places.isNotEmpty ? places[index].uid : const Uuid().v4(),
+
+                            );
+                            placeNotifier.setPlaceModels(origin: widget.isOrigin ? appPlaceModel : placeState.origin,
+                              destination: !widget.isOrigin ? appPlaceModel : placeState.destination,);
+                            if(widget.isOrigin) {
+                              placeNotifier.originSearchController.text = placeState.placeList[index]["name"];
+                            } else {
+                              placeNotifier.destinationSearchController.text = placeState.placeList[index]["name"];
+                            }
+                            placeNotifier.clear();
+                            overlayController.hide();
+                          },
+                          child: Text("${placeState.placeList[index]["name"]}\n\n${placeState.placeList[index]["formatted_address"]}",
+                            textAlign: TextAlign.start,
+                            style: kCustomTextStyle,),
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-              child: customInputField(title: "",
-                hintText: widget.isOrigin ?
-                placeState.origin.name!.isNotEmpty ? placeState.origin.name! : "Ankara, TR"
-                    :
-                placeState.destination.name!.isNotEmpty ? placeState.destination.name! : "İstanbul, TR",
-                icon: Icons.map, controller: widget.isOrigin ? placeNotifier.originSearchController :
-                placeNotifier.destinationSearchController
-                , hasIcon: false,
-                onTap: () {
-                  overlayController.toggle();
-                }, onChanged: (value) {
+                    );
+                  },
+                ),
+                child: customInputField(title: "",
+                  hintText: widget.isOrigin ?
+                  placeState.origin.name!.isNotEmpty ? placeState.origin.name! : "Ankara, TR"
+                      :
+                  placeState.destination.name!.isNotEmpty ? placeState.destination.name! : "İstanbul, TR",
+                  icon: Icons.map, controller: widget.isOrigin ? placeNotifier.originSearchController :
+                  placeNotifier.destinationSearchController
+                  , hasIcon: false,
+                  onTap: () {
+                    overlayController.toggle();
+                  }, onChanged: (value) {
 
-                },
+                  },
+                ),
               ),
             ),
           ),
-        ),
 
-      ],
+        ],
+      ),
+      loading: () => const LoadingWidget(),
+      error: (error, stackTrace) => const NoPlaceFound(),
     );
   }
 }

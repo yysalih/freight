@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/controllers/load_controller.dart';
 import 'package:kamyon/controllers/main_controller.dart';
+import 'package:kamyon/models/place_model.dart';
 
 import '../constants/languages.dart';
 import '../controllers/place_controller.dart';
@@ -16,6 +17,7 @@ Widget quickLoadWidget(BuildContext context, double width, double height, String
     PlaceState placeState,
     PlaceController placeNotifier,
     TruckController truckNotifier,
+    List<AppPlaceModel> placeModels,
     ) {
   return AnimatedSize(
     duration: const Duration(milliseconds: 300),
@@ -51,8 +53,16 @@ Widget quickLoadWidget(BuildContext context, double width, double height, String
                 destination: placeState.destination
             );
 
-            await placeNotifier.createPlace(context, appPlaceModel: placeState.origin,);
-            await placeNotifier.createPlace(context, appPlaceModel: placeState.destination,);
+            bool checkOriginExists = placeNotifier.checkPlaceModel(placeModels, isOrigin: true);
+            bool checkDestinationExists = placeNotifier.checkPlaceModel(placeModels, isOrigin: false);
+
+            if(checkOriginExists) {
+              await placeNotifier.createPlace(context, appPlaceModel: placeState.origin,);
+            }
+
+            if(checkDestinationExists) {
+              await placeNotifier.createPlace(context, appPlaceModel: placeState.destination,);
+            }
 
             loadNotifier.createLoad(context, errorTitle: languages[language]!["problem_creating_new_load"]!,
                 successTitle: languages[language]!["new_load_created"]!, fromMainView: true);
@@ -65,12 +75,10 @@ Widget quickLoadWidget(BuildContext context, double width, double height, String
             mainNotifier.changeExpansions(isTruckPostExpanded: false, isLoadExpanded: false);
             FocusScope.of(context).unfocus();
 
-          },)
-              : const SizedBox(),
+          },) : const SizedBox(),
         )
       ],
-    )
-        : const SizedBox(),
+    ) : const SizedBox(),
   );
 }
 

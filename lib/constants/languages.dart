@@ -5,6 +5,8 @@ const Map<String, Map<String, String>> languages = {
 };
 
 const Map<String, String> tr = {
+  "no_places_found" : "Herhangi bir mekan bulunamadı.",
+  "loading" : "Yükleniyor...",
   "send_a_message" : "Mesaj Gönder",
   "no_chats_found" : "Herhangi bir mesaj bulunmadı.",
   "error_creating_chat" : "Mesajlarda bir sorun oluştu!",
@@ -186,6 +188,9 @@ const Map<String, String> tr = {
   "switch_language" : "Dili Değiştir",
 };
 const Map<String, String> en = {
+  "send_a_message" : "Send a Message",
+  "no_places_found" : "No places found.",
+  "loading" : "Loading...",
   "chats" : "Chats",
   "no_chats_found" : "No chats found",
   "show_results" : "Show Results",

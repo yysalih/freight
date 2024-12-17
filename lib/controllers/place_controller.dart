@@ -12,16 +12,21 @@ import '../models/place_model.dart';
 
 class PlaceState {
   final List placeList;
+  final List<AppPlaceModel> placeModels;
   final AppPlaceModel origin;
   final AppPlaceModel destination;
 
-  PlaceState({required this.placeList, required this.origin, required this.destination});
+  PlaceState({required this.placeList, required this.origin,
+    required this.destination, required this.placeModels});
 
-  PlaceState copyWith({List? placeList, AppPlaceModel? origin, AppPlaceModel? destination}) {
+  PlaceState copyWith({List? placeList, AppPlaceModel? origin, AppPlaceModel? destination, List<AppPlaceModel>? placeModels}) {
     return PlaceState(
       placeList: placeList ?? this.placeList,
       origin: origin ?? this.origin,
       destination: destination ?? this.destination,
+      placeModels: placeModels ?? this.placeModels,
+
+
     );
   }
 }
@@ -38,11 +43,10 @@ class PlaceController extends StateNotifier<PlaceState> {
   void getSuggestion(String input) async {
 
 
-    const String placesApiKey = "AIzaSyDZg_ZZdVGiLpdwBs3pbnP6sl4JaEquLY8";
 
     try{
       String baseURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-      String request = '$baseURL?input=$input&key=$placesApiKey&sessiontoken=$sessionToken';
+      String request = '$baseURL?input=$input&key=$kApiKey&sessiontoken=$sessionToken';
       var response = await http.get(Uri.parse(request));
       var data = json.decode(response.body);
       if (kDebugMode) {
@@ -62,9 +66,6 @@ class PlaceController extends StateNotifier<PlaceState> {
 
   Future<void> fetchPlaceDetails(String placeName) async {
 
-    const String apiKey = 'AIzaSyDZg_ZZdVGiLpdwBs3pbnP6sl4JaEquLY8';
-
-
     const String baseUrl = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json';
 
 
@@ -72,7 +73,7 @@ class PlaceController extends StateNotifier<PlaceState> {
       '$baseUrl?fields=formatted_address,name,rating,opening_hours,geometry'
           '&input=${Uri.encodeComponent(placeName)}'
           '&inputtype=textquery'
-          '&key=$apiKey',
+          '&key=$kApiKey',
     );
 
     try {
@@ -124,13 +125,43 @@ class PlaceController extends StateNotifier<PlaceState> {
     }
   }
 
+  bool checkPlaceModel(List<AppPlaceModel> placeModels, {required bool isOrigin}) {
+
+    if(isOrigin) {
+      List origins = placeModels.where((element) =>
+      element.name == state.origin.name || element.name == state.origin.address || element.uid == state.origin.uid ||
+          (element.latitude == state.origin.latitude && element.longitude == state.origin.longitude)
+        ,).toList();
+
+      if(origins.isEmpty) {
+        return false;
+      }
+      else {
+        return true;
+      }
+    }
+
+    else {
+      List destinations = placeModels.where((element) =>
+      element.name == state.destination.name || element.name == state.destination.address || element.uid == state.destination.uid ||
+          (element.latitude == state.destination.latitude && element.longitude == state.destination.longitude)
+        ,).toList();
+
+      if(destinations.isEmpty) {
+        return false;
+      }
+      else {
+        return true;
+      }
+    }
+  }
 
   setPlaceModels({required AppPlaceModel origin, required AppPlaceModel destination}) {
     state = state.copyWith(destination: destination, origin: origin);
   }
 
   clear() {
-    state = state.copyWith(placeList: []);
+    state = state.copyWith(placeList: [], placeModels: []);
     destinationSearchController.clear();
     originSearchController.clear();
   }
@@ -138,5 +169,6 @@ class PlaceController extends StateNotifier<PlaceState> {
 }
 
 final placeController = StateNotifierProvider<PlaceController, PlaceState>(
-  (ref) => PlaceController(PlaceState(placeList: [], origin: AppPlaceModel(name: ""), destination: AppPlaceModel(name: ""))),
+  (ref) => PlaceController(PlaceState(placeList: [], origin: AppPlaceModel(name: ""),
+      destination: AppPlaceModel(name: ""), placeModels: [])),
 );

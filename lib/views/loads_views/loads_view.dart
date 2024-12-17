@@ -49,6 +49,8 @@ class LoadsView extends ConsumerWidget {
     final availableLoadsNotifier = ref.watch(availableLoadsFutureProvider(""));
     final availableTruckPostsNotifier = ref.watch(availableTruckPostsFutureProvider(""));
 
+    final placesProvider = ref.watch(placesFutureProvider(""));
+
     return availableLoadsNotifier.when(
       data: (availableLoads) => availableTruckPostsNotifier.when(
         data: (availableTruckPosts) => Stack(
@@ -92,20 +94,26 @@ class LoadsView extends ConsumerWidget {
               ],
             ),
 
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  quickLoadWidget(context, width, height, language, loadNotifier,
-                      mainState, mainNotifier, placeState, placeNotifier, truckNotifier),
+            placesProvider.when(
+              data: (places) => Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-                  quickTruckWidget(context, width, height, language, loadNotifier,
-                      mainState, mainNotifier, placeState, placeNotifier, truckNotifier),
+                    quickLoadWidget(context, width, height, language, loadNotifier,
+                        mainState, mainNotifier, placeState, placeNotifier, truckNotifier),
 
-                ],
+                    quickTruckWidget(context, width, height, language, loadNotifier,
+                        mainState, mainNotifier, placeState, placeNotifier, truckNotifier),
+
+                  ],
+                ),
               ),
+              loading: () => Container(),
+              error: (error, stackTrace) => Container(),
+
             ),
             Align(
               alignment: Alignment.bottomCenter,

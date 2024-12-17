@@ -30,3 +30,29 @@ class NoChatsFoundWidget extends ConsumerWidget {
     );
   }
 }
+
+class NoPlaceFound extends ConsumerWidget {
+  const NoPlaceFound({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final language = ref.watch(languageStateProvider);
+
+    return Padding(
+      padding: EdgeInsets.only(top: 10.0.h),
+      child: Text(languages[language]!["no_places_found"]!, style: kCustomTextStyle,),
+    );
+  }
+}
+
+class LoadingWidget extends StatelessWidget {
+  const LoadingWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+
