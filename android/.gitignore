@@ -11,8 +11,9 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
-**/AndroidManifest.xml
-**/GoogleService-Info.plist
-lib/constants/app_constants.dart
-lib/firebase_options.dart
+/android/app/src/main/AndroidManifest.xml
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
+/lib/constants/app_constants.dart
+/lib/firebase_options.dart
 notes.txt
