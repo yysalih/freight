@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:kamyon/constants/app_constants.dart';
 import 'package:kamyon/constants/snackbars.dart';
 import 'package:kamyon/controllers/profile_controller.dart';
 
@@ -45,7 +46,7 @@ class AuthController extends StateNotifier<AuthState> {
 
   User? get currentUser => FirebaseAuth.instance.currentUser;
 
-  final url = Uri.parse('https://coral-lemur-335530.hostingersite.com/get.php');
+  //final url = Uri.parse('https://coral-lemur-335530.hostingersite.com/get.php');
 
   switchRegister() {
     state = state.copyWith(isRegister: !state.isRegister);
@@ -61,7 +62,7 @@ class AuthController extends StateNotifier<AuthState> {
 
   Future<bool> checkIfUserExists() async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'singleQuery': "SELECT * FROM users WHERE uid = '${currentUser!.uid}'",
       },
@@ -102,7 +103,7 @@ class AuthController extends StateNotifier<AuthState> {
     );
 
     final response = await http.post(
-      url,
+      appUrl,
       body: {
 
         'executeQuery': "INSERT INTO users (${userModel.getDbFields()}) VALUES (${userModel.questionMarks})",
@@ -124,7 +125,7 @@ class AuthController extends StateNotifier<AuthState> {
 
   getCurrentUser() async {
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'singleQuery': "SELECT * FROM users WHERE uid = '${FirebaseAuth.instance.currentUser!.uid}'",
       },
@@ -172,7 +173,7 @@ class AuthController extends StateNotifier<AuthState> {
     );
 
     final response = await http.post(
-      url,
+      appUrl,
       body: {
         'executeQuery': """
         UPDATE users 
