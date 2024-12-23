@@ -103,10 +103,10 @@ class LoadsView extends ConsumerWidget {
                   children: [
 
                     quickLoadWidget(context, width, height, language, loadNotifier,
-                        mainState, mainNotifier, placeState, placeNotifier, truckNotifier),
+                        mainState, mainNotifier, placeState, placeNotifier, truckNotifier, places),
 
                     quickTruckWidget(context, width, height, language, loadNotifier,
-                        mainState, mainNotifier, placeState, placeNotifier, truckNotifier),
+                        mainState, mainNotifier, placeState, placeNotifier, truckNotifier, places),
 
                   ],
                 ),

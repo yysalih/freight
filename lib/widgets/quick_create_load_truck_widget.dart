@@ -90,6 +90,7 @@ Widget quickTruckWidget(BuildContext context, double width, double height, Strin
     PlaceState placeState,
     PlaceController placeNotifier,
     TruckController truckNotifier,
+    List<AppPlaceModel> placeModels,
     ) {
   return AnimatedSize(
     duration: const Duration(milliseconds: 300),
@@ -126,8 +127,16 @@ Widget quickTruckWidget(BuildContext context, double width, double height, Strin
               destination: placeState.destination,
             );
 
-            await placeNotifier.createPlace(context, appPlaceModel: placeState.origin,);
-            await placeNotifier.createPlace(context, appPlaceModel: placeState.destination,);
+            bool checkOriginExists = placeNotifier.checkPlaceModel(placeModels, isOrigin: true);
+            bool checkDestinationExists = placeNotifier.checkPlaceModel(placeModels, isOrigin: false);
+
+            if(checkOriginExists) {
+              await placeNotifier.createPlace(context, appPlaceModel: placeState.origin,);
+            }
+
+            if(checkDestinationExists) {
+              await placeNotifier.createPlace(context, appPlaceModel: placeState.destination,);
+            }
 
             await truckNotifier.createTruckPost(context, truckUid: mainState.truck.uid!,fromMainView: true,
                 errorTitle: languages[language]!["problem_creating_new_truck_post"]!,
