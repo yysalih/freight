@@ -95,5 +95,4 @@ class ShipmentModel implements BaseModel<ShipmentModel> {
     ];
   }
 
-  List get allMessages => type!.split(";");
 }

@@ -15,6 +15,7 @@ class OfferModel implements BaseModel<OfferModel> {
   final String? truckUid;
   final double? price;
   final String? description;
+  final String? state;
 
 
   const OfferModel({
@@ -24,7 +25,8 @@ class OfferModel implements BaseModel<OfferModel> {
     this.unitUid,
     this.truckUid,
     this.price,
-    this.description
+    this.description,
+    this.state,
   });
 
   @override
@@ -37,6 +39,7 @@ class OfferModel implements BaseModel<OfferModel> {
     unitUid: json["unitUid"] as String?,
     price: double.parse(json["price"]),
     description: json["description"] as String?,
+    state: json["state"] as String?,
   );
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -49,17 +52,18 @@ class OfferModel implements BaseModel<OfferModel> {
     "truckUid": truckUid,
     "price" : price,
     "description" : description,
+    "state" : state,
   };
 
   String getDbFields() {
-    return "uid, date, type, toUid, fromUid, unitUid, truckUid, price, description";
+    return "uid, date, type, toUid, fromUid, unitUid, truckUid, price, description, state";
   }
 
   String getDbFieldsWithQuestionMark() {
-    return "uid = ?, date = ?, type = ?, toUid = ?, fromUid = ?, unitUid = ?, truckUid = ?, price = ?, description = ?";
+    return "uid = ?, date = ?, type = ?, toUid = ?, fromUid = ?, unitUid = ?, truckUid = ?, price = ?, description = ?, state = ?";
   }
 
-  String get questionMarks => "?, ?, ?, ?, ?, ?, ?, ?, ?";
+  String get questionMarks => "?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
 
   List getDbFormat() {
     return [
@@ -72,8 +76,9 @@ class OfferModel implements BaseModel<OfferModel> {
       truckUid,
       price,
       description,
+      state
     ];
   }
 
-  List get allMessages => type!.split(";");
+
 }
