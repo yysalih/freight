@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kamyon/models/offer_model.dart';
+import 'package:kamyon/models/shipment_model.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import '../constants/app_constants.dart';
@@ -32,10 +32,10 @@ class ShipmentController extends StateNotifier<ShipmentState> {
 
   final descriptionController = TextEditingController();
 
-  createOffer(BuildContext context, {required String type, required String unitUid, required String toUid,
+  createShipment(BuildContext context, {required String type, required String unitUid, required String toUid,
     required String errorTitle, required String successTitle}) async {
     String uid = const Uuid().v4();
-    OfferModel offerModel = OfferModel(
+    ShipmentModel shipmentModel = ShipmentModel(
       price: state.price,
       date: DateTime.now(),
       description: descriptionController.text,
@@ -46,13 +46,16 @@ class ShipmentController extends StateNotifier<ShipmentState> {
       uid: uid,
       unitUid: unitUid,
       state: "sent",
+      lastChangedDate: DateTime.now(),
+      lastLatitude: 0.0,
+      lastLongitude: 0.0,
     );
 
     final response = await http.post(
       appUrl,
       body: {
-        'executeQuery': "INSERT INTO offers (${offerModel.getDbFields()}) VALUES (${offerModel.questionMarks})",
-        "params": jsonEncode(offerModel.getDbFormat()),
+        'executeQuery': "INSERT INTO shipments (${shipmentModel.getDbFields()}) VALUES (${shipmentModel.questionMarks})",
+        "params": jsonEncode(shipmentModel.getDbFormat()),
       },
     );
 
@@ -71,13 +74,13 @@ class ShipmentController extends StateNotifier<ShipmentState> {
     }
   }
 
-  updateOfferState(BuildContext context, {required String offerUid, required String newState,
+  updateShipmentState(BuildContext context, {required String shipmentUid, required String newState,
     required String errorTitle, required String successTitle}) async {
     final response = await http.post(
       appUrl,
       body: {
-        'executeQuery': "UPDATE offers SET state = ? WHERE uid = ?",
-        "params": jsonEncode([newState, offerUid]),
+        'executeQuery': "UPDATE shipments SET state = ? WHERE uid = ?",
+        "params": jsonEncode([newState, shipmentUid]),
       },
     );
 
@@ -103,6 +106,6 @@ class ShipmentController extends StateNotifier<ShipmentState> {
 
 }
 
-final offerController = StateNotifierProvider<ShipmentController, ShipmentState>((ref) => ShipmentController(ShipmentState(
+final shipmentController = StateNotifierProvider<ShipmentController, ShipmentState>((ref) => ShipmentController(ShipmentState(
   truckModel: TruckModel(), price: 0.0,
 )),);
