@@ -18,7 +18,7 @@ class TruckModel implements BaseModel<TruckModel> {
   final bool? isPartial;
 
 
-  TruckModel({this.uid, this.name, this.description,
+  const TruckModel({this.uid, this.name, this.description,
     this.city, this.length,
     this.ownerUid, this.isPartial,
     this.weight, this.type, this.trailerUid
@@ -26,9 +26,9 @@ class TruckModel implements BaseModel<TruckModel> {
 
   @override
   TruckModel fromJson(Map<String, dynamic> json) => TruckModel(
+    trailerUid: json["trailerUid"] as String?,
     length: double.parse(json["length"]),
     ownerUid: json["ownerUid"] as String?,
-    trailerUid: json["trailerUid"] as String?,
     description: json["description"] as String?,
     uid: json["uid"] as String?,
     name: json["name"] as String?,
@@ -40,10 +40,10 @@ class TruckModel implements BaseModel<TruckModel> {
 
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
-    "length": length,
-    "description": description,
-    "ownerUid": ownerUid,
     "trailerUid": trailerUid,
+    "length": length,
+    "ownerUid": ownerUid,
+    "description": description,
     "uid": uid,
     "name": name,
     "city": city,

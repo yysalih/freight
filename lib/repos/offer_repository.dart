@@ -95,13 +95,13 @@ class OfferRepository {
     }
   }
 
-  Stream<List<OfferModel>> getCurrentUserOffersStream() async* {
+  Stream<List<OfferModel>> getUnitOffersStream() async* {
     while (true) {
       try {
         final response = await http.post(
           appUrl,
           body: {
-            'multiQuery': "SELECT * FROM offers WHERE fromUid = '$_uid' OR toUid = '$_uid'",
+            'multiQuery': "SELECT * FROM offers WHERE unitUid = '$_uid'",
           },
         );
 
@@ -178,7 +178,7 @@ final offerStreamProvider = StreamProvider.autoDispose.family<OfferModel, String
 
 final offersStreamProvider = StreamProvider.autoDispose.family<List<OfferModel>, String?>((ref, uid) {
   final offerRepository = ref.watch(offerRepositoryProvider(uid));
-  return offerRepository.getCurrentUserOffersStream();
+  return offerRepository.getUnitOffersStream();
 });
 
 final offerRepositoryProvider = Provider.family<OfferRepository, String?>((ref, uid) {

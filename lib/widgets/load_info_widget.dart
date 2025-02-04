@@ -4,19 +4,23 @@ import 'package:kamyon/constants/languages.dart';
 
 import '../constants/app_constants.dart';
 
-Widget loadInfoWidget(double width, double height, {required String title, required String description, String language = "tr", double point = 5.0}) {
+Widget loadInfoWidget(double width, double height, {required String title,
+  required String description, String language = "tr", double point = 5.0,
+  double descriptionFontSize = 14, bool multiLineDescription = false
+}) {
   return Padding(
     padding: EdgeInsets.only(top: 12.h),
     child: Container(
-      width: width, height: 40.h,
+      width: width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: kLightBlack,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
           children: [
             Text(title, style: kCustomTextStyle.copyWith(fontWeight: FontWeight.bold),),
             title == languages[language]!["rating"] ? Row(
@@ -29,7 +33,15 @@ Widget loadInfoWidget(double width, double height, {required String title, requi
                     child: const Icon(Icons.star, color: Colors.orange,),
                   )
               ],
-            ) : Text(description, style: kCustomTextStyle.copyWith(fontSize: 13.w),),
+            ) :
+            multiLineDescription ?
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: height * .2, maxWidth: width * .5),
+                  child: Text(description, style: kCustomTextStyle.copyWith(fontSize: descriptionFontSize,),
+                    maxLines: 3, overflow: TextOverflow.ellipsis,),
+                )
+                :
+            Text(description, style: kCustomTextStyle.copyWith(fontSize: descriptionFontSize),),
           ],
         ),
       ),

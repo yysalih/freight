@@ -31,12 +31,13 @@ class OfferController extends StateNotifier<OfferState> {
   OfferController(super.state);
 
   final descriptionController = TextEditingController();
+  final priceController = TextEditingController();
 
   createOffer(BuildContext context, {required String type, required String unitUid, required String toUid,
     required String errorTitle, required String successTitle}) async {
     String uid = const Uuid().v4();
     OfferModel offerModel = OfferModel(
-      price: state.price,
+      price: double.parse(priceController.text),
       date: DateTime.now(),
       description: descriptionController.text,
       fromUid: FirebaseAuth.instance.currentUser!.uid,
@@ -47,6 +48,8 @@ class OfferController extends StateNotifier<OfferState> {
       unitUid: unitUid,
       state: "sent",
     );
+
+    debugPrint(offerModel.toJson().toString());
 
     final response = await http.post(
       appUrl,
@@ -68,6 +71,7 @@ class OfferController extends StateNotifier<OfferState> {
       debugPrint('Error: ${response.statusCode}');
       debugPrint('Error: ${response.reasonPhrase}');
       showSnackbar(title: errorTitle, context: context);
+
     }
   }
 
@@ -100,6 +104,28 @@ class OfferController extends StateNotifier<OfferState> {
   }
 
 
+  deleteOffer({
+    required String offerUid,
+  }) async {
+    final response = await http.post(
+      appUrl,
+      body: {
+        'executeQuery': "DELETE FROM offers WHERE uid = ?",
+        "params": jsonEncode([offerUid]), // Pass the uid of the load to delete
+      },
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      var data = jsonDecode(response.body);
+      debugPrint('Response: $data');
+    } else {
+      debugPrint('Error: ${response.statusCode}');
+      debugPrint('Error: ${response.reasonPhrase}');
+    }
+  }
+
+  changeTruck({required TruckModel value}) => state = state.copyWith(truckModel: value);
 
 }
 

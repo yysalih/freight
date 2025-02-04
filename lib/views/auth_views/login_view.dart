@@ -7,11 +7,14 @@ import 'package:kamyon/constants/languages.dart';
 import 'package:kamyon/constants/providers.dart';
 import 'package:kamyon/controllers/auth_controller.dart';
 import 'package:kamyon/views/auth_views/fill_out_view.dart';
+import 'package:kamyon/views/shipment_views/offer_inner_view.dart';
 import 'package:kamyon/widgets/custom_button_widget.dart';
 import 'package:kamyon/widgets/input_field_widget.dart';
+import 'package:kamyon/widgets/offer_modal_bottom_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/authentication_service.dart';
+import '../../widgets/pick_city_modal_bottom_sheet.dart';
 import '../main_view.dart';
 
 class LoginView extends ConsumerWidget {
@@ -85,7 +88,12 @@ class LoginView extends ConsumerWidget {
                     return customButton(title: authState.isRegister ?
                     languages[appLanguage]!["sign_up"]! :
                     languages[appLanguage]!["login"]!, color: kGreen, onPressed: () async {
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      debugPrint(FirebaseAuth.instance.currentUser!.uid);
+
+                      Navigator.push(context,
+                          routeToView(const OfferInnerView(offerUid: "")));
+
+                      /*SharedPreferences prefs = await SharedPreferences.getInstance();
                       User? user = await Authentication.signInWithGoogle(context: context);
 
                       if(user != null) {
@@ -102,7 +110,7 @@ class LoginView extends ConsumerWidget {
                           Navigator.push(context, routeToView(const FillOutView()));
                         }
 
-                      }
+                      }*/
                     },);
                   }
                   return customButton(title: authState.isRegister ?

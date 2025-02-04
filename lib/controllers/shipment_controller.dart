@@ -32,23 +32,26 @@ class ShipmentController extends StateNotifier<ShipmentState> {
 
   final descriptionController = TextEditingController();
 
-  createShipment(BuildContext context, {required String type, required String unitUid, required String toUid,
-    required String errorTitle, required String successTitle}) async {
+  createShipment(BuildContext context, {required String type,
+    required String unitUid, required String toUid,
+    required String errorTitle, required String successTitle,
+    required String truckUid, required double price}) async {
+
     String uid = const Uuid().v4();
     ShipmentModel shipmentModel = ShipmentModel(
-      price: state.price,
+      price: price,
       date: DateTime.now(),
       description: descriptionController.text,
       fromUid: FirebaseAuth.instance.currentUser!.uid,
       toUid: toUid,
-      truckUid: state.truckModel.uid,
+      truckUid: truckUid,
       type: type,
       uid: uid,
       unitUid: unitUid,
-      state: "sent",
+      state: "start",
       lastChangedDate: DateTime.now(),
-      lastLatitude: 0.0,
-      lastLongitude: 0.0,
+      lastLatitudeOfFreight: 0.0,
+      lastLongitudeOfFreight: 0.0,
     );
 
     final response = await http.post(

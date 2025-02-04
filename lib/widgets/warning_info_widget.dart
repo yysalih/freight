@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:kamyon/constants/app_constants.dart';
 
 import '../constants/languages.dart';
@@ -45,14 +46,25 @@ class NoPlaceFound extends ConsumerWidget {
   }
 }
 
-class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({super.key});
+class NoOfferFound extends ConsumerWidget {
+  const NoOfferFound({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator(),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final language = ref.watch(languageStateProvider);
+
+    return Padding(
+      padding: EdgeInsets.only(top: 10.0.h),
+      child: Text(languages[language]!["no_offer_found"]!, style: kCustomTextStyle,),
     );
   }
 }
+
+Widget loadingWidget() {
+  return const Center(
+    child: CircularProgressIndicator(),
+  );
+}
+
+Widget errorText() => const Text("Error found.", style: kCustomTextStyle,);
 

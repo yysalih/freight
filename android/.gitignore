@@ -4,6 +4,7 @@
 /lib/constants/app_constants.dart
 /lib/firebase_options.dart
 notes.txt
+get.php
 
 gradle-wrapper.jar
 /.gradle

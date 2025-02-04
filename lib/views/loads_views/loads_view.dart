@@ -43,7 +43,7 @@ class LoadsView extends ConsumerWidget {
 
     final locationNotifier = ref.watch(locationController.notifier);
 
-    final latlng = LatLng(locationNotifier.locationData.latitude ?? 41.0082376,
+    final latLng = LatLng(locationNotifier.locationData.latitude ?? 41.0082376,
         locationNotifier.locationData.longitude ?? 28.9783589);
 
     final availableLoadsNotifier = ref.watch(availableLoadsFutureProvider(""));
@@ -58,7 +58,7 @@ class LoadsView extends ConsumerWidget {
             FlutterMap(
               mapController: mainNotifier.mapController,
               options: MapOptions(
-                initialCenter: latlng,
+                initialCenter: latLng,
                 initialZoom: 9.2,
               ),
               children: [
@@ -86,7 +86,7 @@ class LoadsView extends ConsumerWidget {
 
 
                     Marker(
-                      point: latlng,
+                      point: latLng,
                       child: Icon(Icons.my_location, color: Colors.red, size: 30.w,)
                     )
                   ],
@@ -243,11 +243,11 @@ class LoadsView extends ConsumerWidget {
             ),
           ],
         ),
-        loading: () => emptyFlutterMap(latlng),
-        error: (error, stackTrace) => emptyFlutterMap(latlng),
+        loading: () => emptyFlutterMap(latLng),
+        error: (error, stackTrace) => emptyFlutterMap(latLng),
       ),
-      loading: () => emptyFlutterMap(latlng),
-      error: (error, stackTrace) => emptyFlutterMap(latlng),
+      loading: () => emptyFlutterMap(latLng),
+      error: (error, stackTrace) => emptyFlutterMap(latLng),
     );
   }
 }

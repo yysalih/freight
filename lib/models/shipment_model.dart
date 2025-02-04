@@ -17,21 +17,23 @@ class ShipmentModel implements BaseModel<ShipmentModel> {
   final String? description;
   final String? state;
   final DateTime? lastChangedDate;
-  final double? lastLatitude;
-  final double? lastLongitude;
+  final double? lastLatitudeOfFreight;
+  final double? lastLongitudeOfFreight;
 
   const ShipmentModel({
     this.uid,
-    this.date, this.type,
-    this.fromUid, this.toUid,
+    this.date,
+    this.type,
+    this.fromUid,
+    this.toUid,
     this.unitUid,
     this.truckUid,
     this.price,
     this.description,
     this.state,
     this.lastChangedDate,
-    this.lastLatitude,
-    this.lastLongitude,
+    this.lastLatitudeOfFreight,
+    this.lastLongitudeOfFreight,
   });
 
   @override
@@ -42,12 +44,13 @@ class ShipmentModel implements BaseModel<ShipmentModel> {
     toUid: json["toUid"] as String?,
     fromUid: json["fromUid"] as String?,
     unitUid: json["unitUid"] as String?,
+    truckUid: json["truckUid"] as String?,
     price: double.parse(json["price"]),
     description: json["description"] as String?,
     state: json["state"] as String?,
     lastChangedDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["lastChangedDate"])),
-    lastLatitude: double.parse(json["lastLatitude"]),
-    lastLongitude: double.parse(json["lastLongitude"]),
+    lastLatitudeOfFreight: double.parse(json["lastLatitudeOfFreight"]),
+    lastLongitudeOfFreight: double.parse(json["lastLongitudeOfFreight"]),
   );
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -62,17 +65,17 @@ class ShipmentModel implements BaseModel<ShipmentModel> {
     "description" : description,
     "state" : state,
     "lastChangedDate": lastChangedDate!.millisecondsSinceEpoch,
-    "lastLatitude" : lastLatitude,
-    "lastLongitude" : lastLongitude,
+    "lastLatitudeOfFreight" : lastLatitudeOfFreight,
+    "lastLongitudeOfFreight" : lastLongitudeOfFreight,
 
   };
 
   String getDbFields() {
-    return "uid, date, type, toUid, fromUid, unitUid, truckUid, price, description, state, lastChangedDate, lastLatitude, lastLongitude";
+    return "uid, date, type, toUid, fromUid, unitUid, truckUid, price, description, state, lastChangedDate, lastLatitudeOfFreight, lastLongitudeOfFreight";
   }
 
   String getDbFieldsWithQuestionMark() {
-    return "uid = ?, date = ?, type = ?, toUid = ?, fromUid = ?, unitUid = ?, truckUid = ?, price = ?, description = ?, state = ?, lastChangedDate = ?, lastLatitude = ?, lastLongitude = ?";
+    return "uid = ?, date = ?, type = ?, toUid = ?, fromUid = ?, unitUid = ?, truckUid = ?, price = ?, description = ?, state = ?, lastChangedDate = ?, lastLatitudeOfFreight = ?, lastLongitudeOfFreight = ?";
   }
 
   String get questionMarks => "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
@@ -80,7 +83,7 @@ class ShipmentModel implements BaseModel<ShipmentModel> {
   List getDbFormat() {
     return [
       uid,
-      date,
+      date!.millisecondsSinceEpoch,
       type,
       toUid,
       fromUid,
@@ -89,9 +92,9 @@ class ShipmentModel implements BaseModel<ShipmentModel> {
       price,
       description,
       state,
-      lastChangedDate,
-      lastLatitude,
-      lastLongitude,
+      lastChangedDate!.millisecondsSinceEpoch,
+      lastLatitudeOfFreight,
+      lastLongitudeOfFreight,
     ];
   }
 

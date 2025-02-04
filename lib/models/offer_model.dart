@@ -37,6 +37,7 @@ class OfferModel implements BaseModel<OfferModel> {
     toUid: json["toUid"] as String?,
     fromUid: json["fromUid"] as String?,
     unitUid: json["unitUid"] as String?,
+    truckUid: json["truckUid"] as String?,
     price: double.parse(json["price"]),
     description: json["description"] as String?,
     state: json["state"] as String?,
@@ -68,7 +69,7 @@ class OfferModel implements BaseModel<OfferModel> {
   List getDbFormat() {
     return [
       uid,
-      date,
+      date!.millisecondsSinceEpoch,
       type,
       toUid,
       fromUid,

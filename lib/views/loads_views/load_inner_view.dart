@@ -11,8 +11,10 @@ import 'package:kamyon/controllers/place_controller.dart';
 import 'package:kamyon/repos/load_repository.dart';
 import 'package:kamyon/repos/place_repository.dart';
 import 'package:kamyon/repos/user_repository.dart';
+import 'package:kamyon/views/shipment_views/offers_view.dart';
 import 'package:kamyon/widgets/app_alert_dialogs_widget.dart';
 import 'package:kamyon/widgets/map_markers_widget.dart';
+import 'package:kamyon/widgets/offer_modal_bottom_sheet.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -22,6 +24,7 @@ import '../../constants/languages.dart';
 import '../../constants/providers.dart';
 import '../../widgets/load_action_button.dart';
 import '../../widgets/load_info_widget.dart';
+import '../../widgets/warning_info_widget.dart';
 
 class LoadInnerView extends ConsumerWidget {
   final String uid;
@@ -131,12 +134,8 @@ class LoadInnerView extends ConsumerWidget {
                                         "${DateFormat("dd.MM.yyyy").format(load.startDate!)}",
                                       style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,),
                                   ),
-                                  error: (error, stackTrace) => Text("İstanbul TR\n"
-                                      "${DateFormat("dd.MM.yyyy").format(load.startDate!)}",
-                                    style: kCustomTextStyle,),
-                                  loading: () => Text("İstanbul TR\n"
-                                      "${DateFormat("dd.MM.yyyy").format(load.startDate!)}",
-                                    style: kCustomTextStyle,),
+                                  error: (error, stackTrace) => errorText(),
+                                  loading: () => Container(),
                                 ),
                                 //TODO Place name should be added just like in the AddTruckPostView (edit mode)
                                 const Icon(Icons.fast_forward_sharp, color: kBlueColor,),
@@ -152,12 +151,8 @@ class LoadInnerView extends ConsumerWidget {
                                       style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.end,),
                                   ),
-                                  loading: () => Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}",
-
-                                    style: kCustomTextStyle, textAlign: TextAlign.end,),
-                                  error: (error, stackTrace) => Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}",
-
-                                    style: kCustomTextStyle, textAlign: TextAlign.end,),
+                                  loading: () => Container(),
+                                  error: (error, stackTrace) => errorText(),
                                 ),
                               ],
                             ),
@@ -205,18 +200,41 @@ class LoadInnerView extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 15.h,),
+                        if(load.ownerUid == FirebaseAuth.instance.currentUser!.uid) Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.push(context, routeToView(OffersView(unitUid: load.uid!)));
+                              },
+                              child: Text(languages[language]!["show_offers"]!, style: kCustomTextStyle.copyWith(
+                                color: Colors.blue
+                              ),),
+                            ),
+                          ),
+                        ) else SizedBox(height: 15.h,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
 
                             loadActionButton(width, language, icon: Icons.monetization_on_rounded,
                                 description2: "${load.price}\$",
-                                title: languages[language]!["take_the_job"]!, description: languages[language]!["total"]!,
+                                title: languages[language]!["take_the_job"]!, description: "",
                             onPressed: () {
-                              chatNotifier.createChat(context, to: load.ownerUid!,
+                              showModalBottomSheet(context: context, builder: (context) =>
+                                  OfferModalBottomSheet(
+                                    toUid: load.ownerUid!,
+                                    type: "load",
+                                    unitUid: load.uid!,
+                                  ),);
+                            },),
 
-                                  errorTitle: languages[language]!["error_creating_chat"]!);
+                            loadActionButton(width, language, icon: Icons.chat_bubble,
+                                description2: languages[language]!["now"]!,
+                                title: languages[language]!["chat"]!, description: "",
+                            onPressed: () {
+                              chatNotifier.createChat(context, to: load.ownerUid!, errorTitle: languages[language]!["error_creating_chat"]!);
                             },),
 
 
@@ -224,7 +242,7 @@ class LoadInnerView extends ConsumerWidget {
                               data: (owner) => loadActionButton(width, language, icon: Icons.add_ic_call_rounded,
                                 description2: "${load.distance} KM",
 
-                                title: languages[language]!["call"]!, description: languages[language]!["distance"]!,
+                                title: languages[language]!["call"]!, description: "",
                                 onPressed: () {
                                   launchUrlString("tel://${owner.phone!}");
                                 },

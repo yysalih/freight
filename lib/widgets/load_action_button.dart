@@ -9,27 +9,19 @@ Widget loadActionButton(double width, String language,
       required String description, required String description2,
     }) {
   return SizedBox(
-    width: width * .435, height: 80.h,
+    width: width * .275, height: 50.h,
     child: ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: MaterialButton(
         onPressed: onPressed,
         color: kLightBlack,
-        child: Column(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, color: kGreen,),
-                SizedBox(width: 10.w,),
-                Text(title, style: kCustomTextStyle,),
+            Icon(icon, color: kGreen,),
+            SizedBox(width: 5.w,),
+            Text(title, style: kCustomTextStyle,),
 
-              ],
-            ),
-
-            SizedBox(height: 5.h,),
-            Text("$description: $description2", style: kCustomTextStyle.copyWith(color: kWhite, fontSize: 13.w),),
           ],
         ),
       ),

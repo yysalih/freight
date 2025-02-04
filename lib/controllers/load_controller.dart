@@ -184,6 +184,33 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
     }
   }
 
+  updateLoadState(BuildContext context, {required String loadUid, required String newState}) async {
+    final response = await http.post(
+      appUrl,
+      body: {
+        'executeQuery': "UPDATE loads SET state = ? WHERE uid = ?",
+        "params": jsonEncode([newState, loadUid]),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      var data = jsonDecode(response.body);
+      debugPrint('Response: $data');
+
+      if (!data.toString().contains("error")) {
+        //showSnackbar(title: successTitle, context: context);
+      } else {
+        debugPrint('Error updating offer state');
+        //showSnackbar(title: errorTitle, context: context);
+      }
+    } else {
+      debugPrint('Error: ${response.statusCode}');
+      debugPrint('Error: ${response.reasonPhrase}');
+      //showSnackbar(title: errorTitle, context: context);
+    }
+  }
+
   clear() {
     state = state.copyWith(origin: AppPlaceModel(), destination: AppPlaceModel());
     priceController.clear();

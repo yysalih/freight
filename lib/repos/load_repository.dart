@@ -69,7 +69,7 @@ class LoadRepository {
     final response = await http.post(
       appUrl,
       body: {
-        'multiQuery': "SELECT * FROM loads",
+        'multiQuery': "SELECT * FROM loads WHERE state = 'available'",
       },
     );
 

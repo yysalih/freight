@@ -1,18 +1,16 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/constants/app_constants.dart';
 import 'package:kamyon/controllers/main_controller.dart';
-import 'package:kamyon/controllers/truck_controller.dart';
-import 'package:kamyon/models/truck_model.dart';
-import 'package:kamyon/repos/truck_repository.dart';
-import 'package:kamyon/widgets/search_card_widget.dart';
+import 'package:kamyon/widgets/pick_truck_button_widget.dart';
 import 'package:kamyon/widgets/search_place_field_widget.dart';
 
 import '../constants/languages.dart';
 import '../constants/providers.dart';
 import 'input_field_widget.dart';
+
+
 
 class MainInputPostWidgets extends ConsumerWidget{
   final bool isLoad;
@@ -27,14 +25,7 @@ class MainInputPostWidgets extends ConsumerWidget{
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
     final language = ref.watch(languageStateProvider);
-
-    final mainState = ref.watch(mainController);
-    final truckState = ref.watch(truckController);
-
     final mainNotifier = ref.watch(mainController.notifier);
-    final truckNotifier = ref.watch(truckController.notifier);
-
-    final GlobalKey _menuKey2 = GlobalKey();
 
 
     return Column(
@@ -51,44 +42,9 @@ class MainInputPostWidgets extends ConsumerWidget{
         SizedBox(height: 10.h,),
 
         if(!isLoad) ...[
-          Row(
+          const Row(
             children: [
-              Consumer(
-                builder: (context, ref, child) {
-                  final GlobalKey _menuKey = GlobalKey();
-
-                  final trucksProvider = ref.watch(trucksFutureProvider(FirebaseAuth.instance.currentUser!.uid));
-
-                  return trucksProvider.when(
-                    data: (trucks) => PopupMenuButton(
-                      color: kBlack,
-                      key: _menuKey,
-                      child: searchCardWidget(width, hasTitle: false,
-                        halfLength: false,
-                        title: languages[language]!["pick_truck"]!,
-                        hint: mainState.truck.name!.isNotEmpty ?
-                        mainState.truck.name!
-                            : languages[language]!["pick_truck"]!, onPressed: () {
-                          final dynamic popupMenu = _menuKey.currentState;
-                          popupMenu.showButtonMenu();
-                        },),
-                      onSelected: (value) {
-                        mainNotifier.changeTruck(value: value);
-                      },
-                      itemBuilder: (context) => <PopupMenuEntry<TruckModel>>[
-                        for(int i = 0; i < trucks.length; i++) PopupMenuItem<TruckModel>(
-
-                          value: trucks[i],
-                          child: Text(trucks[i].name!, style: kCustomTextStyle,),
-                        ),
-                      ],
-                    ),
-                    loading: () => const SizedBox(),
-                    error: (error, stackTrace) => const SizedBox(),
-                  );
-                },
-                child: const SizedBox(),
-              ),
+              PickTruckButton(),
             ],
           ),
           SizedBox(height: 10.h,),
@@ -140,3 +96,5 @@ class MainInputPostWidgets extends ConsumerWidget{
     );
   }
 }
+
+

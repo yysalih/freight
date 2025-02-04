@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/constants/app_constants.dart';
 
-Widget customButton({required String title, Color color = kGreen, required Function() onPressed, bool inProgress = false}) {
+Widget customButton({required String title, Color color = kGreen,
+  required Function() onPressed, bool inProgress = false}) {
 
   return SizedBox(
     height: 40.h,
