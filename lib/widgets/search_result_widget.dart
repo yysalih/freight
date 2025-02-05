@@ -40,15 +40,23 @@ Widget searchResultWidget(double width, double height, String language,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(origin.name!//\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}"
-                        , style: kCustomTextStyle,),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: width * .3),
+                        child: Text("${origin.name!}",
+                          style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,),
+                      ),
                       const Icon(Icons.fast_forward_sharp, color: kWhite,),
 
                       Icon(Icons.local_shipping, color: kBlueColor, size: 30.w,),
 
                       const Icon(Icons.fast_forward_sharp, color: kWhite,),
-                      Text(destination.name!//\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}",
-                        ,style: kCustomTextStyle, textAlign: TextAlign.end,),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: width * .3),
+                        child: Text("${destination.name}",
+
+                          style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.end,),
+                      ),
                     ],
                   ),
                   SizedBox(height: 10.h,),

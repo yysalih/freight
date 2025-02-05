@@ -23,9 +23,6 @@ class OffersView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final language = ref.watch(languageStateProvider);
 
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-
     final offersStream = ref.watch(offersStreamProvider(unitUid));
     return Scaffold(
       backgroundColor: kBlack,

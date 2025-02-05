@@ -14,6 +14,7 @@ import 'package:kamyon/views/trucks_views/my_trucks_view.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants/app_constants.dart';
+import '../models/load_model.dart';
 
 class MainState {
   final int bottomIndex;
@@ -21,6 +22,7 @@ class MainState {
   final UserModel currentUser;
 
   final TruckModel truck;
+  final LoadModel load;
 
   final bool isLoadExpanded;
   final bool isTruckPostExpanded;
@@ -36,6 +38,7 @@ class MainState {
     required this.isLoadExpanded,
     required this.isTruckPostExpanded,
     required this.truck,
+    required this.load,
     required this.searchString,
     required this.filteredItems,
     required this.itemsOpened,
@@ -49,6 +52,7 @@ class MainState {
     bool? isTruckPostExpanded,
     bool? isLoadExpanded,
     TruckModel? truck,
+    LoadModel? load,
     List? filteredItems,
     bool? itemsOpened,
   }) {
@@ -59,6 +63,7 @@ class MainState {
       isLoadExpanded: isLoadExpanded ?? this.isLoadExpanded,
       isTruckPostExpanded: isTruckPostExpanded ?? this.isTruckPostExpanded,
       truck: truck ?? this.truck,
+      load: load ?? this.load,
       searchString: searchString ?? this.searchString,
       filteredItems: filteredItems ?? this.filteredItems,
       itemsOpened: itemsOpened ?? this.itemsOpened,
@@ -94,33 +99,9 @@ class MainController extends StateNotifier<MainState> {
     state = state.copyWith(isTruckPostExpanded: isTruckPostExpanded, isLoadExpanded: isLoadExpanded);
   }
 
-  getCurrentUser() async {
-    final response = await http.post(
-      appUrl,
-      body: {
-        'singleQuery': "SELECT * FROM users WHERE uid = '${FirebaseAuth.instance.currentUser!.uid}'",
-      },
-    );
-
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      UserModel userModel = UserModel().fromJson(data);
-      debugPrint('UserModel: $userModel');
-
-      if(data.toString().contains("error")) {
-        return false;
-      } else {
-        state = state.copyWith(currentUser: userModel);
-        return true;
-      }
-    } else {
-      debugPrint('Error: ${response.statusCode}');
-      debugPrint('Error: ${response.reasonPhrase}');
-      return false;
-    }
-  }
 
   changeTruck({required TruckModel value}) => state = state.copyWith(truck: value);
+  changeLoad({required LoadModel value}) => state = state.copyWith(load: value);
 
   changeSearchString({required String value}) => state = state.copyWith(searchString: value);
   showSearchItems({required bool value}) => state = state.copyWith(itemsOpened: value);
@@ -131,5 +112,5 @@ class MainController extends StateNotifier<MainState> {
 
 final mainController = StateNotifierProvider<MainController, MainState>(
       (ref) => MainController(MainState(bottomIndex: 0, selectedTab: "", isLoadExpanded: false, isTruckPostExpanded: false,
-      currentUser: UserModel(), truck: TruckModel(name: ""),
+      currentUser: UserModel(), truck: TruckModel(name: ""), load: LoadModel(originName: ""),
           searchString: "", filteredItems: [], itemsOpened: false),),);

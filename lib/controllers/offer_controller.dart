@@ -8,21 +8,25 @@ import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import '../constants/app_constants.dart';
 import '../constants/snackbars.dart';
+import '../models/load_model.dart';
 import '../models/truck_model.dart';
 
 class OfferState  {
   final double price;
   final TruckModel truckModel;
+  final LoadModel loadModel;
 
-  OfferState({required this.price, required this.truckModel});
+  OfferState({required this.price, required this.truckModel, required this.loadModel});
 
   OfferState copyWith({
     TruckModel? truckModel,
+    LoadModel? loadModel,
     double? price,
   }) {
     return OfferState(
       price: price ?? this.price,
       truckModel: truckModel ?? this.truckModel,
+      loadModel: loadModel ?? this.loadModel,
     );
   }
 }
@@ -126,9 +130,10 @@ class OfferController extends StateNotifier<OfferState> {
   }
 
   changeTruck({required TruckModel value}) => state = state.copyWith(truckModel: value);
+  changeLoad({required LoadModel value}) => state = state.copyWith(loadModel: value);
 
 }
 
 final offerController = StateNotifierProvider<OfferController, OfferState>((ref) => OfferController(OfferState(
-  truckModel: TruckModel(), price: 0.0,
+  truckModel: TruckModel(uid: ""), price: 0.0, loadModel: LoadModel(uid: "")
 )),);

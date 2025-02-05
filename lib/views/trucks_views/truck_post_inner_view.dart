@@ -5,9 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:kamyon/constants/snackbars.dart';
-import 'package:kamyon/controllers/load_controller.dart';
-import 'package:kamyon/controllers/place_controller.dart';
-import 'package:kamyon/repos/load_repository.dart';
 import 'package:kamyon/repos/place_repository.dart';
 import 'package:kamyon/repos/user_repository.dart';
 import 'package:kamyon/widgets/app_alert_dialogs_widget.dart';
@@ -19,11 +16,14 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/languages.dart';
 import '../../constants/providers.dart';
+import '../../controllers/chat_controller.dart';
 import '../../controllers/truck_controller.dart';
 import '../../repos/truck_posts_repository.dart';
 import '../../repos/truck_repository.dart';
 import '../../widgets/load_action_button.dart';
 import '../../widgets/load_info_widget.dart';
+import '../../widgets/offer_modal_bottom_sheet.dart';
+import '../shipment_views/offers_view.dart';
 
 class TruckPostInnerView extends ConsumerWidget {
   final String uid;
@@ -40,6 +40,7 @@ class TruckPostInnerView extends ConsumerWidget {
 
     final truckNotifier = ref.watch(truckController.notifier);
 
+    final chatNotifier = ref.watch(chatController.notifier);
 
     return Scaffold(
       backgroundColor: kBlack,
@@ -50,7 +51,7 @@ class TruckPostInnerView extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back_outlined),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(languages[language]!["load_details"]!,
+        title: Text(languages[language]!["truck_post_details"]!,
           style: const TextStyle(color: kWhite),),
         actions: [
           truckPostProvider.when(
@@ -171,7 +172,7 @@ class TruckPostInnerView extends ConsumerWidget {
                     loading: () => Container(),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 15.0.h, right: 15.w, left: 15.w),
+                    padding: EdgeInsets.only(top: 0.0.h, right: 15.w, left: 15.w),
                     child: Column(
                       children: [
                         Column(
@@ -229,6 +230,21 @@ class TruckPostInnerView extends ConsumerWidget {
                                     Text(DateFormat("dd.MM.yyyy").format(truckPost.createdDate!), style: kCustomTextStyle,),
                                   ],
                                 ),
+                                if(truckPost.ownerUid == FirebaseAuth.instance.currentUser!.uid && truckPost.state == "available")
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 5),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.push(context, routeToView(OffersView(unitUid: truckPost.uid!)));
+                                        },
+                                        child: Text(languages[language]!["show_offers"]!, style: kCustomTextStyle.copyWith(
+                                            color: Colors.blue
+                                        ),),
+                                      ),
+                                    ),
+                                  )
                               ],
                             ),
                           ],
@@ -240,10 +256,22 @@ class TruckPostInnerView extends ConsumerWidget {
 
                             loadActionButton(width, language, icon: Icons.monetization_on_rounded,
                                 description2: "${truckPost.price}\$",
-                                title: languages[language]!["take_the_job"]!, description: languages[language]!["total"]!,
+                                title: languages[language]!["propose"]!, description: languages[language]!["total"]!,
                             onPressed: () {
-
+                              showModalBottomSheet(context: context, builder: (context) =>
+                                  OfferModalBottomSheet(
+                                    toUid: truckPost.ownerUid!,
+                                    type: "truckPost",
+                                    unitUid: truckPost.uid!,
+                                  ),);
                             },),
+                            loadActionButton(width, language, icon: Icons.chat_bubble,
+                              description2: languages[language]!["now"]!,
+                              title: languages[language]!["chat"]!, description: "",
+                              onPressed: () {
+                                chatNotifier.createChat(context, to: truckPost.ownerUid!,
+                                    errorTitle: languages[language]!["error_creating_chat"]!);
+                              },),
                             ownerUser.when(
                               data: (owner) => loadActionButton(width, language, icon: Icons.add_ic_call_rounded,
                                 description2: "${truckPost.distance} KM",

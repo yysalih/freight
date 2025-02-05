@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kamyon/widgets/pick_load_button_widget.dart';
 import 'package:kamyon/widgets/pick_truck_button_widget.dart';
 import '../constants/app_constants.dart';
 import '../constants/languages.dart';
@@ -35,9 +36,9 @@ class OfferModalBottomSheet extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(languages[language]!["pick_truck"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
+                Text(languages[language]![type == "load" ? "pick_truck" : "pick_load"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
                 SizedBox(height: 3.h,),
-                const PickTruckButton(),
+                type == "load" ? const PickTruckButton() : const PickLoadButton(),
               ],
             ),
             SizedBox(height: 10.h,),

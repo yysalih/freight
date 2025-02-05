@@ -69,7 +69,7 @@ class TruckPostRepository {
     final response = await http.post(
       appUrl,
       body: {
-        'multiQuery': "SELECT * FROM truck_posts",
+        'multiQuery': "SELECT * FROM truck_posts WHERE state = 'available'",
       },
     );
 

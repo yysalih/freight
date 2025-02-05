@@ -5,6 +5,9 @@ const Map<String, Map<String, String>> languages = {
 };
 
 const Map<String, String> tr = {
+  "pick_load" : "Yük Seç",
+  "truck_post_details" : "Araç İlan Detayları",
+  "propose" : "Teklif",
   "update_shipment_state" : "Nakliyat Durumunu Güncelle",
   "load_received" : "Yük Alındı",
   "target_reached" : "Hedefe Ulaşıldı",
@@ -232,6 +235,10 @@ const Map<String, String> tr = {
   "canceled" : "İptal Edildi",
 };
 const Map<String, String> en = {
+  "pick_load" : "Yük Seç",
+
+  "truck_post_details" : "Araç İlan Detayları",
+  "propose" : "Teklif",
   "update_shipment_state" : "Nakliyat Durumunu Güncelle",
   "load_received" : "Yük Alındı",
   "target_reached" : "Hedefe Ulaşıldı",

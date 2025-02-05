@@ -332,6 +332,34 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
 
   switchToTruckPosts() => state = state.copyWith(showTruckPosts: !state.showTruckPosts);
 
+  updateTruckPostState(BuildContext context, {required String truckPostUid, required String newState}) async {
+    final response = await http.post(
+      appUrl,
+      body: {
+        'executeQuery': "UPDATE truck_posts SET state = ? WHERE uid = ?",
+        "params": jsonEncode([newState, truckPostUid]),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      var data = jsonDecode(response.body);
+      debugPrint('Response: $data');
+
+      if (!data.toString().contains("error")) {
+        //showSnackbar(title: successTitle, context: context);
+      } else {
+        debugPrint('Error updating offer state');
+        //showSnackbar(title: errorTitle, context: context);
+      }
+    } else {
+      debugPrint('Error: ${response.statusCode}');
+      debugPrint('Error: ${response.reasonPhrase}');
+      //showSnackbar(title: errorTitle, context: context);
+    }
+  }
+
+
   clear() {
     priceController.clear();
     descriptionController.clear();

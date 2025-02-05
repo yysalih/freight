@@ -15,10 +15,15 @@ import '../../constants/languages.dart';
 import '../../constants/providers.dart';
 import '../../constants/snackbars.dart';
 import '../../controllers/chat_controller.dart';
+import '../../controllers/truck_controller.dart';
+import '../../repos/load_repository.dart';
+import '../../repos/place_repository.dart';
 import '../../repos/truck_repository.dart';
 import '../../widgets/app_alert_dialogs_widget.dart';
 import '../../widgets/custom_button_widget.dart';
 import '../../widgets/load_info_widget.dart';
+import '../../widgets/search_result_widget.dart';
+import '../loads_views/load_inner_view.dart';
 
 class OfferInnerView extends ConsumerWidget {
   final String offerUid;
@@ -31,6 +36,7 @@ class OfferInnerView extends ConsumerWidget {
     final offerProvider = ref.watch(offerStreamProvider(offerUid));
     final offerNotifier = ref.watch(offerController.notifier);
     final loadNotifier = ref.watch(loadController.notifier);
+    final truckNotifier = ref.watch(truckController.notifier);
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -82,6 +88,7 @@ class OfferInnerView extends ConsumerWidget {
           child: offerProvider.when(
             data: (offer) {
               final truckProvider = ref.watch(truckFutureProvider(offer.truckUid));
+              final loadProvider = ref.watch(loadFutureProvider(offer.unitUid));
               final offerOwnerProvider = ref.watch(userFutureProvider(offer.fromUid));
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,7 +152,7 @@ class OfferInnerView extends ConsumerWidget {
                       loadInfoWidget(width, height, title: languages[language]!["price"]!,
                           description: "${offer.price} ₺", descriptionFontSize: 20),
                       SizedBox(height: 20.h,),
-                      truckProvider.when(
+                      if(offer.type == "load") truckProvider.when(
                         data: (truck) => Padding(
                           padding: const EdgeInsets.all(15.0),
                           child: Container(
@@ -200,6 +207,40 @@ class OfferInnerView extends ConsumerWidget {
                           return Container();
                         },
                         loading: () => Container(),
+                      ) else loadProvider.when(
+                        data: (load) {
+                          final originProvider = ref.watch(placeFutureProvider(load.origin!));
+                          final destinationProvider = ref.watch(placeFutureProvider(load.destination!));
+
+                          return originProvider.when(
+                            data: (origin) => destinationProvider.when(
+                              data: (destination) => Padding(
+                                padding: EdgeInsets.only(top: 15.0.h),
+                                child: searchResultWidget(width, height, language, load: load,
+                                  destination: destination, origin: origin,
+                                  onPressed: () {
+                                    Navigator.push(context, routeToView(LoadInnerView(uid: load.uid!)));
+                                  },
+                                ),
+                              ),
+                              loading: () => Container(),
+                              error: (error, stackTrace) {
+                                debugPrint("Error: $error");
+                                debugPrint("Error: $stackTrace");
+                                return const NoLoadsFoundWidget();
+                              },
+                            ),
+                            loading: () => Container(),
+                            error: (error, stackTrace) {
+                              debugPrint("Error: $error");
+                              debugPrint("Error: $stackTrace");
+                              return const NoLoadsFoundWidget();
+                            },
+                          );
+                        },
+
+                        loading: () => Container(),
+                        error: (error, stackTrace) => Container(),
                       ),
                       const SizedBox(height: 10,),
                       loadInfoWidget(width, height, title: languages[language]!["description"]!,
@@ -235,7 +276,11 @@ class OfferInnerView extends ConsumerWidget {
                               errorTitle: languages[language]!["error_accept_offer"]!,
                               successTitle: languages[language]!["success_accept_offer"]!);
 
-                          await loadNotifier.updateLoadState(context, loadUid: offer.unitUid!, newState: "accepted",);
+                          if(offer.type == "load") {
+                            await loadNotifier.updateLoadState(context, loadUid: offer.unitUid!, newState: "accepted",);
+                          } else {
+                            await truckNotifier.updateTruckPostState(context, truckPostUid: offer.unitUid!, newState: "accepted",);
+                          }
                           await shipmentNotifier.createShipment(context,
                               type: "load", unitUid: offer.unitUid!, toUid: offer.toUid!,
                               price: offer.price!, truckUid: offer.truckUid!,

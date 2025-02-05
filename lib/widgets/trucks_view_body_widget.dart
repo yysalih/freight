@@ -6,6 +6,7 @@ import 'package:kamyon/controllers/place_controller.dart';
 import 'package:kamyon/repos/place_repository.dart';
 import 'package:kamyon/repos/truck_posts_repository.dart';
 import 'package:kamyon/views/trucks_views/new_post_view.dart';
+import 'package:kamyon/views/trucks_views/truck_post_inner_view.dart';
 import 'package:kamyon/widgets/search_result_widget.dart';
 import 'package:kamyon/widgets/truck_card_widget.dart';
 import 'package:kamyon/widgets/warning_info_widget.dart';
@@ -140,8 +141,7 @@ class MyTruckPostsWidget extends ConsumerWidget {
                       truckNotifier.switchAppPlaceModels(origin: origin, destination: destination);
                       truckNotifier.switchStrings(truckType: "", contact: truckPosts[index].contact!);
 
-                      Navigator.push(context, routeToView(NewPostView(
-                          truckUid: truckPosts[index].truckUid!, truckPostUid: truckPosts[index].uid!, toEdit: true)));
+                      Navigator.push(context, routeToView(TruckPostInnerView(uid: truckPosts[index].uid!)));
                     },)
                 ),
                 loading: () => Container(),

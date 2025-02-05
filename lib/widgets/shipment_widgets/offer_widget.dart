@@ -28,7 +28,7 @@ Widget offerWidget(OfferModel offer, {required String language, required BuildCo
               Navigator.push(context, routeToView(OfferInnerView(offerUid: offer.uid!)));
             },
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Column(
                 children: [
                   offerOwnerProvider.when(
