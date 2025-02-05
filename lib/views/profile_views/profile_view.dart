@@ -16,6 +16,7 @@ import 'package:kamyon/views/profile_views/contacts_view.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/languages.dart';
 import '../../constants/providers.dart';
+import '../shipment_views/shipments_view.dart';
 
 class ProfileView extends ConsumerWidget {
   const ProfileView({super.key});
@@ -109,6 +110,12 @@ class ProfileView extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          ProfileButtonWidget(width: width,
+                            title: languages[language]!["active_shipments"]!,
+                            icon: Icons.local_shipping,
+                          onPressed: () {
+                            Navigator.push(context, routeToView(ShipmentsView()));
+                          },),
                           ProfileButtonWidget(width: width, title: languages[language]!["contacts"]!, icon: Icons.quick_contacts_dialer_rounded,
                           onPressed: () {
                             Navigator.push(context, routeToView( ContactsView(currentUser: user,)));

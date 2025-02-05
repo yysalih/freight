@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:kamyon/models/base_unit_model.dart';
 import 'package:kamyon/models/place_model.dart';
 import 'base_model.dart';
 
 @JsonSerializable()
 @immutable
-class LoadModel implements BaseModel<LoadModel> {
+class LoadModel extends BaseUnitModel implements BaseModel<LoadModel> {
 
+  @override
   final String? uid;
   final String? origin;
   final String? destination;
@@ -14,9 +16,13 @@ class LoadModel implements BaseModel<LoadModel> {
   final double? originLong;
   final double? destinationLat;
   final double? destinationLong;
+  @override
   final String? ownerUid;
+  @override
   final String? description;
+  @override
   final double? length;
+  @override
   final double? weight;
   final double? volume;
   final DateTime? startDate;
@@ -25,6 +31,7 @@ class LoadModel implements BaseModel<LoadModel> {
   final String? endHour;
   final String? loadType;
   final String? truckType;
+  @override
   final bool? isPartial;
   final bool? isPalletized;
   final String? contact;
@@ -158,4 +165,5 @@ class LoadModel implements BaseModel<LoadModel> {
       destinationAddress
     ];
   }
+
 }

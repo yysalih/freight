@@ -60,6 +60,20 @@ class NoOfferFound extends ConsumerWidget {
   }
 }
 
+class NoShipmentFound extends ConsumerWidget {
+  const NoShipmentFound({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final language = ref.watch(languageStateProvider);
+
+    return Padding(
+      padding: EdgeInsets.only(top: 10.0.h),
+      child: Text(languages[language]!["no_shipment_found"]!, style: kCustomTextStyle,),
+    );
+  }
+}
+
 Widget loadingWidget() {
   return const Center(
     child: CircularProgressIndicator(),

@@ -200,7 +200,8 @@ class LoadInnerView extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        if(load.ownerUid == FirebaseAuth.instance.currentUser!.uid) Align(
+                        if(load.ownerUid == FirebaseAuth.instance.currentUser!.uid && load.state == "available")
+                          Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5),

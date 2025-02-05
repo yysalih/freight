@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:kamyon/models/base_unit_model.dart';
 import 'base_model.dart';
 
 @JsonSerializable()
 @immutable
-class TruckModel implements BaseModel<TruckModel> {
+class TruckModel extends BaseUnitModel implements BaseModel<TruckModel> {
 
+  @override
   final String? uid;
   final String? name;
+  @override
   final String? ownerUid;
   final String? trailerUid;
+  @override
   final String? description;
   final String? city;
+  @override
   final double? length;
+  @override
   final double? weight;
   final String? type;
+  @override
   final bool? isPartial;
 
 
-  const TruckModel({this.uid, this.name, this.description,
+  TruckModel({this.uid, this.name, this.description,
     this.city, this.length,
     this.ownerUid, this.isPartial,
     this.weight, this.type, this.trailerUid

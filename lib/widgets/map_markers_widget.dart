@@ -13,6 +13,8 @@ import 'package:kamyon/views/trucks_views/truck_post_inner_view.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../models/shipment_model.dart';
+
 Marker loadMarker(LoadModel load, {required BuildContext context}) {
   return Marker(
     point: LatLng(load.originLat!, load.originLong!),
@@ -23,6 +25,21 @@ Marker loadMarker(LoadModel load, {required BuildContext context}) {
         radius: 25,
         backgroundColor: Colors.white,
         child: Image.asset("assets/icons/box.png", width: 25.w,),
+      ),
+    ),
+  );
+}
+
+Marker shipmentMarker(ShipmentModel shipment, {required BuildContext context}) {
+  return Marker(
+    point: LatLng(shipment.lastLatitudeOfFreight!, shipment.lastLongitudeOfFreight!),
+    width: 40.w, height: 40.h,
+    child: GestureDetector(
+      onTap: () => Navigator.push(context, routeToView(LoadInnerView(uid: shipment.uid!))),
+      child: CircleAvatar(
+        radius: 25,
+        backgroundColor: Colors.white,
+        child: Image.asset("assets/icons/shipment.png", width: 25.w,),
       ),
     ),
   );
