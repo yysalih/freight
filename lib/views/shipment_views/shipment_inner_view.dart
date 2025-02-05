@@ -9,6 +9,7 @@ import 'package:kamyon/controllers/offer_controller.dart';
 import 'package:kamyon/controllers/shipment_controller.dart';
 import 'package:kamyon/repos/offer_repository.dart';
 import 'package:kamyon/repos/user_repository.dart';
+import 'package:kamyon/widgets/shipment_widgets/shipment_state_modal_bottom_sheet.dart';
 import 'package:kamyon/widgets/warning_info_widget.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -107,6 +108,45 @@ class ShipmentInnerView extends ConsumerWidget {
                     padding: EdgeInsets.all(15.w),
                     child: Column(
                       children: [
+                        if(FirebaseAuth.instance.currentUser!.uid == shipment.toUid) ...[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(languages[language]!["update_shipment_state"]!, style: kTitleTextStyle.copyWith(
+                                  color: kWhite
+                              ),),
+                              const SizedBox(height: 5,),
+                              Container(
+                                  width: width, height: 40.h,
+                                  decoration: BoxDecoration(
+                                      color: kLightBlack,
+                                      borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: MaterialButton(
+                                      onPressed: () {
+                                        if(shipment.state != "completed") {
+                                          showModalBottomSheet(context: context, builder: (context) =>
+                                              ShipmentStateModalBottomSheet(shipmentUid: shipmentUid),);
+                                        }
+                                      },
+                                      color: kLightBlack,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(languages[language]![shipment.state!]!,
+                                            style: kCustomTextStyle,),
+                                          Icon(Icons.arrow_downward, color: kWhite,)
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10.h,),
+                        ],
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -236,6 +276,7 @@ class ShipmentInnerView extends ConsumerWidget {
                           ],
                         ),
 
+
                         SizedBox(height: 10.h,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,7 +400,7 @@ class ShipmentInnerView extends ConsumerWidget {
                             ),),
                           ],
                         )
-                          else Row(
+                          else if(FirebaseAuth.instance.currentUser!.uid != shipment.toUid) Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(

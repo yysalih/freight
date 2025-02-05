@@ -5,6 +5,10 @@ const Map<String, Map<String, String>> languages = {
 };
 
 const Map<String, String> tr = {
+  "update_shipment_state" : "Nakliyat Durumunu Güncelle",
+  "load_received" : "Yük Alındı",
+  "target_reached" : "Hedefe Ulaşıldı",
+  "load_delivered" : "Yük Teslim Edildi",
   "load_owner" : "Yük Sahibi",
   "this_shipment_is_canceled" : "Bu nakliyat iptal edildi!",
   "this_shipment_is_completed" : "Bu nakliyat tamamlandı.",
@@ -228,6 +232,10 @@ const Map<String, String> tr = {
   "canceled" : "İptal Edildi",
 };
 const Map<String, String> en = {
+  "update_shipment_state" : "Nakliyat Durumunu Güncelle",
+  "load_received" : "Yük Alındı",
+  "target_reached" : "Hedefe Ulaşıldı",
+  "load_delivered" : "Yük Teslim Edildi",
   "load_owner" : "Yük Sahibi",
 
   "completed" : "Tamamlandı",

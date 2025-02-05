@@ -13,16 +13,19 @@ import '../models/truck_model.dart';
 class ShipmentState  {
   final double price;
   final TruckModel truckModel;
+  final String shipmentStatus;
 
-  ShipmentState({required this.price, required this.truckModel});
+  ShipmentState({required this.price, required this.truckModel, required this.shipmentStatus});
 
   ShipmentState copyWith({
     TruckModel? truckModel,
     double? price,
+    String? shipmentStatus,
   }) {
     return ShipmentState(
       price: price ?? this.price,
       truckModel: truckModel ?? this.truckModel,
+      shipmentStatus: shipmentStatus ?? this.shipmentStatus,
     );
   }
 }
@@ -92,23 +95,25 @@ class ShipmentController extends StateNotifier<ShipmentState> {
       var data = jsonDecode(response.body);
       debugPrint('Response: $data');
 
-      if (!data.toString().contains("error")) {
+      if (!data.toString().contains("error") && successTitle.isNotEmpty) {
         showSnackbar(title: successTitle, context: context);
       } else {
         debugPrint('Error updating offer state');
-        showSnackbar(title: errorTitle, context: context);
+        if(errorTitle.isNotEmpty) showSnackbar(title: errorTitle, context: context);
       }
     } else {
       debugPrint('Error: ${response.statusCode}');
       debugPrint('Error: ${response.reasonPhrase}');
-      showSnackbar(title: errorTitle, context: context);
+      if(errorTitle.isNotEmpty) showSnackbar(title: errorTitle, context: context);
     }
   }
 
-
+  changeShipmentState(String value, {required}) {
+    state = state.copyWith(shipmentStatus: value);
+  }
 
 }
 
 final shipmentController = StateNotifierProvider<ShipmentController, ShipmentState>((ref) => ShipmentController(ShipmentState(
-  truckModel: TruckModel(), price: 0.0,
+  truckModel: TruckModel(), price: 0.0, shipmentStatus: ""
 )),);
