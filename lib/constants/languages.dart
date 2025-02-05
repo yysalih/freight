@@ -5,7 +5,7 @@ const Map<String, Map<String, String>> languages = {
 };
 
 const Map<String, String> tr = {
-
+  "load_owner" : "Yük Sahibi",
   "this_shipment_is_canceled" : "Bu nakliyat iptal edildi!",
   "this_shipment_is_completed" : "Bu nakliyat tamamlandı.",
   "complete" : "Bitir",
@@ -228,6 +228,8 @@ const Map<String, String> tr = {
   "canceled" : "İptal Edildi",
 };
 const Map<String, String> en = {
+  "load_owner" : "Yük Sahibi",
+
   "completed" : "Tamamlandı",
   "canceled" : "İptal Edildi",
   "complete" : "Bitir",

@@ -41,7 +41,6 @@ class ShipmentInnerView extends ConsumerWidget {
 
     final shipmentProvider = ref.watch(shipmentStreamProvider(shipmentUid));
     final shipmentNotifier = ref.watch(shipmentController.notifier);
-    final loadNotifier = ref.watch(loadController.notifier);
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -69,6 +68,7 @@ class ShipmentInnerView extends ConsumerWidget {
 
               final truckProvider = ref.watch(truckFutureProvider(shipment.truckUid));
               final carrierProvider = ref.watch(userFutureProvider(shipment.toUid));
+              final loadOwnerProvider = ref.watch(userFutureProvider(shipment.fromUid));
               final loadProvider = ref.watch(loadFutureProvider(shipment.unitUid));
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,25 +133,31 @@ class ShipmentInnerView extends ConsumerWidget {
                                             backgroundImage: CachedNetworkImageProvider(carrier.image!),
                                           ),
                                           const SizedBox(width: 15,),
-                                          Text("${carrier.name}\n${carrier.email}", style: kCustomTextStyle,),
+                                          ConstrainedBox(
+                                              constraints: BoxConstraints(maxWidth: width * .45),
+                                              child: Text("${carrier.name}\n${carrier.email}",
+                                                style: kCustomTextStyle,)),                                        ],
+                                      ),
+                                      if(carrier.uid != FirebaseAuth.instance.currentUser!.uid) Row(
+                                        children: [
+                                          IconButton(
+                                            splashColor: kBlueColor,
+                                            splashRadius: 30,
+                                            onPressed: () {
+                                              launchUrlString("tel://${carrier.phone!}");
+                                            },
+                                            icon: const Icon(Icons.call, color: kWhite,),
+                                          ),
+                                          IconButton(
+                                            splashColor: kBlueColor,
+                                            splashRadius: 30,
+                                            onPressed: () {
+                                              chatNotifier.createChat(context, to: shipment.fromUid!,
+                                                  errorTitle: languages[language]!["error_creating_chat"]!);
+                                            },
+                                            icon: const Icon(Icons.chat_bubble, color: kWhite,),
+                                          ),
                                         ],
-                                      ),
-                                      IconButton(
-                                        splashColor: kBlueColor,
-                                        splashRadius: 30,
-                                        onPressed: () {
-                                          launchUrlString("tel://${carrier.phone!}");
-                                        },
-                                        icon: const Icon(Icons.call, color: kWhite,),
-                                      ),
-                                      IconButton(
-                                        splashColor: kBlueColor,
-                                        splashRadius: 30,
-                                        onPressed: () {
-                                          chatNotifier.createChat(context, to: shipment.fromUid!,
-                                              errorTitle: languages[language]!["error_creating_chat"]!);
-                                        },
-                                        icon: const Icon(Icons.chat_bubble, color: kWhite,),
                                       ),
 
                                     ],
@@ -165,9 +171,71 @@ class ShipmentInnerView extends ConsumerWidget {
                           ],
                         ),
                         SizedBox(height: 10.h,),
-                        loadInfoWidget(width, height, title: languages[language]!["state"]!,
-                            description: languages[language]![shipment.state!]!,
-                            multiLineDescription: true, descriptionFontSize: 15),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(languages[language]!["load_owner"]!, style: kTitleTextStyle.copyWith(
+                                color: kWhite
+                            ),),
+                            const SizedBox(height: 5,),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: kLightBlack,
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: loadOwnerProvider.when(
+                                  data: (loadOwner) => Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 30.w,
+                                            backgroundColor: kBlack,
+                                            backgroundImage: CachedNetworkImageProvider(loadOwner.image!),
+                                          ),
+                                          const SizedBox(width: 15,),
+                                          ConstrainedBox(
+                                            constraints: BoxConstraints(maxWidth: width * .45),
+                                              child: Text("${loadOwner.name}\n${loadOwner.email}",
+                                                style: kCustomTextStyle,)),
+                                        ],
+                                      ),
+                                      if(loadOwner.uid != FirebaseAuth.instance.currentUser!.uid) Row(
+                                        children: [
+                                          IconButton(
+                                            splashColor: kBlueColor,
+                                            splashRadius: 30,
+                                            onPressed: () {
+                                              launchUrlString("tel://${loadOwner.phone!}");
+                                            },
+                                            icon: const Icon(Icons.call, color: kWhite,),
+                                          ),
+                                          IconButton(
+                                            splashColor: kBlueColor,
+                                            splashRadius: 30,
+                                            onPressed: () {
+                                              chatNotifier.createChat(context, to: shipment.fromUid!,
+                                                  errorTitle: languages[language]!["error_creating_chat"]!);
+                                            },
+                                            icon: const Icon(Icons.chat_bubble, color: kWhite,),
+                                          ),
+                                        ],
+                                      ),
+
+                                    ],
+                                  ),
+                                  loading: () => Container(),
+                                  error: (error, stackTrace) => Container(),
+
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
                         SizedBox(height: 10.h,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,6 +243,9 @@ class ShipmentInnerView extends ConsumerWidget {
                             Text(languages[language]!["details"]!, style: kTitleTextStyle.copyWith(
                                 color: kWhite
                             ),),
+                            loadInfoWidget(width, height, title: languages[language]!["state"]!,
+                                description: languages[language]![shipment.state!]!,
+                                multiLineDescription: true, descriptionFontSize: 15),
                             loadInfoWidget(width, height, title: languages[language]!["price"]!,
                                 description: "${shipment.price} ₺", descriptionFontSize: 20),
                             SizedBox(height: 20.h,),
