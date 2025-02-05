@@ -60,33 +60,14 @@ class MyLoadsView extends ConsumerWidget {
                     :  Expanded(
                   child: ListView.builder(
                     itemBuilder: (context, index) {
-                      final originProvider = ref.watch(placeFutureProvider(loads[index].origin!));
-                      final destinationProvider = ref.watch(placeFutureProvider(loads[index].destination!));
 
-                      return originProvider.when(
-                        data: (origin) => destinationProvider.when(
-                          data: (destination) => Padding(
-                            padding: EdgeInsets.only(top: 15.0.h),
-                            child: searchResultWidget(width, height, language, load: loads[index],
-                              destination: destination, origin: origin,
-                              onPressed: () {
-                                Navigator.push(context, routeToView(LoadInnerView(uid: loads[index].uid!)));
-                              },
-                            ),
-                          ),
-                          loading: () => Container(),
-                          error: (error, stackTrace) {
-                            debugPrint("Error: $error");
-                            debugPrint("Error: $stackTrace");
-                            return const NoLoadsFoundWidget();
+                      return Padding(
+                        padding: EdgeInsets.only(top: 15.0.h),
+                        child: searchResultWidget(width, height, language, load: loads[index],
+                          onPressed: () {
+                            Navigator.push(context, routeToView(LoadInnerView(uid: loads[index].uid!)));
                           },
                         ),
-                        loading: () => Container(),
-                        error: (error, stackTrace) {
-                          debugPrint("Error: $error");
-                          debugPrint("Error: $stackTrace");
-                          return const NoLoadsFoundWidget();
-                        },
                       );
                     },
                     itemCount: loads.length,

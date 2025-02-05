@@ -234,33 +234,15 @@ class ShipmentInnerForTruckPostView extends ConsumerWidget {
                             const SizedBox(height: 10,),
                             loadProvider.when(
                               data: (load) {
-                                final originProvider = ref.watch(placeFutureProvider(load.origin!));
-                                final destinationProvider = ref.watch(placeFutureProvider(load.destination!));
 
-                                return originProvider.when(
-                                  data: (origin) => destinationProvider.when(
-                                    data: (destination) => Padding(
-                                      padding: EdgeInsets.only(top: 15.0.h),
-                                      child: searchResultWidget(width, height, language, load: load,
-                                        destination: destination, origin: origin,
-                                        onPressed: () {
-                                          Navigator.push(context, routeToView(LoadInnerView(uid: load.uid!)));
-                                        },
-                                      ),
-                                    ),
-                                    loading: () => Container(),
-                                    error: (error, stackTrace) {
-                                      debugPrint("Error: $error");
-                                      debugPrint("Error: $stackTrace");
-                                      return const NoLoadsFoundWidget();
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 15.0.h),
+                                  child: searchResultWidget(width, height, language, load: load,
+
+                                    onPressed: () {
+                                      Navigator.push(context, routeToView(LoadInnerView(uid: load.uid!)));
                                     },
                                   ),
-                                  loading: () => Container(),
-                                  error: (error, stackTrace) {
-                                    debugPrint("Error: $error");
-                                    debugPrint("Error: $stackTrace");
-                                    return const NoLoadsFoundWidget();
-                                  },
                                 );
                               },
 

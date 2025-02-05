@@ -8,9 +8,12 @@ import 'package:http/http.dart' as http;
 import 'package:kamyon/constants/app_constants.dart';
 import 'package:kamyon/constants/snackbars.dart';
 import 'package:kamyon/controllers/profile_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/providers.dart';
 import '../models/user_model.dart';
+import '../services/authentication_service.dart';
+import '../views/auth_views/fill_out_view.dart';
 import '../views/main_view.dart';
 
 
@@ -45,8 +48,6 @@ class AuthController extends StateNotifier<AuthState> {
   TextEditingController passwordAgainController = TextEditingController();
 
   User? get currentUser => FirebaseAuth.instance.currentUser;
-
-  //final url = Uri.parse('https://coral-lemur-335530.hostingersite.com/get.php');
 
   switchRegister() {
     state = state.copyWith(isRegister: !state.isRegister);
@@ -84,20 +85,20 @@ class AuthController extends StateNotifier<AuthState> {
     }
   }
 
-  createUser({required BuildContext context, required String errorTitle}) async {
+  createUser(ProfileState profileState, {required BuildContext context, required String errorTitle}) async {
 
     UserModel userModel = UserModel(
       isCarrier: state.isCarrier,
       isBroker: state.isBroker,
       name: nameController.text,
-      image: currentUser!.photoURL,
+      image: currentUser!.photoURL ?? profileState.image,
       uid: currentUser!.uid,
       email: emailController.text,
       password: passwordController.text,
       phone: phoneController.text,
       lastname: surnameController.text,
       token: "",
-      point: 0.1,
+      point: 0.0,
       contacts: "${phoneController.text};",
       idBack: "", idFront: "", licenseBack: "", licenseFront: "", psiko: "", registration: "", src: ""
     );
@@ -215,6 +216,79 @@ class AuthController extends StateNotifier<AuthState> {
       showSnackbar(title: errorTitle, context: context);
     }
   }
+
+  handleSignIn(AuthController authNotifier, {required BuildContext context}) async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    User? user = await Authentication.signInWithGoogle(context: context);
+
+    if(user != null) {
+      prefs.setString("uid", user.uid);
+
+      bool isUserExists = await authNotifier.checkIfUserExists();
+
+      if(isUserExists) {
+        Navigator.push(context,
+            routeToView(const MainView()));
+      }
+      else {
+        //await authWatch.createNewUser(user.uid, user);
+        Navigator.push(context, routeToView(const FillOutView()));
+      }
+
+    }
+  }
+
+  handleSignInWithApple(AuthController authNotifier, {required BuildContext context}) async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    UserCredential? userCredential = await Authentication.signInWithApple();
+
+    if(userCredential.user != null) {
+      final user = userCredential.user!;
+      prefs.setString("uid", user.uid);
+
+      bool isUserExists = await authNotifier.checkIfUserExists();
+
+      if(isUserExists) {
+        Navigator.push(context,
+            routeToView(const MainView()));
+      }
+      else {
+        //await authWatch.createNewUser(user.uid, user);
+        Navigator.push(context, routeToView(const FillOutView()));
+      }
+
+    }
+  }
+
+  handleSignInWithEmail(AuthController authNotifier, {required BuildContext context}) async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    User? user =  state.isRegister ?
+    await Authentication.signUp(email: authNotifier.emailController.text,
+        password: authNotifier.passwordController.text)
+        :
+    await Authentication.signIn(email: authNotifier.emailController.text,
+        password: authNotifier.passwordController.text);
+
+    if(user != null) {
+      prefs.setString("uid", user.uid);
+
+      bool isUserExists = await authNotifier.checkIfUserExists();
+
+      if(isUserExists) {
+        Navigator.push(context,
+            routeToView(const MainView()));
+      }
+      else {
+        //await authWatch.createNewUser(user.uid, user);
+        Navigator.push(context, routeToView(const FillOutView()));
+      }
+
+    }
+  }
+
 
 }
 

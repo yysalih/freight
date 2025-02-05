@@ -15,8 +15,7 @@ import '../controllers/place_controller.dart';
 import '../models/truck_post_model.dart';
 
 Widget searchResultWidget(double width, double height, String language,
-    {required Function() onPressed, required LoadModel load,
-      required AppPlaceModel destination, required AppPlaceModel origin}) {
+    {required Function() onPressed, required LoadModel load,}) {
   return Consumer(
     builder: (context, ref, child) {
 
@@ -42,7 +41,7 @@ Widget searchResultWidget(double width, double height, String language,
                     children: [
                       ConstrainedBox(
                         constraints: BoxConstraints(maxWidth: width * .3),
-                        child: Text("${origin.name!}",
+                        child: Text(load.originName!,
                           style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,),
                       ),
                       const Icon(Icons.fast_forward_sharp, color: kWhite,),
@@ -52,7 +51,7 @@ Widget searchResultWidget(double width, double height, String language,
                       const Icon(Icons.fast_forward_sharp, color: kWhite,),
                       ConstrainedBox(
                         constraints: BoxConstraints(maxWidth: width * .3),
-                        child: Text("${destination.name}",
+                        child: Text("${load.destinationName}",
 
                           style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.end,),
@@ -140,8 +139,7 @@ Widget searchResultWidget(double width, double height, String language,
 }
 
 Widget smallerSearchResultWidget(double width, double height, String language,
-    {required Function() onPressed, required LoadModel load,
-      required AppPlaceModel destination, required AppPlaceModel origin}) {
+    {required Function() onPressed, required LoadModel load}) {
   return Consumer(
     builder: (context, ref, child) {
 
@@ -170,12 +168,10 @@ Widget smallerSearchResultWidget(double width, double height, String language,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(origin.name!//\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}"
-                            , style: kCustomTextStyle,),
+                          Text(load.originName!, style: kCustomTextStyle,),
 
                           const Icon(Icons.fast_forward_sharp, color: kWhite,),
-                          Text(destination.name!//\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}",
-                            ,style: kCustomTextStyle, textAlign: TextAlign.end,),
+                          Text(load.destinationName!, style: kCustomTextStyle, textAlign: TextAlign.end,),
                         ],
                       ),
                     ],
@@ -260,9 +256,48 @@ Widget smallerSearchResultWidget(double width, double height, String language,
   );
 }
 
+Widget extraSmallLoadWidget(double width, double height, String language,
+    {required Function() onPressed, required LoadModel load}) {
+  return Container(
+    width: width * .5, height: height * .32,
+    decoration: BoxDecoration(
+      color: kLightBlack,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: MaterialButton(
+        onPressed: onPressed,
+        color: kLightBlack,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: kBlueColor,
+                  radius: 25,
+                  child: Image.asset("assets/icons/box.png", width: 25),
+                ),
+                SizedBox(width: 10.w,),
+                Text("${load.originName!}\n${load.destinationName}", style: kCustomTextStyle,),
+              ],
+            ),
+            SizedBox(height: 5.h,),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Text("${load.price!.toStringAsFixed(2)} TL",
+                  style: kCustomTextStyle.copyWith(fontSize: 15, fontWeight: FontWeight.bold),)),
+
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
 Widget truckPostsWidget(double width, double height, String language,
-    {required Function() onPressed, required TruckPostModel truckPost,
-      required AppPlaceModel origin, required AppPlaceModel destination}) {
+    {required Function() onPressed, required TruckPostModel truckPost,}) {
 
   return Consumer(
     builder: (context, ref, child) {
@@ -290,7 +325,7 @@ Widget truckPostsWidget(double width, double height, String language,
                     children: [
                       ConstrainedBox(
                         constraints: BoxConstraints(maxWidth: width * .25),
-                        child: Text(origin.name!//\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}"
+                        child: Text(truckPost.originName!//\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}"
                           , style: kCustomTextStyle, overflow: TextOverflow.ellipsis,),
                       ),
                       const Icon(Icons.fast_forward_sharp, color: kWhite,),
@@ -300,7 +335,7 @@ Widget truckPostsWidget(double width, double height, String language,
                       const Icon(Icons.fast_forward_sharp, color: kWhite,),
                       ConstrainedBox(
                         constraints: BoxConstraints(maxWidth: width * .25),
-                        child: Text(destination.name!//\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}"
+                        child: Text(truckPost.destinationName!//\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}"
                           , style: kCustomTextStyle, overflow: TextOverflow.ellipsis, textAlign: TextAlign.end,),
                       ),
                     ],
@@ -376,7 +411,8 @@ Widget truckPostsWidget(double width, double height, String language,
                         loading: () => Container(),
                         error: (error, stackTrace) => Container(),
                       ),
-                      Text("${calculateDistance(origin.latitude!, origin.longitude!, destination.latitude!, destination.longitude!).toStringAsFixed(2)} KM",
+                      Text("${calculateDistance(truckPost.originLat!, truckPost.originLong!,
+                          truckPost.destinationLat!, truckPost.destinationLong!).toStringAsFixed(2)} KM",
                         style: kCustomTextStyle,),
                     ],
                   ),
@@ -393,8 +429,7 @@ Widget truckPostsWidget(double width, double height, String language,
 
 
 Widget smallerTruckPostsWidget(double width, double height, String language,
-    {required Function() onPressed, required TruckPostModel truckPost,
-      required AppPlaceModel origin, required AppPlaceModel destination}) {
+    {required Function() onPressed, required TruckPostModel truckPost,}) {
 
   return Consumer(
     builder: (context, ref, child) {
@@ -427,14 +462,14 @@ Widget smallerTruckPostsWidget(double width, double height, String language,
                         children: [
                           ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: width * .725),
-                            child: Text("${origin.name!}",//\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}"
+                            child: Text(truckPost.originName!,
                               style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,),
                           ),
                           const Icon(Icons.fast_forward_sharp, color: kWhite,),
                           ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: width * .725),
-                            child: Text("${destination.name!}"//\n${DateFormat("dd.MM.yyyy").format(load.startDate!)}"
-                              ,maxLines: 3, style: kCustomTextStyle, overflow: TextOverflow.ellipsis,),
+                            child: Text(truckPost.destinationName!, maxLines: 3,
+                              style: kCustomTextStyle, overflow: TextOverflow.ellipsis,),
                           ),
                         ],
                       ),
@@ -511,7 +546,8 @@ Widget smallerTruckPostsWidget(double width, double height, String language,
                         loading: () => Container(),
                         error: (error, stackTrace) => Container(),
                       ),
-                      Text("${calculateDistance(origin.latitude!, origin.longitude!, destination.latitude!, destination.longitude!).toStringAsFixed(2)} KM",
+                      Text("${calculateDistance(truckPost.originLat!, truckPost.originLong!,
+                          truckPost.destinationLat!, truckPost.destinationLong!).toStringAsFixed(2)} KM",
                         style: kCustomTextStyle,),
                     ],
                   ),
@@ -523,5 +559,46 @@ Widget smallerTruckPostsWidget(double width, double height, String language,
       );
     },
     child: Container(),
+  );
+}
+
+
+Widget extraSmallTruckPostsWidget(double width, double height, String language,
+    {required Function() onPressed, required TruckPostModel truckPost,}) {
+  return Container(
+    width: width * .5, height: height * .32,
+    decoration: BoxDecoration(
+      color: kLightBlack,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: MaterialButton(
+        onPressed: onPressed,
+        color: kLightBlack,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: kBlueColor,
+                  radius: 25,
+                  child: Image.asset("assets/icons/truck.png", width: 25),
+                ),
+                SizedBox(width: 10.w,),
+                Text("${truckPost.originName!}\n${truckPost.destinationName}", style: kCustomTextStyle,),
+              ],
+            ),
+            SizedBox(height: 5.h,),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Text("${truckPost.price!.toStringAsFixed(2)} TL",
+                  style: kCustomTextStyle.copyWith(fontSize: 15, fontWeight: FontWeight.bold),)),
+
+          ],
+        ),
+      ),
+    ),
   );
 }

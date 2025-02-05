@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/constants/providers.dart';
+import 'package:kamyon/controllers/profile_controller.dart';
 import 'package:kamyon/views/main_view.dart';
 import 'package:kamyon/widgets/file_card_widget.dart';
 import 'package:kamyon/widgets/pick_city_modal_bottom_sheet.dart';
@@ -20,6 +21,8 @@ class UploadFilesView extends ConsumerWidget {
     final language = ref.watch(languageStateProvider);
     final authNotifier = ref.watch(authController.notifier);
     final authState = ref.watch(authController);
+
+    final profileState = ref.watch(profileController);
 
     return Scaffold(
       backgroundColor: kBlack,
@@ -133,7 +136,7 @@ class UploadFilesView extends ConsumerWidget {
                 if(toEdit) {
                   Navigator.pop(context);
                 } else {
-                  authNotifier.createUser(context: context, errorTitle: languages[language]!["problem_signing_up"]!);
+                  authNotifier.createUser(profileState, context: context, errorTitle: languages[language]!["problem_signing_up"]!);
                 }
               },),
             ],

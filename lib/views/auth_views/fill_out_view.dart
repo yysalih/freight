@@ -56,10 +56,13 @@ class FillOutView extends ConsumerWidget {
                   CircleAvatar(
                     radius: 40.h,
                     backgroundColor: kLightBlack,
-                    backgroundImage: CachedNetworkImageProvider(authNotifier.currentUser!.photoURL!),
-                    child: authNotifier.currentUser!.photoURL!.isNotEmpty ? null
+                    backgroundImage: profileState.image.isEmpty ? authNotifier.currentUser!.photoURL == null ? null
+                        : CachedNetworkImageProvider(authNotifier.currentUser!.photoURL!) :
+                    CachedNetworkImageProvider(profileState.image)
+                    ,
+                    child: profileState.image.isEmpty ? authNotifier.currentUser!.photoURL != null ? null
                         : toEdit ? CachedNetworkImage(imageUrl: authState.currentUser.image!)
-                        : Image.asset("assets/icons/photo.png", width: 50.w,),
+                        : Image.asset("assets/icons/photo.png", width: 50.w,) : null,
                   ),
                   SizedBox(width: 10.w,),
                   TextButton(
@@ -84,7 +87,7 @@ class FillOutView extends ConsumerWidget {
                     icon: Icons.person, onTap: () {
 
                     }, controller: authNotifier.nameController..text = toEdit ? authState.currentUser.name! :
-                      authNotifier.currentUser!.displayName!,
+                      authNotifier.currentUser!.displayName == null ? "" : authNotifier.currentUser!.displayName!,
                    onChanged: (value) {
 
                    },),
@@ -141,7 +144,7 @@ class FillOutView extends ConsumerWidget {
                     ],
                   ),
 
-                  if(!profileState.carrierCheck) Row(
+                  /*if(!profileState.carrierCheck) Row(
                     children: [
                       Checkbox(
                         value: profileState.brokerCheck,
@@ -150,7 +153,7 @@ class FillOutView extends ConsumerWidget {
                       Text(languages[language]!["i_am_a_broker"]!, style: kCustomTextStyle,),
 
                     ],
-                  ),
+                  ),*/
                 ],
               ),
 

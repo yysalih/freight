@@ -53,196 +53,202 @@ class LoadsView extends ConsumerWidget {
 
     return availableLoadsNotifier.when(
       data: (availableLoads) => availableTruckPostsNotifier.when(
-        data: (availableTruckPosts) => Stack(
-          children: [
-            FlutterMap(
-              mapController: mainNotifier.mapController,
-              options: MapOptions(
-                initialCenter: latLng,
-                initialZoom: 9.2,
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.kamyon',
-                  maxNativeZoom: 19,
+        data: (availableTruckPosts) {
+
+          List<dynamic> combinedList = [...availableLoads, ...availableTruckPosts];
+
+          return Stack(
+            children: [
+              FlutterMap(
+                mapController: mainNotifier.mapController,
+                options: MapOptions(
+                  initialCenter: latLng,
+                  initialZoom: 9.2,
                 ),
-                RichAttributionWidget(
-                  attributions: [
-                    TextSourceAttribution(
-                      'OpenStreetMap contributors',
-                      onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-                    ),
-                    // Also add images...
-                  ],
-                ),
-                MarkerLayer(
-                  markers: [
-                    for(LoadModel load in availableLoads)
-                      loadMarker(load, context: context),
-
-                    for(TruckPostModel truckPost in availableTruckPosts)
-                      truckPostMarker(truckPost, context: context),
-
-
-                    Marker(
-                      point: latLng,
-                      child: Icon(Icons.my_location, color: Colors.red, size: 30.w,)
-                    )
-                  ],
-                ),
-              ],
-            ),
-
-            placesProvider.when(
-              data: (places) => Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-
-                    quickLoadWidget(context, width, height, language, loadNotifier,
-                        mainState, mainNotifier, placeState, placeNotifier, truckNotifier, places),
-
-                    quickTruckWidget(context, width, height, language, loadNotifier,
-                        mainState, mainNotifier, placeState, placeNotifier, truckNotifier, places),
-
-                  ],
-                ),
-              ),
-              loading: () => Container(),
-              error: (error, stackTrace) => Container(),
-
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: width,
-                height: height * ((mainState.itemsOpened && mainNotifier.searchController.text.isNotEmpty)
-                    ? .7 : (mainState.filteredItems.isEmpty || mainNotifier.searchController.text.isEmpty) ? .11 : .175),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                    color: kBlack
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 15.0.h, left: 15.w, right: 15.w),
-                      child: customInputField(title: languages[language]!["search"]!,
-                        hintText: languages[language]!["search"]!, icon: Icons.search,
-
-                        hasTitle: false, borderRadius: 20, controller: mainNotifier.searchController, onChanged: (value) {
-                          mainNotifier.changeSearchString(value: value);
-
-                          List loadList = availableLoads.where((element) => element.originName!.toLowerCase().contains(value.toLowerCase())
-                              || element.originAddress!.toLowerCase().toLowerCase().contains(value.toLowerCase())).toList();
-
-                          List truckPostList = availableTruckPosts.where((element) => element.originName!.contains(value.toLowerCase())
-                              || element.originAddress!.toLowerCase().contains(value.toLowerCase())).toList();
-
-                          List<dynamic> combinedList = [...truckPostList, ...loadList];
-
-                          mainNotifier.updateFilteredList(combinedList);
-                          debugPrint("Filtered List Length: ${mainState.filteredItems.length}");
-
-                        },
-                        onTap: () {
-
-                        },
+                children: [
+                  TileLayer(
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'com.kamyon',
+                    maxNativeZoom: 19,
+                  ),
+                  RichAttributionWidget(
+                    attributions: [
+                      TextSourceAttribution(
+                        'OpenStreetMap contributors',
+                        onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
                       ),
-                    ),
-                    mainState.filteredItems.isEmpty || mainNotifier.searchController.text.isEmpty
-                        ? const SizedBox() : TextButton(
-                      child: Text(languages[language]![mainState.itemsOpened ? "hide_results" : "show_results"]!,
-                        style: kCustomTextStyle.copyWith(
-                        color: Colors.lightBlueAccent
-                      ),),
-                      onPressed: () {
-                        if(mainNotifier.searchController.text.isNotEmpty) {
-                          mainNotifier.showSearchItems(value: !mainState.itemsOpened);
-                        }
-                      },
-                    ),
-                    SizedBox(height: 10.h,),
-                    Expanded(
-                      child: mainState.filteredItems.isEmpty || mainNotifier.searchController.text.isEmpty
-                          ? const SizedBox.shrink()
-                          : ListView.builder(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        itemCount: mainState.filteredItems.length,
-                        itemBuilder: (context, index) {
-                          final item = mainState.filteredItems[index];
-                          debugPrint("Item Type: ${item.runtimeType}");
-                          if(item.runtimeType == LoadModel) {
-                            final item0 = item as LoadModel;
-                            final originProvider = ref.watch(placeFutureProvider(item0.origin!));
-                            final destinationProvider = ref.watch(placeFutureProvider(item0.destination!));
+                      // Also add images...
+                    ],
+                  ),
+                  MarkerLayer(
+                    markers: [
+                      for(LoadModel load in availableLoads)
+                        loadMarker(load, context: context),
 
-                            return originProvider.when(
-                              data: (origin) => destinationProvider.when(
-                                data: (destination) => Padding(
-                                  padding: EdgeInsets.only(top: 15.0.h),
-                                  child: smallerSearchResultWidget(width, height, language, load: item0,
-                                    destination: destination, origin: origin,
-                                    onPressed: () {
-                                      mainNotifier.mapController.move(LatLng(origin.latitude!, origin.longitude!), 9.2);
-                                    },
-                                  ),
-                                ),
-                                loading: () => Container(),
-                                error: (error, stackTrace) {
-                                  debugPrint("Error: $error");
-                                  debugPrint("Error: $stackTrace");
-                                  return Container();
-                                },
-                              ),
-                              loading: () => Container(),
-                              error: (error, stackTrace) {
-                                debugPrint("Error: $error");
-                                debugPrint("Error: $stackTrace");
-                                return Container();
-                              },
-                            );
+                      for(TruckPostModel truckPost in availableTruckPosts)
+                        truckPostMarker(truckPost, context: context),
+
+
+                      Marker(
+                          point: latLng,
+                          child: Icon(Icons.my_location, color: Colors.red, size: 30.w,)
+                      )
+                    ],
+                  ),
+                ],
+              ),
+
+              placesProvider.when(
+                data: (places) => Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                      quickLoadWidget(context, width, height, language, loadNotifier,
+                          mainState, mainNotifier, placeState, placeNotifier, truckNotifier, places),
+
+                      quickTruckWidget(context, width, height, language, loadNotifier,
+                          mainState, mainNotifier, placeState, placeNotifier, truckNotifier, places),
+
+                    ],
+                  ),
+                ),
+                loading: () => Container(),
+                error: (error, stackTrace) => Container(),
+
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: width,
+                  height: height * ((mainState.itemsOpened && mainNotifier.searchController.text.isNotEmpty)
+                      ? .7 : (mainState.filteredItems.isEmpty || mainNotifier.searchController.text.isEmpty) ? .275
+                      : .175),
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                      color: kBlack
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 15.0.h, left: 15.w, right: 15.w),
+                        child: customInputField(title: languages[language]!["search"]!,
+                          hintText: languages[language]!["search"]!, icon: Icons.search,
+
+                          hasTitle: false, borderRadius: 20, controller: mainNotifier.searchController, onChanged: (value) {
+                            mainNotifier.changeSearchString(value: value);
+
+                            List loadList = availableLoads.where((element) => element.originName!.toLowerCase().contains(value.toLowerCase())
+                                || element.originAddress!.toLowerCase().toLowerCase().contains(value.toLowerCase())).toList();
+
+                            List truckPostList = availableTruckPosts.where((element) => element.originName!.contains(value.toLowerCase())
+                                || element.originAddress!.toLowerCase().contains(value.toLowerCase())).toList();
+
+                            List<dynamic> combinedList = [...truckPostList, ...loadList];
+
+                            mainNotifier.updateFilteredList(combinedList);
+                            debugPrint("Filtered List Length: ${mainState.filteredItems.length}");
+
+                          },
+                          onTap: () {
+
+                          },
+                        ),
+                      ),
+                      mainState.filteredItems.isEmpty || mainNotifier.searchController.text.isEmpty
+                          ? const SizedBox() : TextButton(
+                        child: Text(languages[language]![mainState.itemsOpened ? "hide_results" : "show_results"]!,
+                          style: kCustomTextStyle.copyWith(
+                              color: Colors.lightBlueAccent
+                          ),),
+                        onPressed: () {
+                          if(mainNotifier.searchController.text.isNotEmpty) {
+                            mainNotifier.showSearchItems(value: !mainState.itemsOpened);
                           }
-
-                          final item0 = item as TruckPostModel;
-                          final originProvider = ref.watch(placeFutureProvider(item0.origin!));
-                          final destinationProvider = ref.watch(placeFutureProvider(item0.destination!));
-                          return originProvider.when(
-                            data: (origin) => destinationProvider.when(
-                              data: (destination) => Padding(
-                                  padding: EdgeInsets.only(top: 15.0.h),
-                                  child: smallerTruckPostsWidget(width, height, language, truckPost: item0,
-                                    destination: destination, origin: origin,
-                                    onPressed: () {
-                                      mainNotifier.mapController.move(LatLng(origin.latitude!, origin.longitude!), 9.2);
-                                    },)
-                              ),
-                              loading: () => Container(),
-                              error: (error, stackTrace) {
-                                debugPrint("Error: $error");
-                                debugPrint("Error: $stackTrace");
-                                return Container();
-                              },
-                            ),
-                            loading: () => Container(),
-                            error: (error, stackTrace) {
-                              debugPrint("Error: $error");
-                              debugPrint("Error: $stackTrace");
-                              return Container();
-                            },
-                          );
                         },
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 10.h,),
+
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxHeight: height * .15),
+                        child: ListView.builder(
+                          padding: EdgeInsets.only(right: 10.w),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: combinedList.length,
+                          itemBuilder: (context, index) {
+                            final item = combinedList[index];
+                            if(item.runtimeType == LoadModel) {
+                              final load = item as LoadModel;
+
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: extraSmallLoadWidget(width, height, language,
+                                  load: load, onPressed: () {
+                                    mainNotifier.mapController.move(LatLng(load.originLat!, load.originLong!), 9.2);
+
+                                  },
+                                ),
+                              );
+                            }
+                            else {
+                              final truckPost = item as TruckPostModel;
+
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: extraSmallTruckPostsWidget(width, height, language, truckPost: truckPost, onPressed: () {
+                                  mainNotifier.mapController.move(LatLng(truckPost.originLat!, truckPost.originLong!), 9.2);
+                                },),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+
+                      SizedBox(height: 10.h,),
+                      Expanded(
+                        child: mainState.filteredItems.isEmpty || mainNotifier.searchController.text.isEmpty
+                            ? const SizedBox.shrink()
+                            : ListView.builder(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          itemCount: mainState.filteredItems.length,
+                          itemBuilder: (context, index) {
+                            final item = mainState.filteredItems[index];
+                            debugPrint("Item Type: ${item.runtimeType}");
+                            if(item.runtimeType == LoadModel) {
+                              final item0 = item as LoadModel;
+
+
+                              return Padding(
+                                padding: EdgeInsets.only(top: 15.0.h),
+                                child: smallerSearchResultWidget(width, height, language, load: item0,
+                                  onPressed: () {
+                                    mainNotifier.mapController.move(LatLng(item0.originLat!, item0.originLong!), 9.2);
+                                  },
+                                ),
+                              );
+                            }
+
+                            final item0 = item as TruckPostModel;
+                            return Padding(
+                                padding: EdgeInsets.only(top: 15.0.h),
+                                child: smallerTruckPostsWidget(width, height, language, truckPost: item0,
+                                  onPressed: () {
+                                    mainNotifier.mapController.move(LatLng(item0.originLat!, item0.originLong!), 9.2);
+                                  },)
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        },
         loading: () => emptyFlutterMap(latLng),
         error: (error, stackTrace) => emptyFlutterMap(latLng),
       ),
@@ -251,22 +257,5 @@ class LoadsView extends ConsumerWidget {
     );
   }
 }
-/*Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(languages[language]!["discover"]!, style: kCustomTextStyle,),
-                      SizedBox(height: 5.h,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          fileCardWidget3(title: languages[language]!["find_load"]!, image: "box",
-                              color: kLightBlack, onPressed: () {}),
-                          fileCardWidget3(title: languages[language]!["rest"]!, image: "parking",
-                              color: kLightBlack, onPressed: () {}),
-                          fileCardWidget3(title: languages[language]!["fuel"]!, image: "fuel",
-                              color: kLightBlack, onPressed: () {}),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Container()*/
+
+

@@ -130,7 +130,7 @@ class MyTruckPostsWidget extends ConsumerWidget {
               data: (origin) => destinationProvider.when(
                 data: (destination) => Padding(
                     padding: EdgeInsets.only(top: 15.0.h),
-                    child: truckPostsWidget(width, height, language, truckPost: truckPosts[index], destination: destination, origin: origin,
+                    child: truckPostsWidget(width, height, language, truckPost: truckPosts[index],
                         onPressed: () {
                       placeNotifier.setPlaceModels(origin: origin, destination: destination);
                       debugPrint("Places are set for TruckPosts View");

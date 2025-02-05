@@ -212,7 +212,7 @@ class ProfileController extends StateNotifier<ProfileState> {
     //TODO doesn't work, needs to be fixed - 30/10/2024 - 15:05
     List<String> contactsList = currentUser.contacts!.split(';');
     contactsList.removeWhere((contact) => contact == contactToDelete);
-    String updatedContacts = contactsList.join(';') + ';';
+    String updatedContacts = '${contactsList.join(';')};';
 
     final response = await http.post(
       appUrl,

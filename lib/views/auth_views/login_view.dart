@@ -39,7 +39,9 @@ class LoginView extends ConsumerWidget {
                   hintText: languages[appLanguage]!["input_email"]!,
                   icon: Icons.local_post_office_outlined, onTap: () {
 
-                }, controller: authNotifier.emailController, onChanged: (value) {
+                },
+                controller: authNotifier.emailController,
+                onChanged: (value) {
 
                 },),
               SizedBox(height: 10.h,),
@@ -88,34 +90,14 @@ class LoginView extends ConsumerWidget {
                     return customButton(title: authState.isRegister ?
                     languages[appLanguage]!["sign_up"]! :
                     languages[appLanguage]!["login"]!, color: kGreen, onPressed: () async {
-                      debugPrint(FirebaseAuth.instance.currentUser!.uid);
-
-                      Navigator.push(context,
-                          routeToView(const OfferInnerView(offerUid: "")));
-
-                      /*SharedPreferences prefs = await SharedPreferences.getInstance();
-                      User? user = await Authentication.signInWithGoogle(context: context);
-
-                      if(user != null) {
-                        prefs.setString("uid", user.uid);
-
-                        bool isUserExists = await authNotifier.checkIfUserExists();
-
-                        if(isUserExists) {
-                          Navigator.push(context,
-                              routeToView(const MainView()));
-                        }
-                        else {
-                          //await authWatch.createNewUser(user.uid, user);
-                          Navigator.push(context, routeToView(const FillOutView()));
-                        }
-
-                      }*/
+                      authNotifier.handleSignInWithEmail(authNotifier, context: context);
                     },);
                   }
                   return customButton(title: authState.isRegister ?
                   languages[appLanguage]!["sign_up"]! :
-                  languages[appLanguage]!["login"]!, color: kGreen, onPressed: () {}, inProgress: true);
+                  languages[appLanguage]!["login"]!, color: kGreen, onPressed: () {
+                    authNotifier.handleSignInWithEmail(authNotifier, context: context);
+                  }, inProgress: true);
                 }
               ),
               SizedBox(height: 30.h,),
@@ -129,8 +111,8 @@ class LoginView extends ConsumerWidget {
                       builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         return ElevatedButton(
-                          onPressed: () async {
-                            await authNotifier.checkIfUserExists();
+                          onPressed: ()  {
+                            authNotifier.handleSignIn(authNotifier, context: context);
                           },
                           style: ElevatedButton.styleFrom(
                             shape: const CircleBorder(),
@@ -142,8 +124,8 @@ class LoginView extends ConsumerWidget {
                         );
                       };
                       return ElevatedButton(
-                          onPressed: () async {
-                            await authNotifier.checkIfUserExists();
+                          onPressed: () {
+                            authNotifier.handleSignIn(authNotifier, context: context);
                           },
                         style: ElevatedButton.styleFrom(
                           shape: const CircleBorder(),
@@ -165,25 +147,7 @@ class LoginView extends ConsumerWidget {
                       if (snapshot.connectionState == ConnectionState.done) {
                         return ElevatedButton(
                           onPressed: () async {
-
-                            SharedPreferences prefs = await SharedPreferences.getInstance();
-                            User? user = await Authentication.signInWithGoogle(context: context);
-
-                            if(user != null) {
-                              prefs.setString("uid", user.uid);
-
-                              bool isUserExists = await authNotifier.checkIfUserExists();
-
-                              if(isUserExists) {
-                                Navigator.push(context,
-                                    routeToView(const MainView()));
-                              }
-                              else {
-                                //await authWatch.createNewUser(user.uid, user);
-                                Navigator.push(context, routeToView(const FillOutView()));
-                              }
-
-                            }
+                            authNotifier.handleSignInWithApple(authNotifier, context: context);
                           },
                           style: ElevatedButton.styleFrom(
                             shape: const CircleBorder(),
@@ -195,25 +159,9 @@ class LoginView extends ConsumerWidget {
                         );
                       }
                       return ElevatedButton(
-                        onPressed: () async {
-
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                          User? user = await Authentication.signInWithGoogle(context: context);
-
-                          if(user != null) {
-                            prefs.setString("uid", user.uid);
-
-                            bool isUserExists = await authNotifier.checkIfUserExists();
-
-                            if(isUserExists) {
-                              Navigator.push(context,
-                                  routeToView(const MainView()));
-                            }
-                            else {
-                              Navigator.push(context, routeToView(const FillOutView()));
-                            }
-
-                          }                        },
+                        onPressed: () {
+                          authNotifier.handleSignInWithApple(authNotifier, context: context);
+                        },
                         style: ElevatedButton.styleFrom(
                           shape: const CircleBorder(),
                           padding: const EdgeInsets.all(20),
@@ -243,4 +191,5 @@ class LoginView extends ConsumerWidget {
       ),
     );
   }
+
 }
