@@ -23,7 +23,7 @@ class ChatsView extends ConsumerWidget {
 
     final chatsProvider = ref.watch(chatsStreamProvider(FirebaseAuth.instance.currentUser!.uid));
 
-    return Padding(
+    return !isUserAnonymous ? Padding(
       padding: EdgeInsets.only(top: 10.h, right: 15.w, left: 15.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +51,7 @@ class ChatsView extends ConsumerWidget {
           ),
         ],
       ),
-    );
+    ) : const NoAccountFound();
   }
 }
 

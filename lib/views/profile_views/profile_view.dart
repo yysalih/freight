@@ -16,6 +16,7 @@ import 'package:kamyon/views/profile_views/contacts_view.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/languages.dart';
 import '../../constants/providers.dart';
+import '../../widgets/warning_info_widget.dart';
 import '../shipment_views/shipments_view.dart';
 
 class ProfileView extends ConsumerWidget {
@@ -35,7 +36,7 @@ class ProfileView extends ConsumerWidget {
 
     final locationNotifier = ref.watch(locationController.notifier);
 
-    return Padding(
+    return !isUserAnonymous ? Padding(
       padding: EdgeInsets.only(top: 10.h, right: 15.w, left: 15.w),
       child: SingleChildScrollView(
         child: Column(
@@ -160,7 +161,7 @@ class ProfileView extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    ) : const NoAccountFound();
   }
 }
 

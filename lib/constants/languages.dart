@@ -5,6 +5,7 @@ const Map<String, Map<String, String>> languages = {
 };
 
 const Map<String, String> tr = {
+  "anonymous_login" : "Misafir Olarak Devam Et",
   "pick_load" : "Yük Seç",
   "truck_post_details" : "Araç İlan Detayları",
   "propose" : "Teklif",
@@ -233,10 +234,12 @@ const Map<String, String> tr = {
   "success_complete_shipment" : "Nakliyat başarıyla tamamlandı.",
   "completed" : "Tamamlandı",
   "canceled" : "İptal Edildi",
+  "you_need_a_profile" : "Herhangi bir işlem için kayıt olmalısınız.",
 };
 const Map<String, String> en = {
+  "anonymous_login" : "Misafir Olarak Devam Et",
+  "you_need_a_profile" : "Herhangi bir işlem için kayıt olmalısınız.",
   "pick_load" : "Yük Seç",
-
   "truck_post_details" : "Araç İlan Detayları",
   "propose" : "Teklif",
   "update_shipment_state" : "Nakliyat Durumunu Güncelle",

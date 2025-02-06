@@ -255,30 +255,47 @@ class TruckPostInnerView extends ConsumerWidget {
                           children: [
 
                             loadActionButton(width, language, icon: Icons.monetization_on_rounded,
-                                description2: "${truckPost.price}\$",
-                                title: languages[language]!["propose"]!, description: languages[language]!["total"]!,
-                            onPressed: () {
-                              showModalBottomSheet(context: context, builder: (context) =>
-                                  OfferModalBottomSheet(
-                                    toUid: truckPost.ownerUid!,
-                                    type: "truckPost",
-                                    unitUid: truckPost.uid!,
-                                  ),);
-                            },),
+                              description2: "${truckPost.price}\$",
+                              title: languages[language]!["propose"]!, description: "",
+                              onPressed: () {
+                                if(!isUserAnonymous) {
+                                  showModalBottomSheet(context: context, builder: (context) =>
+                                      OfferModalBottomSheet(
+                                        toUid: truckPost.ownerUid!,
+                                        type: "truckPost",
+                                        unitUid: truckPost.uid!,
+                                      ),);
+                                }
+                                else {
+                                  showWarningSnackbar(context: context, title: languages[language]!["you_need_a_profile"]!);
+                                }
+                              },),
+
                             loadActionButton(width, language, icon: Icons.chat_bubble,
                               description2: languages[language]!["now"]!,
                               title: languages[language]!["chat"]!, description: "",
                               onPressed: () {
-                                chatNotifier.createChat(context, to: truckPost.ownerUid!,
-                                    errorTitle: languages[language]!["error_creating_chat"]!);
+                                if(!isUserAnonymous) {
+                                  chatNotifier.createChat(context, to: truckPost.ownerUid!, errorTitle: languages[language]!["error_creating_chat"]!);
+                                }
+                                else {
+                                  showWarningSnackbar(context: context, title: languages[language]!["you_need_a_profile"]!);
+                                }
                               },),
+
+
                             ownerUser.when(
                               data: (owner) => loadActionButton(width, language, icon: Icons.add_ic_call_rounded,
                                 description2: "${truckPost.distance} KM",
 
-                                title: languages[language]!["call"]!, description: languages[language]!["distance"]!,
+                                title: languages[language]!["call"]!, description: "",
                                 onPressed: () {
-                                  launchUrlString("tel://${owner.phone!}");
+                                  if(!isUserAnonymous) {
+                                    launchUrlString("tel://${owner.phone!}");
+                                  }
+                                  else {
+                                    showWarningSnackbar(context: context, title: languages[language]!["you_need_a_profile"]!);
+                                  }
                                 },
                               ),
                               error: (error, stackTrace) => Container(),

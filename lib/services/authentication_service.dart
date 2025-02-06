@@ -67,6 +67,11 @@ class Authentication {
     return await FirebaseAuth.instance.signInWithProvider(appleProvider);
   }
 
+  static Future<UserCredential> signInAnonymously() async {
+    final userCredential = await FirebaseAuth.instance.signInAnonymously();
+    return userCredential;
+  }
+
   static SnackBar customSnackBar({required String content}) {
     return SnackBar(
       backgroundColor: Colors.black,

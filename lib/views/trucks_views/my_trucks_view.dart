@@ -12,6 +12,7 @@ import 'package:kamyon/widgets/trucks_view_body_widget.dart';
 
 import '../../constants/languages.dart';
 import '../../constants/providers.dart';
+import '../../widgets/warning_info_widget.dart';
 
 
 class MyTrucksView extends ConsumerWidget {
@@ -25,7 +26,8 @@ class MyTrucksView extends ConsumerWidget {
     final truckNotifier = ref.watch(truckController.notifier);
     final truckState = ref.watch(truckController);
 
-    return Padding(
+    return !isUserAnonymous ?
+    Padding(
       padding: EdgeInsets.only(top: 10.h, right: 15.w, left: 15.w),
       child: Column(
         children: [
@@ -60,7 +62,7 @@ class MyTrucksView extends ConsumerWidget {
 
         ],
       ),
-    );
+    ) : const NoAccountFound();
   }
 }
 

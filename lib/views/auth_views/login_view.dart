@@ -185,6 +185,15 @@ class LoginView extends ConsumerWidget {
                   Text(languages[appLanguage]!["accepted_user_agreement"]!, style: kCustomTextStyle,),
                 ],
               ),
+              SizedBox(height: 20.h,),
+              TextButton(
+                child: Text(languages[appLanguage]!["anonymous_login"]!, style: kCustomTextStyle.copyWith(
+                  color: kBlueColor
+                ),),
+                onPressed: () {
+                  authNotifier.handleSignInAnonymous(authNotifier, context: context);
+                },
+              ),
             ],
           ),
         ),

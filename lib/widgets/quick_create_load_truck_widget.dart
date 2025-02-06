@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kamyon/constants/app_constants.dart';
+import 'package:kamyon/constants/snackbars.dart';
 import 'package:kamyon/controllers/load_controller.dart';
 import 'package:kamyon/controllers/main_controller.dart';
 import 'package:kamyon/models/place_model.dart';
@@ -48,32 +50,13 @@ Widget quickLoadWidget(BuildContext context, double width, double height, String
           curve: Curves.easeInOut,
           child: mainState.isLoadExpanded ?
           MainInputPostWidgets(isLoad: true, controller: loadNotifier.priceController, onPressed: () async {
-            loadNotifier.switchAppPlaceModels(
-                origin: placeState.origin,
-                destination: placeState.destination
-            );
-
-            bool checkOriginExists = placeNotifier.checkPlaceModel(placeModels, isOrigin: true);
-            bool checkDestinationExists = placeNotifier.checkPlaceModel(placeModels, isOrigin: false);
-
-            if(checkOriginExists) {
-              await placeNotifier.createPlace(context, appPlaceModel: placeState.origin,);
+            if(!isUserAnonymous) {
+              await loadNotifier.handleCreatingLoad(loadNotifier, placeState, placeNotifier,
+                  placeModels, context, language, truckNotifier, mainNotifier);
             }
-
-            if(checkDestinationExists) {
-              await placeNotifier.createPlace(context, appPlaceModel: placeState.destination,);
+            else {
+              showWarningSnackbar(context: context, title: languages[language]!["you_need_a_profile"]!);
             }
-
-            loadNotifier.createLoad(context, errorTitle: languages[language]!["problem_creating_new_load"]!,
-                successTitle: languages[language]!["new_load_created"]!, fromMainView: true);
-
-            loadNotifier.clear();
-
-            truckNotifier.clear();
-            placeNotifier.clear();
-
-            mainNotifier.changeExpansions(isTruckPostExpanded: false, isLoadExpanded: false);
-            FocusScope.of(context).unfocus();
 
           },) : const SizedBox(),
         )
@@ -81,6 +64,7 @@ Widget quickLoadWidget(BuildContext context, double width, double height, String
     ) : const SizedBox(),
   );
 }
+
 
 
 Widget quickTruckWidget(BuildContext context, double width, double height, String language,
@@ -122,33 +106,15 @@ Widget quickTruckWidget(BuildContext context, double width, double height, Strin
           child: mainState.isTruckPostExpanded ?
           MainInputPostWidgets(isLoad: false, controller: truckNotifier.priceController, onPressed: () async {
 
-            truckNotifier.switchAppPlaceModels(
-              origin: placeState.origin,
-              destination: placeState.destination,
-            );
-
-            bool checkOriginExists = placeNotifier.checkPlaceModel(placeModels, isOrigin: true);
-            bool checkDestinationExists = placeNotifier.checkPlaceModel(placeModels, isOrigin: false);
-
-            if(checkOriginExists) {
-              await placeNotifier.createPlace(context, appPlaceModel: placeState.origin,);
+            if(!isUserAnonymous) {
+              await truckNotifier.handleCreatingTruckPost(truckNotifier, placeState, placeNotifier, placeModels,
+                  context, mainState, language, loadNotifier, mainNotifier);
+            }
+            else {
+              showWarningSnackbar(context: context, title: languages[language]!["you_need_a_profile"]!);
             }
 
-            if(checkDestinationExists) {
-              await placeNotifier.createPlace(context, appPlaceModel: placeState.destination,);
-            }
 
-            await truckNotifier.createTruckPost(context, truckUid: mainState.truck.uid!,fromMainView: true,
-                errorTitle: languages[language]!["problem_creating_new_truck_post"]!,
-                successTitle: languages[language]!["new_truck_post_created"]!);
-
-            loadNotifier.clear();
-
-            truckNotifier.clear();
-            placeNotifier.clear();
-
-            mainNotifier.changeExpansions(isTruckPostExpanded: false, isLoadExpanded: false);
-            FocusScope.of(context).unfocus();
 
           },)
               : const SizedBox(),
@@ -158,3 +124,4 @@ Widget quickTruckWidget(BuildContext context, double width, double height, Strin
         : const SizedBox(),
   );
 }
+

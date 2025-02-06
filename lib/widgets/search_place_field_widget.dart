@@ -119,7 +119,7 @@ class _SearchPlaceViewState extends ConsumerState<SearchPlaceFieldWidget> {
                 placeState.destination.name!.isNotEmpty ? placeState.destination.name! : "İstanbul, TR",
                 icon: Icons.map, controller: widget.isOrigin ? placeNotifier.originSearchController :
                 placeNotifier.destinationSearchController
-                , hasIcon: false,
+                , hasPrefixIcon: false,
                 onTap: () {
                   overlayController.toggle();
                 }, onChanged: (value) {

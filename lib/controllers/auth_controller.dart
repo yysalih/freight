@@ -289,6 +289,28 @@ class AuthController extends StateNotifier<AuthState> {
     }
   }
 
+  handleSignInAnonymous(AuthController authNotifier, {required BuildContext context}) async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    UserCredential? userCredential = await Authentication.signInAnonymously();
+
+    if(userCredential.user != null) {
+      final user = userCredential.user!;
+      prefs.setString("uid", user.uid);
+
+      bool isUserExists = await authNotifier.checkIfUserExists();
+
+      if(isUserExists) {
+        Navigator.push(context,
+            routeToView(const MainView()));
+      }
+      else {
+
+        Navigator.push(context, routeToView(const MainView()));
+      }
+
+    }
+  }
 
 }
 

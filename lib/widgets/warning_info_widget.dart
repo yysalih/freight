@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:kamyon/constants/app_constants.dart';
+import 'package:kamyon/views/auth_views/login_view.dart';
 
 import '../constants/languages.dart';
 import '../constants/providers.dart';
@@ -74,6 +75,35 @@ class NoShipmentFound extends ConsumerWidget {
   }
 }
 
+class NoAccountFound extends ConsumerWidget {
+  const NoAccountFound({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final language = ref.watch(languageStateProvider);
+
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.only(top: 10.0.h),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(languages[language]!["you_need_a_profile"]!, style: kCustomTextStyle,),
+            SizedBox(height: 10.h,),
+            TextButton(
+              child: Text(languages[language]!["sign_up"]!, style: kCustomTextStyle.copyWith(
+                color: Colors.lightBlueAccent, fontSize: 20
+              ),),
+              onPressed: () => Navigator.pushAndRemoveUntil(context, routeToView(const LoginView()), (route) => false,),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 Widget loadingWidget() {
   return const Center(
     child: CircularProgressIndicator(),
@@ -81,4 +111,5 @@ Widget loadingWidget() {
 }
 
 Widget errorText() => const Text("Error found.", style: kCustomTextStyle,);
+
 

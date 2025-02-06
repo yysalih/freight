@@ -223,19 +223,29 @@ class LoadInnerView extends ConsumerWidget {
                                 description2: "${load.price}\$",
                                 title: languages[language]!["take_the_job"]!, description: "",
                             onPressed: () {
-                              showModalBottomSheet(context: context, builder: (context) =>
+                              if(!isUserAnonymous) {
+                                showModalBottomSheet(context: context, builder: (context) =>
                                   OfferModalBottomSheet(
                                     toUid: load.ownerUid!,
                                     type: "load",
                                     unitUid: load.uid!,
                                   ),);
+                              }
+                              else {
+                                showWarningSnackbar(context: context, title: languages[language]!["you_need_a_profile"]!);
+                              }
                             },),
 
                             loadActionButton(width, language, icon: Icons.chat_bubble,
                                 description2: languages[language]!["now"]!,
                                 title: languages[language]!["chat"]!, description: "",
                             onPressed: () {
-                              chatNotifier.createChat(context, to: load.ownerUid!, errorTitle: languages[language]!["error_creating_chat"]!);
+                              if(!isUserAnonymous) {
+                                chatNotifier.createChat(context, to: load.ownerUid!, errorTitle: languages[language]!["error_creating_chat"]!);
+                              }
+                              else {
+                                showWarningSnackbar(context: context, title: languages[language]!["you_need_a_profile"]!);
+                              }
                             },),
 
 
@@ -245,7 +255,12 @@ class LoadInnerView extends ConsumerWidget {
 
                                 title: languages[language]!["call"]!, description: "",
                                 onPressed: () {
-                                  launchUrlString("tel://${owner.phone!}");
+                                  if(!isUserAnonymous) {
+                                    launchUrlString("tel://${owner.phone!}");
+                                  }
+                                  else {
+                                    showWarningSnackbar(context: context, title: languages[language]!["you_need_a_profile"]!);
+                                  }
                                 },
                               ),
                               error: (error, stackTrace) => Container(),

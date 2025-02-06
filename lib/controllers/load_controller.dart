@@ -4,14 +4,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kamyon/controllers/base_notifier.dart';
+import 'package:kamyon/controllers/place_controller.dart';
+import 'package:kamyon/controllers/truck_controller.dart';
 import 'package:kamyon/models/load_model.dart';
 import 'package:kamyon/models/place_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 import '../constants/app_constants.dart';
+import '../constants/languages.dart';
 import '../constants/snackbars.dart';
 import '../models/base_state.dart';
 import '../models/user_model.dart';
+import 'main_controller.dart';
 
 class LoadState implements BaseState{
 
@@ -211,11 +215,46 @@ class LoadController extends StateNotifier<LoadState> implements BaseNotifier{
     }
   }
 
+  Future<void> handleCreatingLoad(LoadController loadNotifier, PlaceState placeState,
+      PlaceController placeNotifier, List<AppPlaceModel> placeModels, BuildContext context,
+      String language, TruckController truckNotifier, MainController mainNotifier) async {
+    loadNotifier.switchAppPlaceModels(
+        origin: placeState.origin,
+        destination: placeState.destination
+    );
+
+    bool checkOriginExists = placeNotifier.checkPlaceModel(placeModels, isOrigin: true);
+    bool checkDestinationExists = placeNotifier.checkPlaceModel(placeModels, isOrigin: false);
+
+    if(checkOriginExists) {
+      await placeNotifier.createPlace(context, appPlaceModel: placeState.origin,);
+    }
+
+    if(checkDestinationExists) {
+      await placeNotifier.createPlace(context, appPlaceModel: placeState.destination,);
+    }
+
+    loadNotifier.createLoad(context, errorTitle: languages[language]!["problem_creating_new_load"]!,
+        successTitle: languages[language]!["new_load_created"]!, fromMainView: true);
+
+    loadNotifier.clear();
+
+    truckNotifier.clear();
+    placeNotifier.clear();
+
+    mainNotifier.changeExpansions(isTruckPostExpanded: false, isLoadExpanded: false);
+    FocusScope.of(context).unfocus();
+  }
+
+
   clear() {
     state = state.copyWith(origin: AppPlaceModel(), destination: AppPlaceModel());
     priceController.clear();
     descriptionController.clear();
   }
+
+
+
 }
 
 final loadController = StateNotifierProvider<LoadController, LoadState>(

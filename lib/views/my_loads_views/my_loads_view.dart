@@ -31,7 +31,8 @@ class MyLoadsView extends ConsumerWidget {
     return Scaffold(
       backgroundColor: kBlack,
 
-      body: SafeArea(
+      body: !isUserAnonymous ?
+      SafeArea(
         child: Padding(
           padding: EdgeInsets.only(top: 15.0.h, left: 15.w, right: 15.w),
           child: Column(
@@ -83,7 +84,8 @@ class MyLoadsView extends ConsumerWidget {
             ],
           ),
         ),
-      ),
+      )
+      : const NoAccountFound(),
     );
   }
 

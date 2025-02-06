@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kamyon/controllers/base_notifier.dart';
+import 'package:kamyon/controllers/place_controller.dart';
 import 'package:kamyon/models/base_state.dart';
 import 'package:kamyon/models/trailer_model.dart';
 import 'package:kamyon/models/truck_model.dart';
@@ -12,8 +13,11 @@ import 'package:kamyon/models/truck_post_model.dart';
 import 'package:kamyon/models/user_model.dart';
 import 'package:uuid/uuid.dart';
 import '../constants/app_constants.dart';
+import '../constants/languages.dart';
 import '../constants/snackbars.dart';
 import '../models/place_model.dart';
+import 'load_controller.dart';
+import 'main_controller.dart';
 
 class TruckState implements BaseState {
   final bool showTruckPosts;
@@ -165,6 +169,7 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
       debugPrint('Error: ${response.reasonPhrase}');
       showSnackbar(title: errorTitle, context: context);
     }
+
   }
 
 
@@ -359,6 +364,38 @@ class TruckController extends StateNotifier<TruckState> implements BaseNotifier 
     }
   }
 
+
+  handleCreatingTruckPost(TruckController truckNotifier, PlaceState placeState,
+      PlaceController placeNotifier, List<AppPlaceModel> placeModels, BuildContext context,
+      MainState mainState, String language, LoadController loadNotifier, MainController mainNotifier) async {
+    truckNotifier.switchAppPlaceModels(
+      origin: placeState.origin,
+      destination: placeState.destination,
+    );
+
+    bool checkOriginExists = placeNotifier.checkPlaceModel(placeModels, isOrigin: true);
+    bool checkDestinationExists = placeNotifier.checkPlaceModel(placeModels, isOrigin: false);
+
+    if(checkOriginExists) {
+      await placeNotifier.createPlace(context, appPlaceModel: placeState.origin,);
+    }
+
+    if(checkDestinationExists) {
+      await placeNotifier.createPlace(context, appPlaceModel: placeState.destination,);
+    }
+
+    await truckNotifier.createTruckPost(context, truckUid: mainState.truck.uid!,fromMainView: true,
+        errorTitle: languages[language]!["problem_creating_new_truck_post"]!,
+        successTitle: languages[language]!["new_truck_post_created"]!);
+
+    loadNotifier.clear();
+
+    truckNotifier.clear();
+    placeNotifier.clear();
+
+    mainNotifier.changeExpansions(isTruckPostExpanded: false, isLoadExpanded: false);
+    FocusScope.of(context).unfocus();
+  }
 
   clear() {
     priceController.clear();

@@ -125,7 +125,7 @@ class LoadsView extends ConsumerWidget {
                   width: width,
                   height: height * ((mainState.itemsOpened && mainNotifier.searchController.text.isNotEmpty)
                       ? .7 : (mainState.filteredItems.isEmpty || mainNotifier.searchController.text.isEmpty) ? .275
-                      : .175),
+                      : .34),
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                       color: kBlack
@@ -137,7 +137,7 @@ class LoadsView extends ConsumerWidget {
                         padding: EdgeInsets.only(top: 15.0.h, left: 15.w, right: 15.w),
                         child: customInputField(title: languages[language]!["search"]!,
                           hintText: languages[language]!["search"]!, icon: Icons.search,
-
+                         hasPrefixIcon: true,
                           hasTitle: false, borderRadius: 20, controller: mainNotifier.searchController, onChanged: (value) {
                             mainNotifier.changeSearchString(value: value);
 
@@ -170,7 +170,8 @@ class LoadsView extends ConsumerWidget {
                           }
                         },
                       ),
-                      SizedBox(height: 10.h,),
+                      if(mainState.filteredItems.isEmpty || mainNotifier.searchController.text.isEmpty)
+                        SizedBox(height: 10.h,),
 
                       ConstrainedBox(
                         constraints: BoxConstraints(maxHeight: height * .15),
@@ -212,7 +213,7 @@ class LoadsView extends ConsumerWidget {
                         child: mainState.filteredItems.isEmpty || mainNotifier.searchController.text.isEmpty
                             ? const SizedBox.shrink()
                             : ListView.builder(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          padding: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 10.h),
                           itemCount: mainState.filteredItems.length,
                           itemBuilder: (context, index) {
                             final item = mainState.filteredItems[index];

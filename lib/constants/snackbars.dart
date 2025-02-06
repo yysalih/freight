@@ -8,3 +8,10 @@ showSnackbar({required BuildContext context, required String title}){
     backgroundColor: kBlack,
   ));
 }
+
+showWarningSnackbar({required BuildContext context, required String title}){
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: Text(title),
+    backgroundColor: kBlueColor,
+  ));
+}
