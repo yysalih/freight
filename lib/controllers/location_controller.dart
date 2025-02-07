@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location/location.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LocationState {
   final bool serviceEnabled;
@@ -90,6 +93,33 @@ class LocationController extends StateNotifier<LocationState> {
       locationData = currentLocation;
       state = state.copyWith(locationData: currentLocation);
     });
+  }
+
+  Future<void> launchMap(double latitude, double longitude) async {
+    Uri uri;
+
+    if (Platform.isAndroid) {
+      uri = Uri.parse('geo:$latitude,$longitude?q=$latitude,$longitude');
+    } else {
+      uri = Uri.parse('comgooglemaps://?q=$latitude,$longitude');
+    }
+
+    final fallbackUri = Uri(
+      scheme: "https",
+      host: "maps.google.com",
+      queryParameters: {'q': '$latitude, $longitude'},
+    );
+
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        await launchUrl(fallbackUri);
+      }
+    } catch (e) {
+      await launchUrl(fallbackUri);
+      debugPrint(e.toString());
+    }
   }
 
 

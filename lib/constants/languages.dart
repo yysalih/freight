@@ -241,8 +241,11 @@ const Map<String, String> tr = {
   "restaurant" : "Restaurant",
   "hotel" : "Otel",
   "park" : "Park ve Dinlenme",
+  "show_on_map" : "Google'da Göster",
 };
 const Map<String, String> en = {
+  "show_on_map" : "Google'da Göster",
+
   "gas_station" : "Petrol İstasyonu",
   "car_repair" : "Oto-Elektrikçi",
   "cafe" : "Kafe",

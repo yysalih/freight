@@ -62,12 +62,12 @@ Marker truckPostMarker(TruckPostModel truckPost, {required BuildContext context}
   );
 }
 
-Marker temporaryPlaceMarker(TemporaryPlaceModel temporaryPlace, String placeType, {required BuildContext context}) {
+Marker temporaryPlaceMarker(TemporaryPlaceModel temporaryPlace, String placeType, {required BuildContext context, required Function() onTap}) {
   return Marker(
-    point: LatLng(temporaryPlace.lat, temporaryPlace.lng),
+    point: LatLng(temporaryPlace.lat!, temporaryPlace.lng!),
     width: 30.w, height: 30.h,
     child: GestureDetector(
-
+      onTap: onTap,
       child: CircleAvatar(
         radius: 20,
         backgroundColor: kBlack,

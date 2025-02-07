@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -63,6 +64,10 @@ class LoadsView extends ConsumerWidget {
               FlutterMap(
                 mapController: mainNotifier.mapController,
                 options: MapOptions(
+                  onTap: (tapPosition, point) => mainNotifier.changeSelectedPlace(
+                      isPlaceSelected: false, selectedPlaceModel: TemporaryPlaceModel()
+                  ),
+
                   initialCenter: latLng,
                   initialZoom: 9.2,
                 ),
@@ -90,8 +95,10 @@ class LoadsView extends ConsumerWidget {
                         truckPostMarker(truckPost, context: context),
 
                       if(mainState.placeType.isNotEmpty && mainState.places.isNotEmpty)
-                        for(TemporaryPlaceModel places in mainState.places)
-                          temporaryPlaceMarker(places, mainState.placeType, context: context),
+                        for(TemporaryPlaceModel place in mainState.places)
+                          temporaryPlaceMarker(place, mainState.placeType, context: context, onTap: () {
+                            mainNotifier.changeSelectedPlace(isPlaceSelected: true, selectedPlaceModel: place);
+                          },),
 
 
                       Marker(
@@ -118,10 +125,10 @@ class LoadsView extends ConsumerWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: kBlueColor,
-                          shape: CircleBorder(),
-                          padding: EdgeInsets.all(15)
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(15)
                         ),
-                        child: Icon(Icons.menu, color: kWhite,),
+                        child: const Icon(Icons.menu, color: kWhite,),
                       ),
                     ),
 
@@ -143,7 +150,7 @@ class LoadsView extends ConsumerWidget {
                 error: (error, stackTrace) => Container(),
 
               ),
-              Align(
+              if(!mainState.isPlaceSelected) Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   width: width,
@@ -268,6 +275,75 @@ class LoadsView extends ConsumerWidget {
                         ),
                       ),
                     ],
+                  ),
+                ),
+              )
+              else Align(
+                alignment: Alignment.bottomCenter,
+                child: GestureDetector(
+                  onTap: () => mainNotifier.changeSelectedPlace(
+                    isPlaceSelected: false, selectedPlaceModel: TemporaryPlaceModel()
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: width,
+                      height: height * .3,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: kBlack
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: width * .4, height: height * .3,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image(
+                                  image: CachedNetworkImageProvider(mainState.selectedPlaceModel.imageUrl!),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10.w,),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: width * .47),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(mainState.selectedPlaceModel.name!, style: kTitleTextStyle.copyWith(
+                                    color: kWhite
+                                  ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                  Text(mainState.selectedPlaceModel.address!, style: kCustomTextStyle),
+                                  TextButton(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        const Icon(Icons.place, color: Colors.lightBlueAccent, size: 22,),
+                                        SizedBox(width: 5.w,),
+                                        Text(languages[language]!["show_on_map"]!, style: kCustomTextStyle.copyWith(
+                                            color: Colors.lightBlueAccent, fontSize: 15),
+                                          maxLines: 2, overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                    onPressed: () {
+                                      locationNotifier.launchMap(
+                                        mainState.selectedPlaceModel.lat!,
+                                          mainState.selectedPlaceModel.lng!
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

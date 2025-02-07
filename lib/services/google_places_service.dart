@@ -28,13 +28,13 @@ class GooglePlacesService {
 }
 
 class TemporaryPlaceModel {
-  final String name;
-  final String address;
-  final double lat;
-  final double lng;
+  final String? name;
+  final String? address;
+  final double? lat;
+  final double? lng;
   final String? imageUrl;
 
-  TemporaryPlaceModel({required this.name, required this.address, required this.lat, required this.lng, this.imageUrl});
+  TemporaryPlaceModel({this.name, this.address, this.lat, this.lng, this.imageUrl});
 
   factory TemporaryPlaceModel.fromJson(Map<String, dynamic> json) {
     String? imageRef = json["photos"] != null ? json["photos"][0]["photo_reference"] : null;

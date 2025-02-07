@@ -23,7 +23,7 @@ class UserRepository {
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       UserModel userModel = UserModel().fromJson(data);
-      debugPrint('UserModel: $userModel');
+
 
       if(data.toString().contains("error")) {
         debugPrint('Error: ${response.statusCode}');

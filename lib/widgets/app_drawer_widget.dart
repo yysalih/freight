@@ -4,12 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/constants/languages.dart';
 import 'package:kamyon/controllers/main_controller.dart';
+import 'package:kamyon/controllers/profile_controller.dart';
 import 'package:kamyon/repos/user_repository.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../constants/app_constants.dart';
 import '../constants/providers.dart';
+import '../controllers/auth_controller.dart';
 import '../controllers/location_controller.dart';
+import '../views/auth_views/fill_out_view.dart';
+import '../views/auth_views/login_view.dart';
 
 class AppDrawerWidget extends ConsumerWidget {
   const AppDrawerWidget({super.key});
@@ -20,6 +24,9 @@ class AppDrawerWidget extends ConsumerWidget {
     final language = ref.watch(languageStateProvider);
 
     final userProvider = ref.watch(userFutureProvider(currentUserUid));
+
+    final authNotifier = ref.watch(authController.notifier);
+    final profileNotifier = ref.watch(profileController.notifier);
 
     final mainNotifier = ref.watch(mainController.notifier);
     final mainState = ref.watch(mainController);
@@ -49,6 +56,16 @@ class AppDrawerWidget extends ConsumerWidget {
                 Text(user.name!, style: kCustomTextStyle,),
                 SizedBox(height: 5.h,),
                 Text(user.email!, style: kCustomTextStyle,),
+                SizedBox(height: 5.h,),
+                TextButton(
+                  onPressed: () async {
+                    await authNotifier.getCurrentUser();
+                    Navigator.push(context, routeToView(const FillOutView(toEdit: true,)));
+                  },
+                  child: Text(languages[language]!["edit_profile"]!, style: kCustomTextStyle.copyWith(
+                    color: Colors.lightBlueAccent
+                  ),),
+                ),
               ],
             ),
             error: (error, stackTrace) => Container(),
@@ -79,6 +96,17 @@ class AppDrawerWidget extends ConsumerWidget {
                   ),
                 ),
             ],
+          ),
+          SizedBox(height: 10.h,),
+
+          TextButton(
+            onPressed: () async {
+              profileNotifier.logout(context);
+              Navigator.pushAndRemoveUntil(context, routeToView(const LoginView()), (route) => false);
+            },
+            child: Text(languages[language]!["logout"]!, style: kCustomTextStyle.copyWith(
+                color: Colors.redAccent
+            ),),
           ),
         ],
       ),
