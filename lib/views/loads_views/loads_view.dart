@@ -20,6 +20,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../controllers/place_controller.dart';
 import '../../models/load_model.dart';
 import '../../repos/place_repository.dart';
+import '../../services/google_places_service.dart';
 import '../../widgets/search_result_widget.dart';
 
 
@@ -88,6 +89,10 @@ class LoadsView extends ConsumerWidget {
                       for(TruckPostModel truckPost in availableTruckPosts)
                         truckPostMarker(truckPost, context: context),
 
+                      if(mainState.placeType.isNotEmpty && mainState.places.isNotEmpty)
+                        for(TemporaryPlaceModel places in mainState.places)
+                          temporaryPlaceMarker(places, mainState.placeType, context: context),
+
 
                       Marker(
                           point: latLng,
@@ -109,6 +114,7 @@ class LoadsView extends ConsumerWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           Scaffold.of(context).openDrawer();
+                          mainNotifier.clearPlaces();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: kBlueColor,

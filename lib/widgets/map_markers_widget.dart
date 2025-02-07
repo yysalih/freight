@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kamyon/constants/app_constants.dart';
 import 'package:kamyon/constants/providers.dart';
 import 'package:kamyon/main.dart';
 import 'package:kamyon/models/load_model.dart';
 import 'package:kamyon/models/truck_post_model.dart';
 import 'package:kamyon/repos/place_repository.dart';
+import 'package:kamyon/services/google_places_service.dart';
 import 'package:kamyon/views/loads_views/load_inner_view.dart';
 import 'package:kamyon/views/trucks_views/new_post_view.dart';
 import 'package:kamyon/views/trucks_views/truck_post_inner_view.dart';
@@ -55,6 +57,21 @@ Marker truckPostMarker(TruckPostModel truckPost, {required BuildContext context}
         radius: 25,
         backgroundColor: Colors.white,
         child: Image.asset("assets/icons/truck.png", width: 25.w,),
+      ),
+    ),
+  );
+}
+
+Marker temporaryPlaceMarker(TemporaryPlaceModel temporaryPlace, String placeType, {required BuildContext context}) {
+  return Marker(
+    point: LatLng(temporaryPlace.lat, temporaryPlace.lng),
+    width: 30.w, height: 30.h,
+    child: GestureDetector(
+
+      child: CircleAvatar(
+        radius: 20,
+        backgroundColor: kBlack,
+        child: Image.asset("assets/icons/${placeType}.png", width: 20.w,),
       ),
     ),
   );

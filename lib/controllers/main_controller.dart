@@ -6,6 +6,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kamyon/models/truck_model.dart';
 import 'package:kamyon/models/user_model.dart';
+import 'package:kamyon/services/google_places_service.dart';
 import 'package:kamyon/views/chat_views/chat_view.dart';
 import 'package:kamyon/views/loads_views/loads_view.dart';
 import 'package:kamyon/views/my_loads_views/my_loads_view.dart';
@@ -31,6 +32,9 @@ class MainState {
   final List filteredItems;
   final bool itemsOpened;
 
+  final String placeType;
+  final List<TemporaryPlaceModel> places;
+
   MainState({
     required this.bottomIndex,
     required this.selectedTab,
@@ -42,6 +46,8 @@ class MainState {
     required this.searchString,
     required this.filteredItems,
     required this.itemsOpened,
+    required this.placeType,
+    required this.places,
   });
 
   MainState copyWith({
@@ -55,6 +61,8 @@ class MainState {
     LoadModel? load,
     List? filteredItems,
     bool? itemsOpened,
+    String? placeType,
+    List<TemporaryPlaceModel>? places,
   }) {
     return MainState(
       bottomIndex: bottomIndex ?? this.bottomIndex,
@@ -67,6 +75,8 @@ class MainState {
       searchString: searchString ?? this.searchString,
       filteredItems: filteredItems ?? this.filteredItems,
       itemsOpened: itemsOpened ?? this.itemsOpened,
+      placeType: placeType ?? this.placeType,
+      places: places ?? this.places,
     );
   }
 }
@@ -111,9 +121,16 @@ class MainController extends StateNotifier<MainState> {
 
   updateFilteredList(List list) => state = state.copyWith(filteredItems: list);
 
+  getSelectedPlaces({required String placeType}) async {
+    List<TemporaryPlaceModel> places = await GooglePlacesService.searchPlaces(placeType);
+    state = state.copyWith(places: places, placeType: placeType);
+  }
+
+  clearPlaces() => state = state.copyWith(places: [], placeType: "");
+
 }
 
 final mainController = StateNotifierProvider<MainController, MainState>(
       (ref) => MainController(MainState(bottomIndex: 0, selectedTab: "", isLoadExpanded: false, isTruckPostExpanded: false,
       currentUser: UserModel(), truck: TruckModel(name: ""), load: LoadModel(originName: ""),
-          searchString: "", filteredItems: [], itemsOpened: false),),);
+          searchString: "", filteredItems: [], itemsOpened: false, placeType: "", places: []),),);
