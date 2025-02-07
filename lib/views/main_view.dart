@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kamyon/constants/app_constants.dart';
 import 'package:kamyon/widgets/app_bottom_bar_widget.dart';
+import 'package:kamyon/widgets/app_drawer_widget.dart';
 
 import '../controllers/main_controller.dart';
 
@@ -28,6 +29,7 @@ class _MainViewState extends ConsumerState<MainView> {
         child: mainNotifier.pages[mainState.bottomIndex],
       ),
       bottomNavigationBar: const AppBottomBarWidget(),
+      drawer: mainState.bottomIndex == 0 ? const AppDrawerWidget() : null,
     );
   }
 }

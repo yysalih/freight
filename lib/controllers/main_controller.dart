@@ -74,6 +74,9 @@ class MainState {
 class MainController extends StateNotifier<MainState> {
   MainController(super.state);
 
+  bool get isDrawerVisible => (state.isLoadExpanded || !state.isTruckPostExpanded )
+      && (!state.isLoadExpanded || state.isTruckPostExpanded);
+
   final searchController = TextEditingController();
   final mapController = MapController();
 

@@ -99,21 +99,39 @@ class LoadsView extends ConsumerWidget {
               ),
 
               placesProvider.when(
-                data: (places) => Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                data: (places) => Row(
+                  mainAxisAlignment: mainNotifier.isDrawerVisible ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if(mainNotifier.isDrawerVisible)
+                      Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: kBlueColor,
+                          shape: CircleBorder(),
+                          padding: EdgeInsets.all(15)
+                        ),
+                        child: Icon(Icons.menu, color: kWhite,),
+                      ),
+                    ),
 
-                      quickLoadWidget(context, width, height, language, loadNotifier,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: quickLoadWidget(context, width, height, language, loadNotifier,
                           mainState, mainNotifier, placeState, placeNotifier, truckNotifier, places),
+                    ),
 
-                      quickTruckWidget(context, width, height, language, loadNotifier,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: quickTruckWidget(context, width, height, language, loadNotifier,
                           mainState, mainNotifier, placeState, placeNotifier, truckNotifier, places),
+                    ),
 
-                    ],
-                  ),
+                  ],
                 ),
                 loading: () => Container(),
                 error: (error, stackTrace) => Container(),

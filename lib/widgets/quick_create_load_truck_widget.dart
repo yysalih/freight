@@ -30,7 +30,7 @@ Widget quickLoadWidget(BuildContext context, double width, double height, String
         AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          width: mainState.isLoadExpanded ? width * .9 : width * .44,
+          width: mainState.isLoadExpanded ? width * .9 : width * .365,
           height: 95.h,
           child: customRichInputField(
             title: "",
@@ -85,7 +85,7 @@ Widget quickTruckWidget(BuildContext context, double width, double height, Strin
         AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          width: mainState.isTruckPostExpanded ? width * .9 : width * .44,
+          width: mainState.isTruckPostExpanded ? width * .9 : width * .38,
           height: 95.h,
           child: customRichInputField(
             title: "",
