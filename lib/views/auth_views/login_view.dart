@@ -6,18 +6,9 @@ import 'package:kamyon/constants/app_constants.dart';
 import 'package:kamyon/constants/languages.dart';
 import 'package:kamyon/constants/providers.dart';
 import 'package:kamyon/controllers/auth_controller.dart';
-import 'package:kamyon/services/serverKey.dart';
-import 'package:kamyon/views/auth_views/fill_out_view.dart';
-import 'package:kamyon/views/shipment_views/offer_inner_view.dart';
 import 'package:kamyon/widgets/custom_button_widget.dart';
 import 'package:kamyon/widgets/input_field_widget.dart';
-import 'package:kamyon/widgets/offer_modal_bottom_sheet.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../services/authentication_service.dart';
-import '../../widgets/pick_city_modal_bottom_sheet.dart';
-import '../main_view.dart';
-
 class LoginView extends ConsumerWidget {
   const LoginView({super.key});
 
