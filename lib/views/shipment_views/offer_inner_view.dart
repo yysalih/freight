@@ -267,8 +267,8 @@ class OfferInnerView extends ConsumerWidget {
                             loadProvider.when(
                                 data: (load) {
                                   NotificationService.sendPushMessage(
-                                      title: language == "tr" ? "${load.originName} - ${load.destinationName} ${languages[language]!["offer_accepted_title"]!}"
-                                          : "${languages[language]!["offer_accepted_title"]!} ${load.originName} - ${load.destinationName} ",
+                                      title: language == "tr" ? "${load.originName} - ${load.destinationName} ${languages[language]!["offer_accepted_load_title"]!}"
+                                          : "${languages[language]!["offer_accepted_load_title"]!} ${load.originName} - ${load.destinationName} ",
                                       body: languages[language]!["offer_accepted_body"]!,
                                       token: offer.carrierUid!, type: "offer_load",
                                       uid: offer.unitUid!);
@@ -283,8 +283,8 @@ class OfferInnerView extends ConsumerWidget {
                             truckPostProvider.when(
                               data: (truckPost) {
                                 NotificationService.sendPushMessage(
-                                    title: language == "tr" ? "${truckPost.originName} - ${truckPost.destinationName} ${languages[language]!["offer_accepted_title"]!}"
-                                        : "${languages[language]!["offer_accepted_title"]!} ${truckPost.originName} - ${truckPost.destinationName} ",
+                                    title: language == "tr" ? "${truckPost.originName} - ${truckPost.destinationName} ${languages[language]!["offer_accepted_truck_title"]!}"
+                                        : "${languages[language]!["offer_accepted_truck_title"]!} ${truckPost.originName} - ${truckPost.destinationName} ",
                                     body: languages[language]!["offer_accepted_body"]!,
                                     token: offer.loadOwnerUid!, type: "offer_truck",
                                     uid: offer.unitUid!);
