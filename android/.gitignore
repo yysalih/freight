@@ -3,6 +3,8 @@
 /ios/Runner/GoogleService-Info.plist
 /lib/constants/app_constants.dart
 /lib/firebase_options.dart
+/lib/services/serverKey.dart.dart
+
 notes.txt
 get.php
 
