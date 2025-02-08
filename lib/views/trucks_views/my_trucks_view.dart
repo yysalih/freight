@@ -26,7 +26,7 @@ class MyTrucksView extends ConsumerWidget {
     final truckNotifier = ref.watch(truckController.notifier);
     final truckState = ref.watch(truckController);
 
-    return !isUserAnonymous ?
+    return !isUserAnonymous() ?
     Padding(
       padding: EdgeInsets.only(top: 10.h, right: 15.w, left: 15.w),
       child: Column(

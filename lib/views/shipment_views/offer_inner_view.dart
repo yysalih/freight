@@ -18,7 +18,9 @@ import '../../controllers/chat_controller.dart';
 import '../../controllers/truck_controller.dart';
 import '../../repos/load_repository.dart';
 import '../../repos/place_repository.dart';
+import '../../repos/truck_posts_repository.dart';
 import '../../repos/truck_repository.dart';
+import '../../services/notification_service.dart';
 import '../../widgets/app_alert_dialogs_widget.dart';
 import '../../widgets/custom_button_widget.dart';
 import '../../widgets/load_info_widget.dart';
@@ -61,7 +63,7 @@ class OfferInnerView extends ConsumerWidget {
             data: (offer) {
 
 
-              return offer.fromUid == FirebaseAuth.instance.currentUser!.uid ?
+              return offer.loadOwnerUid == FirebaseAuth.instance.currentUser!.uid ?
               IconButton(
                 onPressed: () {
                   showDeleteDialog(context: context, title: languages[language]!["delete_offer_title"]!,
@@ -89,7 +91,7 @@ class OfferInnerView extends ConsumerWidget {
             data: (offer) {
               final truckProvider = ref.watch(truckFutureProvider(offer.truckUid));
               final loadProvider = ref.watch(loadFutureProvider(offer.unitUid));
-              final offerOwnerProvider = ref.watch(userFutureProvider(offer.fromUid));
+              final offerOwnerProvider = ref.watch(userFutureProvider(offer.loadOwnerUid));
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,7 +129,7 @@ class OfferInnerView extends ConsumerWidget {
                                   splashColor: kLightBlack,
                                   splashRadius: 30,
                                   onPressed: () {
-                                    chatNotifier.createChat(context, to: offer.fromUid!,
+                                    chatNotifier.createChat(context, to: offer.loadOwnerUid!,
                                         errorTitle: languages[language]!["error_creating_chat"]!);
                                   },
                                   icon: const Icon(Icons.chat_bubble, color: kWhite,),
@@ -260,11 +262,39 @@ class OfferInnerView extends ConsumerWidget {
 
                           if(offer.type == "load") {
                             await loadNotifier.updateLoadState(context, loadUid: offer.unitUid!, newState: "accepted",);
-                          } else {
-                            await truckNotifier.updateTruckPostState(context, truckPostUid: offer.unitUid!, newState: "accepted",);
+                            //TODO send notification to carrier
+                            final loadProvider = ref.read(loadFutureProvider(offer.unitUid!));
+                            loadProvider.when(
+                                data: (load) {
+                                  NotificationService.sendPushMessage(
+                                      title: language == "tr" ? "${load.originName} - ${load.destinationName} ${languages[language]!["offer_accepted_title"]!}"
+                                          : "${languages[language]!["offer_accepted_title"]!} ${load.originName} - ${load.destinationName} ",
+                                      body: languages[language]!["offer_accepted_body"]!,
+                                      token: offer.carrierUid!, type: "offer_load",
+                                      uid: offer.unitUid!);
+                                },
+                                error: (error, stackTrace) {}, loading: () {});
+
                           }
+                          else {
+                            await truckNotifier.updateTruckPostState(context, truckPostUid: offer.unitUid!, newState: "accepted",);
+                            //TODO send notification to load owner
+                            final truckPostProvider = ref.read(truckPostFutureProvider(offer.unitUid!));
+                            truckPostProvider.when(
+                              data: (truckPost) {
+                                NotificationService.sendPushMessage(
+                                    title: language == "tr" ? "${truckPost.originName} - ${truckPost.destinationName} ${languages[language]!["offer_accepted_title"]!}"
+                                        : "${languages[language]!["offer_accepted_title"]!} ${truckPost.originName} - ${truckPost.destinationName} ",
+                                    body: languages[language]!["offer_accepted_body"]!,
+                                    token: offer.loadOwnerUid!, type: "offer_truck",
+                                    uid: offer.unitUid!);
+                              },
+                              error: (error, stackTrace) {}, loading: () {},
+                            );
+                          }
+
                           await shipmentNotifier.createShipment(context,
-                              type: "load", unitUid: offer.unitUid!, toUid: offer.toUid!,
+                              type: "load", unitUid: offer.unitUid!, toUid: offer.carrierUid!,
                               price: offer.price!, truckUid: offer.truckUid!,
                               errorTitle: languages[language]!["success_creating_shipment"]!,
                               successTitle: languages[language]!["error_creating_offer"]!);

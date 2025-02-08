@@ -36,7 +36,7 @@ class ProfileView extends ConsumerWidget {
 
     final locationNotifier = ref.watch(locationController.notifier);
 
-    return !isUserAnonymous ? Padding(
+    return !isUserAnonymous() ? Padding(
       padding: EdgeInsets.only(top: 10.h, right: 15.w, left: 15.w),
       child: SingleChildScrollView(
         child: Column(

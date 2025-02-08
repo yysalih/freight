@@ -258,7 +258,7 @@ class TruckPostInnerView extends ConsumerWidget {
                               description2: "${truckPost.price}\$",
                               title: languages[language]!["propose"]!, description: "",
                               onPressed: () {
-                                if(!isUserAnonymous) {
+                                if(!isUserAnonymous()) {
                                   showModalBottomSheet(context: context, builder: (context) =>
                                       OfferModalBottomSheet(
                                         toUid: truckPost.ownerUid!,
@@ -275,7 +275,7 @@ class TruckPostInnerView extends ConsumerWidget {
                               description2: languages[language]!["now"]!,
                               title: languages[language]!["chat"]!, description: "",
                               onPressed: () {
-                                if(!isUserAnonymous) {
+                                if(!isUserAnonymous()) {
                                   chatNotifier.createChat(context, to: truckPost.ownerUid!, errorTitle: languages[language]!["error_creating_chat"]!);
                                 }
                                 else {
@@ -290,7 +290,7 @@ class TruckPostInnerView extends ConsumerWidget {
 
                                 title: languages[language]!["call"]!, description: "",
                                 onPressed: () {
-                                  if(!isUserAnonymous) {
+                                  if(!isUserAnonymous()) {
                                     launchUrlString("tel://${owner.phone!}");
                                   }
                                   else {

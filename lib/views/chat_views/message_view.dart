@@ -8,6 +8,7 @@ import 'package:kamyon/models/chat_model.dart';
 import 'package:kamyon/repos/chat_repository.dart';
 import 'package:kamyon/repos/message_repository.dart';
 import 'package:kamyon/repos/user_repository.dart';
+import 'package:kamyon/services/notification_service.dart';
 import 'package:kamyon/widgets/input_field_widget.dart';
 import 'package:kamyon/widgets/warning_info_widget.dart';
 
@@ -98,13 +99,23 @@ class MessageView extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    IconButton(
-                      onPressed: () async {
-                        chatNotifier.createMessage(context, to: chatModel.toUid!, errorTitle: languages[language]!["error_creating_chat"]!,
-                            chatUid: chatModel.uid!);
-                      },
-                      icon: const Icon(Icons.send, color: Colors.lightBlueAccent,),
+                    chatUserProvider.when(
+                      data: (chatUser) => IconButton(
+                        onPressed: () async {
+                          chatNotifier.createMessage(context, to: chatModel.toUid!, errorTitle: languages[language]!["error_creating_chat"]!,
+                              chatUid: chatModel.uid!);
+                          NotificationService.sendPushMessage(
+                              title: language == "tr" ? "${chatUser.name!} ${languages[language]!["new_message_title"]!}"
+                              : "${languages[language]!["new_message_title"]!} ${chatUser.name!}",
+                              body: chatNotifier.messageController.text,
+                              token: chatUser.token!, type: "message", uid: chatModel.uid!);
+                        },
+                        icon: const Icon(Icons.send, color: Colors.lightBlueAccent,),
+                      ),
+                      loading: () => Container(),
+                      error: (error, stackTrace) => Container(),
                     ),
+
                   ],
                 ),
               ),

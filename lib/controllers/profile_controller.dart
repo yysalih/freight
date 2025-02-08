@@ -236,6 +236,31 @@ class ProfileController extends StateNotifier<ProfileState> {
     }
   }
 
+  updateToken(String currentUserUid, {required String token}) async {
+
+
+    final response = await http.post(
+      appUrl,
+      body: {
+        'executeQuery': "UPDATE users SET token = '$token' WHERE uid = '${currentUserUid}'",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var data = response.body;
+      if (data.toString().contains("error")) {
+        debugPrint('Error: ${response.statusCode}');
+        debugPrint('Error: ${response.reasonPhrase}');
+      } else {
+        debugPrint('Contact deleted successfully');
+        debugPrint('Updated Contacts: $token');
+      }
+    } else {
+      debugPrint('Error: ${response.statusCode}');
+      debugPrint('Error: ${response.reasonPhrase}');
+    }
+  }
+
 }
 
 final profileController = StateNotifierProvider<ProfileController, ProfileState>((ref) => ProfileController(ProfileState(

@@ -9,8 +9,8 @@ class OfferModel implements BaseModel<OfferModel> {
   final String? uid;
   final DateTime? date;
   final String? type;
-  final String? fromUid;
-  final String? toUid;
+  final String? loadOwnerUid;
+  final String? carrierUid;
   final String? unitUid;
   final String? truckUid;
   final double? price;
@@ -21,7 +21,7 @@ class OfferModel implements BaseModel<OfferModel> {
   const OfferModel({
     this.uid,
     this.date, this.type,
-    this.fromUid, this.toUid,
+    this.loadOwnerUid, this.carrierUid,
     this.unitUid,
     this.truckUid,
     this.price,
@@ -34,8 +34,8 @@ class OfferModel implements BaseModel<OfferModel> {
     uid: json["uid"] as String?,
     date: DateTime.fromMillisecondsSinceEpoch(int.parse(json["date"])),
     type: json["type"] as String?,
-    toUid: json["toUid"] as String?,
-    fromUid: json["fromUid"] as String?,
+    carrierUid: json["toUid"] as String?,
+    loadOwnerUid: json["fromUid"] as String?,
     unitUid: json["unitUid"] as String?,
     truckUid: json["truckUid"] as String?,
     price: double.parse(json["price"]),
@@ -47,8 +47,8 @@ class OfferModel implements BaseModel<OfferModel> {
     "uid": uid,
     "date": date!.millisecondsSinceEpoch,
     "type": type,
-    "toUid": toUid,
-    "fromUid": fromUid,
+    "toUid": carrierUid,
+    "fromUid": loadOwnerUid,
     "unitUid": unitUid,
     "truckUid": truckUid,
     "price" : price,
@@ -71,8 +71,8 @@ class OfferModel implements BaseModel<OfferModel> {
       uid,
       date!.millisecondsSinceEpoch,
       type,
-      toUid,
-      fromUid,
+      carrierUid,
+      loadOwnerUid,
       unitUid,
       truckUid,
       price,

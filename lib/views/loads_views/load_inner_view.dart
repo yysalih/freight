@@ -223,7 +223,7 @@ class LoadInnerView extends ConsumerWidget {
                                 description2: "${load.price}\$",
                                 title: languages[language]!["take_the_job"]!, description: "",
                             onPressed: () {
-                              if(!isUserAnonymous) {
+                              if(!isUserAnonymous()) {
                                 showModalBottomSheet(context: context, builder: (context) =>
                                   OfferModalBottomSheet(
                                     toUid: load.ownerUid!,
@@ -240,7 +240,7 @@ class LoadInnerView extends ConsumerWidget {
                                 description2: languages[language]!["now"]!,
                                 title: languages[language]!["chat"]!, description: "",
                             onPressed: () {
-                              if(!isUserAnonymous) {
+                              if(!isUserAnonymous()) {
                                 chatNotifier.createChat(context, to: load.ownerUid!, errorTitle: languages[language]!["error_creating_chat"]!);
                               }
                               else {
@@ -255,7 +255,7 @@ class LoadInnerView extends ConsumerWidget {
 
                                 title: languages[language]!["call"]!, description: "",
                                 onPressed: () {
-                                  if(!isUserAnonymous) {
+                                  if(!isUserAnonymous()) {
                                     launchUrlString("tel://${owner.phone!}");
                                   }
                                   else {

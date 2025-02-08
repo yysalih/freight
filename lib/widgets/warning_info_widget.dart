@@ -7,6 +7,7 @@ import 'package:kamyon/views/auth_views/login_view.dart';
 
 import '../constants/languages.dart';
 import '../constants/providers.dart';
+import '../controllers/profile_controller.dart';
 
 class NoLoadsFoundWidget extends ConsumerWidget {
   const NoLoadsFoundWidget({super.key});
@@ -81,6 +82,7 @@ class NoAccountFound extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final language = ref.watch(languageStateProvider);
+    final profileNotifier = ref.watch(profileController.notifier);
 
     return Center(
       child: Padding(
@@ -95,7 +97,10 @@ class NoAccountFound extends ConsumerWidget {
               child: Text(languages[language]!["sign_up"]!, style: kCustomTextStyle.copyWith(
                 color: Colors.lightBlueAccent, fontSize: 20
               ),),
-              onPressed: () => Navigator.pushAndRemoveUntil(context, routeToView(const LoginView()), (route) => false,),
+              onPressed: () {
+                profileNotifier.logout(context);
+                Navigator.pushAndRemoveUntil(context, routeToView(const LoginView()), (route) => false,);
+              },
             ),
           ],
         ),

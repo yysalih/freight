@@ -1,16 +1,20 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/controllers/location_controller.dart';
-
+import 'package:kamyon/services/notification_service.dart';
 import 'package:kamyon/views/auth_views/login_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'constants/app_constants.dart';
 import 'constants/providers.dart';
 import 'firebase_options.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  debugPrint("Handling a background message: ${message.messageId}");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +25,10 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  NotificationService notificationService = NotificationService();
+  await notificationService.initialize();
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -41,6 +49,8 @@ class _MyAppState extends ConsumerState<MyApp> {
     final locationNotifier = ref.read(locationController.notifier);
     locationNotifier.getContinuousLocation();
 
+
+
     super.initState();
 
   }
@@ -59,8 +69,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+
     return ScreenUtilInit(
       designSize:  MediaQuery.of(context).size, //const Size(360, 690),
       minTextAdapt: true,

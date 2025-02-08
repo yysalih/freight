@@ -42,7 +42,7 @@ class AppDrawerWidget extends ConsumerWidget {
 
         children: [
           SizedBox(height: 10.h,),
-          if(!isUserAnonymous) userProvider.when(
+          if(!isUserAnonymous()) userProvider.when(
             data: (user) => Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,

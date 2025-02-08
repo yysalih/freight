@@ -6,6 +6,7 @@ import 'package:kamyon/constants/app_constants.dart';
 import 'package:kamyon/constants/languages.dart';
 import 'package:kamyon/constants/providers.dart';
 import 'package:kamyon/controllers/auth_controller.dart';
+import 'package:kamyon/services/serverKey.dart';
 import 'package:kamyon/views/auth_views/fill_out_view.dart';
 import 'package:kamyon/views/shipment_views/offer_inner_view.dart';
 import 'package:kamyon/widgets/custom_button_widget.dart';
@@ -190,7 +191,10 @@ class LoginView extends ConsumerWidget {
                 child: Text(languages[appLanguage]!["anonymous_login"]!, style: kCustomTextStyle.copyWith(
                   color: kBlueColor
                 ),),
-                onPressed: () {
+                onPressed: () async {
+                  // final getKey = get_server_key();
+                  // final token = await getKey.server_token();
+                  // debugPrint(token.toString());
                   authNotifier.handleSignInAnonymous(authNotifier, context: context);
                 },
               ),

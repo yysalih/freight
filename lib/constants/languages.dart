@@ -5,6 +5,21 @@ const Map<String, Map<String, String>> languages = {
 };
 
 const Map<String, String> tr = {
+  "offer_accepted_load_title" : "yükü için teklifiniz kabul edildi",
+  "offer_accepted_truck_title" : "aracı için teklifiniz kabul edildi",
+
+  "offer_accepted_body" : "Teklifiniz kabul edildi.",
+
+  "new_offer_load_body" : "Yükünüz için yeni bir teklif geldi",
+  "new_offer_truck_body" : "Aracınız için yeni bir teklif geldi",
+
+  "new_offer_load_title" : "yükü için yeni bir teklif geldi",
+  "new_offer_truck_title" : "aracı için yeni bir teklif geldi",
+
+  "shipment_canceled_body" : "Nakliyat iptal edildi",
+  "shipment_completed_body" : "Nakliyat tamamlandı!",
+
+  "new_message_title" : "sana yeni bir mesaj gönderdi",
   "anonymous_login" : "Misafir Olarak Devam Et",
   "pick_load" : "Yük Seç",
   "truck_post_details" : "Araç İlan Detayları",
@@ -244,6 +259,23 @@ const Map<String, String> tr = {
   "show_on_map" : "Google'da Göster",
 };
 const Map<String, String> en = {
+  "new_offer_load_body" : "Yükünüz için yeni bir teklif geldi",
+  "new_offer_truck_body" : "Aracınız için yeni bir teklif geldi",
+
+  "new_offer_load_title" : "New offer for your load:",
+  "new_offer_truck_title" : "New offer for your vehicle:",
+
+  "offer_accepted_load_title" : "Offer accepted for your load:",
+  "offer_accepted_truck_title" : "Offer accepted for your vehicle:",
+
+  "offer_accepted_body" : "Teklifiniz kabul edildi.",
+
+
+
+  "shipment_canceled_body" : "Nakliyat iptal edildi",
+  "shipment_completed_body" : "Nakliyat tamamlandı!",
+  "new_message_title" : "You have a message from",
+
   "show_on_map" : "Google'da Göster",
 
   "gas_station" : "Petrol İstasyonu",

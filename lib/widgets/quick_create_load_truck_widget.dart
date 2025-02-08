@@ -50,7 +50,7 @@ Widget quickLoadWidget(BuildContext context, double width, double height, String
           curve: Curves.easeInOut,
           child: mainState.isLoadExpanded ?
           MainInputPostWidgets(isLoad: true, controller: loadNotifier.priceController, onPressed: () async {
-            if(!isUserAnonymous) {
+            if(!isUserAnonymous()) {
               await loadNotifier.handleCreatingLoad(loadNotifier, placeState, placeNotifier,
                   placeModels, context, language, truckNotifier, mainNotifier);
             }
@@ -106,7 +106,7 @@ Widget quickTruckWidget(BuildContext context, double width, double height, Strin
           child: mainState.isTruckPostExpanded ?
           MainInputPostWidgets(isLoad: false, controller: truckNotifier.priceController, onPressed: () async {
 
-            if(!isUserAnonymous) {
+            if(!isUserAnonymous()) {
               await truckNotifier.handleCreatingTruckPost(truckNotifier, placeState, placeNotifier, placeModels,
                   context, mainState, language, loadNotifier, mainNotifier);
             }
