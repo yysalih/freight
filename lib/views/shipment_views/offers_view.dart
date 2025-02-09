@@ -41,10 +41,15 @@ class OffersView extends ConsumerWidget {
 
       body: SafeArea(
         child: offersStream.when(
-          data: (offers) => ListView.builder(
-            itemCount: offers.length,
-            itemBuilder: (context, index) => offerWidget(offers[index], context: context, language: language),
-          ),
+          data: (offers) {
+            if(offers.isEmpty) {
+              return const Center(child:  NoOfferFound());
+            }
+            return ListView.builder(
+              itemCount: offers.length,
+              itemBuilder: (context, index) => offerWidget(offers[index], context: context, language: language),
+            );
+          },
           error: (error, stackTrace) => const NoOfferFound(),
           loading: () => loadingWidget(),
         ),

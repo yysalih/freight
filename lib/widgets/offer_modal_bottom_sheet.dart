@@ -1,7 +1,9 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/repos/load_repository.dart';
+import 'package:kamyon/repos/user_repository.dart';
 import 'package:kamyon/widgets/pick_load_button_widget.dart';
 import 'package:kamyon/widgets/pick_truck_button_widget.dart';
 import '../constants/app_constants.dart';
@@ -25,6 +27,8 @@ class OfferModalBottomSheet extends ConsumerWidget {
     final offerNotifier = ref.watch(offerController.notifier);
 
     final language = ref.watch(languageStateProvider);
+
+    final carrierProvider = ref.watch(userFutureProvider(toUid));
 
 
 
@@ -63,42 +67,50 @@ class OfferModalBottomSheet extends ConsumerWidget {
               },),
             SizedBox(height: 20.h,),
 
-            customButton(title: languages[language]!["confirm"]!, onPressed: () async {
-              offerNotifier.createOffer(context, type: type, unitUid: unitUid, toUid: toUid,
-                  errorTitle: languages[language]!["error_creating_offer"]!,
-                  successTitle: languages[language]!["success_creating_offer"]!);
-
-              if(type == "load") {
-                final loadProvider = ref.read(loadFutureProvider(unitUid));
-                loadProvider.when(
-                  data: (load) {
-                    NotificationService.sendPushMessage(
-                        title: language == "tr" ? "${load.originName} - ${load.destinationName} ${languages[language]!["offer_accepted_load_title"]!}"
-                        : "${languages[language]!["offer_accepted_load_title"]!} ${load.originName} - ${load.destinationName} ",
-                        body: languages[language]!["offer_accepted_body"]!,
-                        token: toUid, type: "offer_load",
-                        uid: unitUid);
-                  },
-                  error: (error, stackTrace) {}, loading: () {},
-                );
-              }
-              else {
-                final truckPostProvider = ref.read(truckPostFutureProvider(unitUid));
-                truckPostProvider.when(
-                  data: (truckPost) {
-                    NotificationService.sendPushMessage(
-                        title: language == "tr" ? "${truckPost.originName} - ${truckPost.destinationName} ${languages[language]!["offer_accepted_truck_title"]!}"
-                            : "${languages[language]!["offer_accepted_truck_title"]!} ${truckPost.originName} - ${truckPost.destinationName} ",
-                        body: languages[language]!["offer_accepted_body"]!,
-                        token: toUid, type: "offer_truck",
-                        uid: unitUid);
-                  },
-                  error: (error, stackTrace) {}, loading: () {},
-                );
-              }
+            carrierProvider.when(
+              data: (carrier) => customButton(title: languages[language]!["confirm"]!, onPressed: () async {
+                offerNotifier.createOffer(context, type: type, unitUid: unitUid, toUid: toUid,
+                    errorTitle: languages[language]!["error_creating_offer"]!,
+                    successTitle: languages[language]!["success_creating_offer"]!);
 
 
-            },)
+
+                if(type == "load") {
+                  final loadProvider = ref.read(loadFutureProvider(unitUid));
+                  loadProvider.when(
+                    data: (load) {
+                      NotificationService().sendPushMessage(
+                          title: language == "tr" ? "${load.originName} - ${load.destinationName} ${languages[language]!["new_offer_load_title"]!}"
+                              : "${languages[language]!["new_offer_load_title"]!} ${load.originName} - ${load.destinationName} ",
+                          body: languages[language]!["new_offer_load_body"]!,
+                          token: carrier.token!, type: "offer_load",
+                          uid: unitUid);
+                    },
+                    error: (error, stackTrace) {}, loading: () {},
+                  );
+                }
+                else {
+                  final truckPostProvider = ref.read(truckPostFutureProvider(unitUid));
+                  truckPostProvider.when(
+                    data: (truckPost) {
+                      NotificationService().sendPushMessage(
+                          title: language == "tr" ? "${truckPost.originName} - ${truckPost.destinationName} ${languages[language]!["new_offer_truck_title"]!}"
+                              : "${languages[language]!["new_offer_truck_title"]!} ${truckPost.originName} - ${truckPost.destinationName} ",
+                          body: languages[language]!["new_offer_truck_body"]!,
+                          token: carrier.token!, type: "offer_truck",
+                          uid: unitUid);
+                    },
+                    error: (error, stackTrace) {}, loading: () {},
+                  );
+                }
+
+
+              },),
+              error: (error, stackTrace) => Container(),
+              loading: () => Container(),
+            ),
+
+
           ],
         ),
       ),

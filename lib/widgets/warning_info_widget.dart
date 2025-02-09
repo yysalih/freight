@@ -98,7 +98,7 @@ class NoAccountFound extends ConsumerWidget {
                 color: Colors.lightBlueAccent, fontSize: 20
               ),),
               onPressed: () {
-                profileNotifier.logout(context);
+                profileNotifier.deleteAccount(context, "tr");
                 Navigator.pushAndRemoveUntil(context, routeToView(const LoginView()), (route) => false,);
               },
             ),

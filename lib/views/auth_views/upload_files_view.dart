@@ -57,7 +57,7 @@ class UploadFilesView extends ConsumerWidget {
                     children: [
                       fileCardWidget(title: languages[language]!["id_front"]!,
                         image: "id", color: kLightBlack, onPressed: () async {
-                          if(toEdit) {
+                          if(true) {
                             await authNotifier.showPicker(context, language: language, type: "idFront");
                             await authNotifier.updateFilesState(
                                 idFront: authState.image,
@@ -73,7 +73,7 @@ class UploadFilesView extends ConsumerWidget {
                       SizedBox(width: 20.w,),
                       fileCardWidget(title: languages[language]!["id_back"]!,
                         image: "id", color: kLightBlack, onPressed: () async {
-                          if(toEdit) {
+                          if(true) {
                             await authNotifier.showPicker(context, language: language, type: "idBack");
                             await authNotifier.updateFilesState(
                                 idFront: authState.idFront,
@@ -95,7 +95,7 @@ class UploadFilesView extends ConsumerWidget {
                       children: [
                         fileCardWidget(title: languages[language]!["license_front"]!,
                           image: "license", color: kLightBlack, onPressed: () async {
-                          if(toEdit) {
+                          if(true) {
                             await authNotifier.showPicker(context, language: language, type: "licenseFront");
                             await authNotifier.updateFilesState(
                                 idFront: authState.idFront,
@@ -110,7 +110,7 @@ class UploadFilesView extends ConsumerWidget {
                         SizedBox(width: 20.w,),
                         fileCardWidget(title: languages[language]!["license_back"]!,
                           image: "license", color: kLightBlack, onPressed: () async {
-                          if(toEdit) {
+                          if(true) {
                             await authNotifier.showPicker(context, language: language, type: "licenseBack");
                             await authNotifier.updateFilesState(
                                 idFront: authState.idFront,
@@ -130,7 +130,7 @@ class UploadFilesView extends ConsumerWidget {
                     children: [
                       fileCardWidget2(title: languages[language]!["psiko"]!,
                           icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
-                            if(toEdit) {
+                            if(true) {
                               showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet(
                                 type: "psiko",
                               ));
@@ -139,8 +139,10 @@ class UploadFilesView extends ConsumerWidget {
                       SizedBox(height: 20.h,),
                       fileCardWidget2(title: languages[language]!["src"]!,
                           icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
-                            if(toEdit) {
-                              showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
+                            if(true) {
+                              showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet(
+                                type: "src",
+                              ));
                             }
                           }),
                     ],
@@ -148,8 +150,10 @@ class UploadFilesView extends ConsumerWidget {
                     children: [
                       fileCardWidget2(title: languages[language]!["registration"]!,
                           icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
-                            if(toEdit) {
-                              showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
+                            if(true) {
+                              showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet(
+                                type: "registration",
+                              ));
                             }
                           }),
                       SizedBox(height: 20.h,),

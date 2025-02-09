@@ -85,8 +85,7 @@ class LoadInnerView extends ConsumerWidget {
           child: loadProvider.when(
             data: (load) {
               final ownerUser = ref.watch(userFutureProvider(load.ownerUid!));
-              final originProvider = ref.watch(placeFutureProvider(load.origin!));
-              final destinationProvider = ref.watch(placeFutureProvider(load.destination!));
+
               return Column(
                 children: [
                   SizedBox(
@@ -127,32 +126,21 @@ class LoadInnerView extends ConsumerWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                originProvider.when(
-                                  data: (origin) => ConstrainedBox(
-                                    constraints: BoxConstraints(maxWidth: width * .3),
-                                    child: Text("${origin.name!}\n"
-                                        "${DateFormat("dd.MM.yyyy").format(load.startDate!)}",
-                                      style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,),
-                                  ),
-                                  error: (error, stackTrace) => errorText(),
-                                  loading: () => Container(),
-                                ),
+                                Text("${load.originName!}\n"
+                                    "${DateFormat("dd.MM.yyyy").format(load.startDate!)}",
+                                  style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,),
                                 //TODO Place name should be added just like in the AddTruckPostView (edit mode)
                                 const Icon(Icons.fast_forward_sharp, color: kBlueColor,),
 
                                 Icon(Icons.local_shipping, color: kWhite, size: 30.w,),
 
                                 const Icon(Icons.fast_forward_sharp, color: kBlueColor,),
-                                destinationProvider.when(
-                                  data: (destination) => ConstrainedBox(
-                                    constraints: BoxConstraints(maxWidth: width * .3),
-                                    child: Text("${destination.name}\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}",
+                                ConstrainedBox(
+                                  constraints: BoxConstraints(maxWidth: width * .3),
+                                  child: Text("${load.destinationName}\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}",
 
-                                      style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.end,),
-                                  ),
-                                  loading: () => Container(),
-                                  error: (error, stackTrace) => errorText(),
+                                    style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.end,),
                                 ),
                               ],
                             ),

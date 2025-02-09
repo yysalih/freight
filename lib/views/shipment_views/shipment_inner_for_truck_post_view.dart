@@ -274,7 +274,7 @@ class ShipmentInnerForTruckPostView extends ConsumerWidget {
                                             errorTitle: languages[language]!["error_cancel_shipment"]!,
                                             successTitle: languages[language]!["success_cancel_shipment"]!);
 
-                                        NotificationService.sendPushMessage(
+                                        NotificationService().sendPushMessage(
                                             title: "${load.originName} - ${load.destinationName}",
                                             body: languages[language]!["shipment_canceled_body"]!,
                                             token: carrier.token!, type: "shipment", uid: shipment.uid!);
@@ -289,7 +289,7 @@ class ShipmentInnerForTruckPostView extends ConsumerWidget {
                                             errorTitle: languages[language]!["error_complete_shipment"]!,
                                             successTitle: languages[language]!["success_complete_shipment"]!);
 
-                                        NotificationService.sendPushMessage(
+                                        NotificationService().sendPushMessage(
                                             title: "${load.originName} - ${load.destinationName}",
                                             body: languages[language]!["shipment_completed_body"]!,
                                             token: carrier.token!, type: "shipment", uid: shipment.uid!);

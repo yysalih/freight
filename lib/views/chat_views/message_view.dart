@@ -104,7 +104,7 @@ class MessageView extends ConsumerWidget {
                         onPressed: () async {
                           chatNotifier.createMessage(context, to: chatModel.toUid!, errorTitle: languages[language]!["error_creating_chat"]!,
                               chatUid: chatModel.uid!);
-                          NotificationService.sendPushMessage(
+                          NotificationService().sendPushMessage(
                               title: language == "tr" ? "${chatUser.name!} ${languages[language]!["new_message_title"]!}"
                               : "${languages[language]!["new_message_title"]!} ${chatUser.name!}",
                               body: chatNotifier.messageController.text,
