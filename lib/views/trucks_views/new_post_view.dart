@@ -157,7 +157,7 @@ class NewPostView extends ConsumerWidget {
                   },),
                 ],
               ),
-              Row(
+              /*Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   searchCardWidget(width, title: languages[language]!["start_date"]!,
@@ -191,7 +191,7 @@ class NewPostView extends ConsumerWidget {
                     },
                   ),
                 ],
-              ),
+              ),*/
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [

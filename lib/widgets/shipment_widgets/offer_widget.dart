@@ -71,7 +71,7 @@ Widget offerWidget(OfferModel offer, {required String language, required BuildCo
 
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text(DateFormat('dd.MM.yyyy').format(offer.date!), style: kCustomTextStyle,),
+                    child: Text(DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(offer.date!)), style: kCustomTextStyle,),
                   ),
                 ],
               ),

@@ -39,7 +39,7 @@ class UserRepository {
     return UserModel();
   }
   Stream<UserModel> getUserStream() async* {
-    while(true) {
+    while (true) {
       try {
         final response = await http.post(
           appUrl,
@@ -50,31 +50,23 @@ class UserRepository {
 
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);
-          UserModel userModel = UserModel().fromJson(data);
-
-
-          if(data.toString().contains("error")) {
-            debugPrint('Error: ${response.statusCode}');
-            debugPrint('Error: ${response.reasonPhrase}');
+          if (!data.toString().contains("error")) {
+            yield UserModel().fromJson(data);
           } else {
-            yield userModel;
+            debugPrint('Error: ${response.statusCode}');
           }
         } else {
           debugPrint('Error: ${response.statusCode}');
-          debugPrint('Error: ${response.reasonPhrase}');
-          yield UserModel();
         }
-        yield UserModel();
-      }
-      catch (e) {
+      } catch (e) {
         debugPrint('Error fetching user: $e');
       }
 
       // Wait before fetching the next update
       await Future.delayed(const Duration(seconds: 2));
-      }
-
     }
+
+  }
 }
 
 final userStreamProvider = StreamProvider.autoDispose.family<UserModel, String?>((ref, uid) {

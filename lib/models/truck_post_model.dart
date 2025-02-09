@@ -13,12 +13,12 @@ class TruckPostModel implements BaseModel<TruckPostModel> {
   final String? ownerUid;
   final String? truckUid;
   final String? description;
-  final DateTime? startDate;
-  final DateTime? endDate;
+  final int? startDate;
+  final int? endDate;
   final String? contact;
   final double? price;
   final String? state;
-  final DateTime? createdDate;
+  final int? createdDate;
   final double? originLat;
   final double? originLong;
   final double? destinationLat;
@@ -51,9 +51,9 @@ class TruckPostModel implements BaseModel<TruckPostModel> {
     contact: json["contact"] as String?,
     destination: json["destination"] as String?,
     price: double.parse(json["price"]),
-    createdDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["createdDate"])),
-    startDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["startDate"])),
-    endDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["endDate"])),
+    createdDate: int.parse(json["createdDate"]),
+    startDate: int.parse(json["startDate"]),
+    endDate: int.parse(json["endDate"]),
     destinationLat: double.parse(json["destinationLat"]),
     destinationLong: double.parse(json["destinationLong"]),
     originLat: double.parse(json["originLat"]),
@@ -76,9 +76,9 @@ class TruckPostModel implements BaseModel<TruckPostModel> {
     "contact": contact,
     "destination": destination,
     "price": price,
-    "createdDate": createdDate!.millisecondsSinceEpoch,
-    "startDate": startDate!.millisecondsSinceEpoch,
-    "endDate": endDate!.millisecondsSinceEpoch,
+    "createdDate": createdDate,
+    "startDate": startDate,
+    "endDate": endDate,
     "originLat" : originLat,
     "destinationLat" : destinationLat,
     "destinationLong" : destinationLong,
@@ -111,9 +111,9 @@ class TruckPostModel implements BaseModel<TruckPostModel> {
       contact,
       destination,
       price,
-      createdDate!.millisecondsSinceEpoch,
-      startDate!.millisecondsSinceEpoch,
-      endDate!.millisecondsSinceEpoch,
+      createdDate,
+      startDate,
+      endDate,
       originLat,
       destinationLat,
       originLong,

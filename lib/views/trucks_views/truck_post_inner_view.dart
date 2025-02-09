@@ -184,14 +184,14 @@ class TruckPostInnerView extends ConsumerWidget {
                                   data: (origin) => ConstrainedBox(
                                     constraints: BoxConstraints(maxWidth: width * .3),
                                     child: Text("${origin.name!}\n"
-                                        "${DateFormat("dd.MM.yyyy").format(truckPost.startDate!)}",
+                                        "${DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(truckPost.startDate!))}",
                                       style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,),
                                   ),
                                   error: (error, stackTrace) => Text("İstanbul TR\n"
-                                      "${DateFormat("dd.MM.yyyy").format(truckPost.startDate!)}",
+                                      "${DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(truckPost.startDate!))}",
                                     style: kCustomTextStyle,),
                                   loading: () => Text("İstanbul TR\n"
-                                      "${DateFormat("dd.MM.yyyy").format(truckPost.startDate!)}",
+                                      "${DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(truckPost.startDate!))}",
                                     style: kCustomTextStyle,),
                                 ),
                                 //TODO Place name should be added just like in the AddTruckPostView (edit mode)
@@ -203,15 +203,15 @@ class TruckPostInnerView extends ConsumerWidget {
                                 destinationProvider.when(
                                   data: (destination) => ConstrainedBox(
                                     constraints: BoxConstraints(maxWidth: width * .3),
-                                    child: Text("${destination.name}\n${DateFormat("dd.MM.yyyy").format(truckPost.endDate!)}",
+                                    child: Text("${destination.name}\n${DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(truckPost.endDate!))}",
 
                                       style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.end,),
                                   ),
-                                  loading: () => Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(truckPost.endDate!)}",
+                                  loading: () => Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(truckPost.endDate!))}",
 
                                     style: kCustomTextStyle, textAlign: TextAlign.end,),
-                                  error: (error, stackTrace) => Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(truckPost.endDate!)}",
+                                  error: (error, stackTrace) => Text("Ankara TR\n${DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(truckPost.endDate!))}",
 
                                     style: kCustomTextStyle, textAlign: TextAlign.end,),
                                 ),
@@ -227,7 +227,7 @@ class TruckPostInnerView extends ConsumerWidget {
                                   children: [
                                     Text(languages[language]!["published_date"]!,
                                       style: kCustomTextStyle,),
-                                    Text(DateFormat("dd.MM.yyyy").format(truckPost.createdDate!), style: kCustomTextStyle,),
+                                    Text(DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(truckPost.createdDate!)), style: kCustomTextStyle,),
                                   ],
                                 ),
                                 if(truckPost.ownerUid == FirebaseAuth.instance.currentUser!.uid && truckPost.state == "available")
@@ -310,9 +310,9 @@ class TruckPostInnerView extends ConsumerWidget {
                           children: [
                             Text(languages[language]!["shipping_details"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
                             loadInfoWidget(width, height, title: languages[language]!["pick_up_date"]!,
-                                description: DateFormat("dd.MM.yyyy").format(truckPost.startDate!)),
+                                description: DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(truckPost.startDate!))),
                             loadInfoWidget(width, height, title: languages[language]!["dock_date"]!,
-                                description: DateFormat("dd.MM.yyyy").format(truckPost.endDate!)),
+                                description: DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(truckPost.endDate!))),
                             loadInfoWidget(width, height, title: languages[language]!["reference"]!,
                                 description: "#1K00F9886"),
 

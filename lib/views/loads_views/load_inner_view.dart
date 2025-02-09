@@ -127,7 +127,7 @@ class LoadInnerView extends ConsumerWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("${load.originName!}\n"
-                                    "${DateFormat("dd.MM.yyyy").format(load.startDate!)}",
+                                    "${DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(load.startDate!))}",
                                   style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,),
                                 //TODO Place name should be added just like in the AddTruckPostView (edit mode)
                                 const Icon(Icons.fast_forward_sharp, color: kBlueColor,),
@@ -137,7 +137,7 @@ class LoadInnerView extends ConsumerWidget {
                                 const Icon(Icons.fast_forward_sharp, color: kBlueColor,),
                                 ConstrainedBox(
                                   constraints: BoxConstraints(maxWidth: width * .3),
-                                  child: Text("${load.destinationName}\n${DateFormat("dd.MM.yyyy").format(load.endDate!)}",
+                                  child: Text("${load.destinationName}\n${DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(load.endDate!))}",
 
                                     style: kCustomTextStyle, maxLines: 3, overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.end,),
@@ -181,7 +181,7 @@ class LoadInnerView extends ConsumerWidget {
                                   children: [
                                     Text(languages[language]!["published_date"]!,
                                       style: kCustomTextStyle,),
-                                    Text(DateFormat("dd.MM.yyyy").format(load.createdDate!), style: kCustomTextStyle,),
+                                    Text(DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(load.createdDate!)), style: kCustomTextStyle,),
                                   ],
                                 ),
                               ],
@@ -280,9 +280,9 @@ class LoadInnerView extends ConsumerWidget {
                           children: [
                             Text(languages[language]!["shipping_details"]!, style: kTitleTextStyle.copyWith(color: kWhite),),
                             loadInfoWidget(width, height, title: languages[language]!["pick_up_date"]!,
-                                description: "${DateFormat("dd.MM.yyyy").format(load.startDate!)}, ${load.startHour}"),
+                                description: "${DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(load.startDate!))}, ${load.startHour}"),
                             loadInfoWidget(width, height, title: languages[language]!["dock_date"]!,
-                                description: "${DateFormat("dd.MM.yyyy").format(load.endDate!)}, ${load.endHour}"),
+                                description: "${DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(load.endDate!))}, ${load.endHour}"),
                             loadInfoWidget(width, height, title: languages[language]!["reference"]!,
                                 description: "#1K00F9886"),
 

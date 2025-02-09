@@ -67,7 +67,7 @@ Widget shipmentWidget(ShipmentModel shipment, {required String language, require
 
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text(DateFormat('dd.MM.yyyy').format(shipment.date!), style: kCustomTextStyle,),
+                    child: Text(DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(shipment.date!)), style: kCustomTextStyle,),
                   ),
                 ],
               ),

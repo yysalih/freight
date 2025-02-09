@@ -44,14 +44,14 @@ class MyLoadsView extends ConsumerWidget {
                   Text("${languages[language]!["my_loads"]}", style: kTitleTextStyle.copyWith(
                     color: kWhite
                   ),),
-                  TextButton(
+                  /*TextButton(
                     child: Text(languages[language]!["new_post"]!, style: kCustomTextStyle.copyWith(
                         color: kBlueColor,
                         fontSize: 13.w),),
                     onPressed: () {
                       Navigator.push(context, routeToView(const PostLoadView()));
                     },
-                  )
+                  )*/
                 ],
               ),
 

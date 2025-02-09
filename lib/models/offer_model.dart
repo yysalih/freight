@@ -7,7 +7,7 @@ import 'base_model.dart';
 class OfferModel implements BaseModel<OfferModel> {
 
   final String? uid;
-  final DateTime? date;
+  final int? date;
   final String? type;
   final String? loadOwnerUid;
   final String? carrierUid;
@@ -32,7 +32,7 @@ class OfferModel implements BaseModel<OfferModel> {
   @override
   OfferModel fromJson(Map<String, dynamic> json) => OfferModel(
     uid: json["uid"] as String?,
-    date: DateTime.fromMillisecondsSinceEpoch(int.parse(json["date"])),
+    date: int.parse(json["date"]),
     type: json["type"] as String?,
     carrierUid: json["toUid"] as String?,
     loadOwnerUid: json["fromUid"] as String?,
@@ -45,7 +45,7 @@ class OfferModel implements BaseModel<OfferModel> {
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
     "uid": uid,
-    "date": date!.millisecondsSinceEpoch,
+    "date": date,
     "type": type,
     "toUid": carrierUid,
     "fromUid": loadOwnerUid,
@@ -69,7 +69,7 @@ class OfferModel implements BaseModel<OfferModel> {
   List getDbFormat() {
     return [
       uid,
-      date!.millisecondsSinceEpoch,
+      date,
       type,
       carrierUid,
       loadOwnerUid,

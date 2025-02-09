@@ -25,8 +25,8 @@ class LoadModel extends BaseUnitModel implements BaseModel<LoadModel> {
   @override
   final double? weight;
   final double? volume;
-  final DateTime? startDate;
-  final DateTime? endDate;
+  final int? startDate;
+  final int? endDate;
   final String? startHour;
   final String? endHour;
   final String? loadType;
@@ -38,7 +38,7 @@ class LoadModel extends BaseUnitModel implements BaseModel<LoadModel> {
   final double? price;
   final double? distance;
   final String? state;
-  final DateTime? createdDate;
+  final int? createdDate;
   final String? originName;
   final String? originAddress;
   final String? destinationName;
@@ -80,9 +80,9 @@ class LoadModel extends BaseUnitModel implements BaseModel<LoadModel> {
     endHour: json["endHour"] as String?,
     price: double.parse(json["price"]),
     volume: double.parse(json["volume"]),
-    createdDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["createdDate"])),
-    startDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["startDate"])),
-    endDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["endDate"])),
+    createdDate: int.parse(json["createdDate"]),
+    startDate: int.parse(json["startDate"]),
+    endDate: int.parse(json["endDate"]),
     originName : json["originName"] as String?,
     originAddress : json["originAddress"] as String?,
     destinationName : json["destinationName"] as String?,
@@ -107,9 +107,9 @@ class LoadModel extends BaseUnitModel implements BaseModel<LoadModel> {
     "endHour": endHour,
     "price": price,
     "volume": volume,
-    "createdDate": createdDate!.millisecondsSinceEpoch,
-    "startDate": startDate!.millisecondsSinceEpoch,
-    "endDate": endDate!.millisecondsSinceEpoch,
+    "createdDate": createdDate,
+    "startDate": startDate,
+    "endDate": endDate,
     "distance": distance,
     "isPalletized": isPalletized,
     "originLat" : originLat,
@@ -150,9 +150,9 @@ class LoadModel extends BaseUnitModel implements BaseModel<LoadModel> {
       endHour,
       price,
       volume,
-      createdDate!.millisecondsSinceEpoch,
-      startDate!.millisecondsSinceEpoch,
-      endDate!.millisecondsSinceEpoch,
+      createdDate,
+      startDate,
+      endDate,
       distance,
       isPalletized,
       originLat,

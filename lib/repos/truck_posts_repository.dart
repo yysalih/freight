@@ -39,7 +39,7 @@ class TruckPostRepository {
     return const TruckPostModel();
   }
   Stream<TruckPostModel> getTruckPostStream() async* {
-    while(true) {
+    while (true) {
       try {
         final response = await http.post(
           appUrl,
@@ -50,25 +50,19 @@ class TruckPostRepository {
 
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);
-          TruckPostModel truckPostModel = const TruckPostModel().fromJson(data);
-          debugPrint('TruckPostModel: $truckPostModel');
-
-          if(data.toString().contains("error")) {
-            debugPrint('Error: ${response.statusCode}');
-            debugPrint('Error: ${response.reasonPhrase}');
+          if (!data.toString().contains("error")) {
+            yield TruckPostModel().fromJson(data);
           } else {
-            yield truckPostModel;
+            debugPrint('Error: ${response.statusCode}');
           }
         } else {
           debugPrint('Error: ${response.statusCode}');
-          debugPrint('Error: ${response.reasonPhrase}');
-          yield const TruckPostModel();
         }
-        yield const TruckPostModel();
+      } catch (e) {
+        debugPrint('Error fetching truckPost: $e');
       }
-      catch(e) {
-        debugPrint('Error fetching truckpost: $e');
-      }
+
+      // Wait before fetching the next update
       await Future.delayed(const Duration(seconds: 2));
     }
   }

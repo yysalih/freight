@@ -50,12 +50,12 @@ class AppDrawerWidget extends ConsumerWidget {
                 CircleAvatar(
                   radius: 40,
                   backgroundColor: kLightBlack,
-                  backgroundImage: CachedNetworkImageProvider(user.image!),
+                  backgroundImage: CachedNetworkImageProvider(user.image ?? ""),
                 ),
                 SizedBox(height: 5.h,),
-                Text(user.name!, style: kCustomTextStyle,),
+                Text(user.name ?? "", style: kCustomTextStyle,),
                 SizedBox(height: 5.h,),
-                Text(user.email!, style: kCustomTextStyle,),
+                Text(user.email ?? "", style: kCustomTextStyle,),
                 SizedBox(height: 5.h,),
                 TextButton(
                   onPressed: () async {

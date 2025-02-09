@@ -136,8 +136,8 @@ class MyTruckPostsWidget extends ConsumerWidget {
                       debugPrint("Places are set for TruckPosts View");
                       truckNotifier.descriptionController.text = truckPosts[index].description!;
                       truckNotifier.priceController.text = truckPosts[index].price.toString();
-                      truckNotifier.switchStartDateTime(startDate: truckPosts[index].startDate!);
-                      truckNotifier.switchEndDateTime(endDate: truckPosts[index].endDate!);
+                      truckNotifier.switchStartDateTime(startDate: DateTime.fromMillisecondsSinceEpoch(truckPosts[index].startDate!));
+                      truckNotifier.switchEndDateTime(endDate: DateTime.fromMillisecondsSinceEpoch(truckPosts[index].endDate!));
                       truckNotifier.switchAppPlaceModels(origin: origin, destination: destination);
                       truckNotifier.switchStrings(truckType: "", contact: truckPosts[index].contact!);
 

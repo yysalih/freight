@@ -43,7 +43,7 @@ class ShipmentController extends StateNotifier<ShipmentState> {
     String uid = const Uuid().v4();
     ShipmentModel shipmentModel = ShipmentModel(
       price: price,
-      date: DateTime.now(),
+      date: DateTime.now().millisecondsSinceEpoch,
       description: descriptionController.text,
       loadOwnerUid: FirebaseAuth.instance.currentUser!.uid,
       carrierUid: toUid,
@@ -52,7 +52,7 @@ class ShipmentController extends StateNotifier<ShipmentState> {
       uid: uid,
       unitUid: unitUid,
       state: "start",
-      lastChangedDate: DateTime.now(),
+      lastChangedDate: DateTime.now().millisecondsSinceEpoch,
       lastLatitudeOfFreight: 0.0,
       lastLongitudeOfFreight: 0.0,
     );

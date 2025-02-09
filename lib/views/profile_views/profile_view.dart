@@ -79,20 +79,20 @@ class ProfileView extends ConsumerWidget {
                             },
                             child: Center(
                               child: CircleAvatar(
-                                backgroundImage: CachedNetworkImageProvider(user.image!),
+                                backgroundImage: CachedNetworkImageProvider(user.image ?? ""),
                                 radius: 50.h,
                               ),
                             ),
                           ),
                           SizedBox(height: 10.h,),
-                          Text(user.name!, style: kCustomTextStyle,),
+                          Text(user.name ?? "", style: kCustomTextStyle,),
                           SizedBox(height: 10.h,),
-                          Text(user.phone!, style: kCustomTextStyle,),
+                          Text(user.phone ?? "", style: kCustomTextStyle,),
                           SizedBox(height: 10.h,),
-                          Text(user.email!, style: kCustomTextStyle,),
+                          Text(user.email ?? "", style: kCustomTextStyle,),
                           SizedBox(height: 10.h,),
-                          Text(user.isBroker! ? languages[language]!["broker"]! :
-                            user.isCarrier! ? languages[language]!["carrier"]! :
+                          Text(user.isBroker ?? true ? languages[language]!["broker"]! :
+                            user.isCarrier ?? true ? languages[language]!["carrier"]! :
                             languages[language]!["shipper"]!
                             , style: kTitleTextStyle.copyWith(color: Colors.lightBlueAccent),),
                         ],

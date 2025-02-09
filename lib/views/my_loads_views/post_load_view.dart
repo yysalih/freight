@@ -201,13 +201,15 @@ class PostLoadView extends ConsumerWidget {
                 ),
 
                 SizedBox(height: 15.h,),
+
+
+                /*
                 searchCardWidget(width, title: languages[language]!["load_type"]!,
                   hint: loadState.isPalletized ? languages[language]!["palletized"]! : languages[language]!["bulk"]!,
                   halfLength: false, onPressed: () {
                     loadNotifier.switchBools(isPartial: loadState.isPartial, isPalletized: !loadState.isPalletized);
                   },),
-
-                /*SizedBox(height: 15.h,),
+                SizedBox(height: 15.h,),
                 userProvider.when(
                   data: (currentUser) => searchCardWidget(width, title: languages[language]!["contact_phone"]!,
                     hint: loadState.contact.isNotEmpty ? loadState.contact : languages[language]!["enter_contact_phone"]!,

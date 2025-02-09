@@ -7,7 +7,7 @@ import 'base_model.dart';
 class ShipmentModel implements BaseModel<ShipmentModel> {
 
   final String? uid;
-  final DateTime? date;
+  final int? date;
   final String? type;
   final String? loadOwnerUid;
   final String? carrierUid;
@@ -16,7 +16,7 @@ class ShipmentModel implements BaseModel<ShipmentModel> {
   final double? price;
   final String? description;
   final String? state;
-  final DateTime? lastChangedDate;
+  final int? lastChangedDate;
   final double? lastLatitudeOfFreight;
   final double? lastLongitudeOfFreight;
 
@@ -39,7 +39,7 @@ class ShipmentModel implements BaseModel<ShipmentModel> {
   @override
   ShipmentModel fromJson(Map<String, dynamic> json) => ShipmentModel(
     uid: json["uid"] as String?,
-    date: DateTime.fromMillisecondsSinceEpoch(int.parse(json["date"])),
+    date: int.parse(json["date"]),
     type: json["type"] as String?,
     carrierUid: json["toUid"] as String?,
     loadOwnerUid: json["fromUid"] as String?,
@@ -48,14 +48,14 @@ class ShipmentModel implements BaseModel<ShipmentModel> {
     price: double.parse(json["price"]),
     description: json["description"] as String?,
     state: json["state"] as String?,
-    lastChangedDate: DateTime.fromMillisecondsSinceEpoch(int.parse(json["lastChangedDate"])),
+    lastChangedDate: int.parse(json["lastChangedDate"]),
     lastLatitudeOfFreight: double.parse(json["lastLatitudeOfFreight"]),
     lastLongitudeOfFreight: double.parse(json["lastLongitudeOfFreight"]),
   );
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
     "uid": uid,
-    "date": date!.millisecondsSinceEpoch,
+    "date": date,
     "type": type,
     "toUid": carrierUid,
     "fromUid": loadOwnerUid,
@@ -64,7 +64,7 @@ class ShipmentModel implements BaseModel<ShipmentModel> {
     "price" : price,
     "description" : description,
     "state" : state,
-    "lastChangedDate": lastChangedDate!.millisecondsSinceEpoch,
+    "lastChangedDate": lastChangedDate,
     "lastLatitudeOfFreight" : lastLatitudeOfFreight,
     "lastLongitudeOfFreight" : lastLongitudeOfFreight,
 
@@ -83,7 +83,7 @@ class ShipmentModel implements BaseModel<ShipmentModel> {
   List getDbFormat() {
     return [
       uid,
-      date!.millisecondsSinceEpoch,
+      date,
       type,
       carrierUid,
       loadOwnerUid,
@@ -92,7 +92,7 @@ class ShipmentModel implements BaseModel<ShipmentModel> {
       price,
       description,
       state,
-      lastChangedDate!.millisecondsSinceEpoch,
+      lastChangedDate,
       lastLatitudeOfFreight,
       lastLongitudeOfFreight,
     ];

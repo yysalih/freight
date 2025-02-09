@@ -42,7 +42,7 @@ class OfferController extends StateNotifier<OfferState> {
     String uid = const Uuid().v4();
     OfferModel offerModel = OfferModel(
       price: double.parse(priceController.text),
-      date: DateTime.now(),
+      date: DateTime.now().millisecondsSinceEpoch,
       description: descriptionController.text,
       loadOwnerUid: FirebaseAuth.instance.currentUser!.uid,
       carrierUid: toUid,

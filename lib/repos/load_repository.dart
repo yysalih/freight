@@ -39,7 +39,7 @@ class LoadRepository {
     return LoadModel();
   }
   Stream<LoadModel> getLoadStream() async* {
-    while(true) {
+    while (true) {
       try {
         final response = await http.post(
           appUrl,
@@ -50,25 +50,19 @@ class LoadRepository {
 
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);
-          LoadModel loadModel = LoadModel().fromJson(data);
-          debugPrint('UserModel: $loadModel');
-
-          if(data.toString().contains("error")) {
-            debugPrint('Error: ${response.statusCode}');
-            debugPrint('Error: ${response.reasonPhrase}');
+          if (!data.toString().contains("error")) {
+            yield LoadModel().fromJson(data);
           } else {
-            yield loadModel;
+            debugPrint('Error: ${response.statusCode}');
           }
         } else {
           debugPrint('Error: ${response.statusCode}');
-          debugPrint('Error: ${response.reasonPhrase}');
-          yield LoadModel();
         }
-        yield LoadModel();
-      }
-      catch(e) {
+      } catch (e) {
         debugPrint('Error fetching load: $e');
       }
+
+      // Wait before fetching the next update
       await Future.delayed(const Duration(seconds: 2));
     }
   }
