@@ -23,7 +23,7 @@ class AppDrawerWidget extends ConsumerWidget {
 
     final language = ref.watch(languageStateProvider);
 
-    final userProvider = ref.watch(userFutureProvider(currentUserUid));
+    final userProvider = ref.watch(userStreamProvider(currentUserUid));
 
     final authNotifier = ref.watch(authController.notifier);
     final profileNotifier = ref.watch(profileController.notifier);

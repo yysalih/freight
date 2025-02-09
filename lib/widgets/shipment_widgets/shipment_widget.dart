@@ -21,7 +21,7 @@ Widget shipmentWidget(ShipmentModel shipment, {required String language, require
   return Consumer(
     builder: (context, ref, child) {
       final shipmentNotifier = ref.watch(shipmentController.notifier);
-      final shipmentOwnerProvider = ref.watch(userFutureProvider(shipment.loadOwnerUid));
+      final shipmentOwnerProvider = ref.watch(userStreamProvider(shipment.loadOwnerUid));
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
         child: ClipRRect(

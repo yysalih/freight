@@ -64,7 +64,7 @@ class ChatCardWidget extends ConsumerWidget {
     double width = MediaQuery.of(context).size.width;
 
 
-    final toUserProvider = ref.watch(userFutureProvider(chat.toUid));
+    final toUserProvider = ref.watch(userStreamProvider(chat.toUid));
     debugPrint("${chat.messages}");
     final lastMessageProvider = ref.watch(messageFutureProvider(chat.allMessages.last));
 

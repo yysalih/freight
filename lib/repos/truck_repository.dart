@@ -12,7 +12,7 @@ class TruckRepository {
   TruckRepository({String? uid})
       : _uid = uid ?? "";
 
-  Future<TruckModel> getTruck() async {
+  Future<TruckModel> getTruckFuture() async {
     final response = await http.post(
       appUrl,
       body: {
@@ -38,8 +38,42 @@ class TruckRepository {
     }
     return TruckModel();
   }
+  Stream<TruckModel> getTruckStream() async* {
+    while(true) {
+      try {
+        final response = await http.post(
+          appUrl,
+          body: {
+            'singleQuery': "SELECT * FROM trucks WHERE uid = '$_uid'",
+          },
+        );
 
-  Future<List<TruckModel>> getCurrentUserTrucks() async {
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          TruckModel truckModel = TruckModel().fromJson(data);
+          debugPrint('TruckModel: $truckModel');
+
+          if(data.toString().contains("error")) {
+            debugPrint('Error: ${response.statusCode}');
+            debugPrint('Error: ${response.reasonPhrase}');
+          } else {
+            yield truckModel;
+          }
+        } else {
+          debugPrint('Error: ${response.statusCode}');
+          debugPrint('Error: ${response.reasonPhrase}');
+          yield TruckModel();
+        }
+        yield TruckModel();
+      }
+      catch(e) {
+        debugPrint('Error fetching truck: $e');
+      }
+      await Future.delayed(const Duration(seconds: 2));
+    }
+  }
+
+  Future<List<TruckModel>> getCurrentUserTrucksFuture() async {
     final response = await http.post(
       appUrl,
       body: {
@@ -64,16 +98,61 @@ class TruckRepository {
       return [];
     }
   }
+  Stream<List<TruckModel>> getCurrentUserTrucksStream() async* {
+    while(true) {
+      try {
+        final response = await http.post(
+          appUrl,
+          body: {
+            'multiQuery': "SELECT * FROM trucks WHERE ownerUid = '$_uid'",
+          },
+        );
+
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          if (data is List) { // Ensure that data is a List
+            List<TruckModel> loads = data.map((e) => TruckModel().fromJson(e as Map<String, dynamic>)).toList();
+            debugPrint('Trucks Length: ${loads.length}');
+
+            yield loads;
+          } else {
+            debugPrint('Error: Unexpected data format');
+            yield [];
+          }
+        }
+        else {
+          debugPrint('Error: ${response.statusCode} : ${response.reasonPhrase}');
+          yield [];
+        }
+      }
+      catch(e) {
+        debugPrint('Error fetching user: $e');
+      }
+      await Future.delayed(const Duration(seconds: 2));
+    }
+  }
 }
 
+final truckStreamProvider = StreamProvider.autoDispose.family<TruckModel, String?>((ref, uid) {
+  final truckRepository = ref.watch(truckRepositoryProvider(uid));
+  return truckRepository.getTruckStream();
+});
 final truckFutureProvider = FutureProvider.autoDispose.family<TruckModel, String?>((ref, uid) {
   final truckRepository = ref.watch(truckRepositoryProvider(uid));
-  return truckRepository.getTruck();
+  return truckRepository.getTruckFuture();
+});
+
+
+
+
+final trucksStreamProvider = StreamProvider.autoDispose.family<List<TruckModel>, String?>((ref, uid) {
+  final truckRepository = ref.watch(truckRepositoryProvider(uid));
+  return truckRepository.getCurrentUserTrucksStream();
 });
 
 final trucksFutureProvider = FutureProvider.autoDispose.family<List<TruckModel>, String?>((ref, uid) {
   final truckRepository = ref.watch(truckRepositoryProvider(uid));
-  return truckRepository.getCurrentUserTrucks();
+  return truckRepository.getCurrentUserTrucksFuture();
 });
 
 final truckRepositoryProvider = Provider.family<TruckRepository, String?>((ref, uid) {

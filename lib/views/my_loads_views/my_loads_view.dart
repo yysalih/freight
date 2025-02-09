@@ -26,7 +26,7 @@ class MyLoadsView extends ConsumerWidget {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
-    final loadsProvider = ref.watch(loadsFutureProvider(FirebaseAuth.instance.currentUser!.uid));
+    final loadsProvider = ref.watch(loadsStreamProvider(FirebaseAuth.instance.currentUser!.uid));
 
     return Scaffold(
       backgroundColor: kBlack,

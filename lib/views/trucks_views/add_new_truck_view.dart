@@ -35,7 +35,7 @@ class AddNewTruckView extends ConsumerWidget {
 
     final trailersProvider = ref.watch(trailersFutureProvider(FirebaseAuth.instance.currentUser!.uid));
 
-    final truckProvider = ref.watch(truckFutureProvider(truckUid));
+    final truckProvider = ref.watch(truckStreamProvider(truckUid));
 
 
 

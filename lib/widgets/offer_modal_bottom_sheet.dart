@@ -28,7 +28,7 @@ class OfferModalBottomSheet extends ConsumerWidget {
 
     final language = ref.watch(languageStateProvider);
 
-    final carrierProvider = ref.watch(userFutureProvider(toUid));
+    final carrierProvider = ref.watch(userStreamProvider(toUid));
 
 
 
@@ -76,7 +76,7 @@ class OfferModalBottomSheet extends ConsumerWidget {
 
 
                 if(type == "load") {
-                  final loadProvider = ref.read(loadFutureProvider(unitUid));
+                  final loadProvider = ref.read(loadStreamProvider(unitUid));
                   loadProvider.when(
                     data: (load) {
                       NotificationService().sendPushMessage(
@@ -90,7 +90,7 @@ class OfferModalBottomSheet extends ConsumerWidget {
                   );
                 }
                 else {
-                  final truckPostProvider = ref.read(truckPostFutureProvider(unitUid));
+                  final truckPostProvider = ref.read(truckPostStreamProvider(unitUid));
                   truckPostProvider.when(
                     data: (truckPost) {
                       NotificationService().sendPushMessage(

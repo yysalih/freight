@@ -37,7 +37,7 @@ class LoadInnerView extends ConsumerWidget {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
-    final loadProvider = ref.watch(loadFutureProvider(uid));
+    final loadProvider = ref.watch(loadStreamProvider(uid));
 
     final loadNotifier = ref.watch(loadController.notifier);
 
@@ -84,7 +84,7 @@ class LoadInnerView extends ConsumerWidget {
         child: SingleChildScrollView(
           child: loadProvider.when(
             data: (load) {
-              final ownerUser = ref.watch(userFutureProvider(load.ownerUid!));
+              final ownerUser = ref.watch(userStreamProvider(load.ownerUid!));
 
               return Column(
                 children: [

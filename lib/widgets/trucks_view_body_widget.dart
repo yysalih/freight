@@ -26,7 +26,7 @@ class MyTrucksWidget extends ConsumerWidget {
     final language = ref.watch(languageStateProvider);
     final width = MediaQuery.of(context).size.width;
 
-    final trucksProvider = ref.watch(trucksFutureProvider(FirebaseAuth.instance.currentUser!.uid));
+    final trucksProvider = ref.watch(trucksStreamProvider(FirebaseAuth.instance.currentUser!.uid));
     final truckNotifier = ref.watch(truckController.notifier);
 
     return trucksProvider.when(
@@ -109,7 +109,7 @@ class MyTruckPostsWidget extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    final truckPostsProvider = ref.watch(truckPostsFutureProvider(FirebaseAuth.instance.currentUser!.uid));
+    final truckPostsProvider = ref.watch(truckPostsStreamProvider(FirebaseAuth.instance.currentUser!.uid));
 
     final truckNotifier = ref.watch(truckController.notifier);
     final placeNotifier = ref.watch(placeController.notifier);

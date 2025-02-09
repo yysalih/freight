@@ -17,7 +17,7 @@ Widget offerWidget(OfferModel offer, {required String language, required BuildCo
   return Consumer(
     builder: (context, ref, child) {
       final offerNotifier = ref.watch(offerController.notifier);
-      final offerOwnerProvider = ref.watch(userFutureProvider(offer.loadOwnerUid));
+      final offerOwnerProvider = ref.watch(userStreamProvider(offer.loadOwnerUid));
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
         child: ClipRRect(

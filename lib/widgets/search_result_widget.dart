@@ -19,7 +19,7 @@ Widget searchResultWidget(double width, double height, String language,
   return Consumer(
     builder: (context, ref, child) {
 
-      final userProvider = ref.watch(userFutureProvider(load.ownerUid));
+      final userProvider = ref.watch(userStreamProvider(load.ownerUid));
 
       return Container(
         width: width,
@@ -143,7 +143,7 @@ Widget smallerSearchResultWidget(double width, double height, String language,
   return Consumer(
     builder: (context, ref, child) {
 
-      final userProvider = ref.watch(userFutureProvider(load.ownerUid));
+      final userProvider = ref.watch(userStreamProvider(load.ownerUid));
 
       return Container(
         width: width,
@@ -306,8 +306,8 @@ Widget truckPostsWidget(double width, double height, String language,
   return Consumer(
     builder: (context, ref, child) {
 
-      final truckProvider = ref.watch(truckFutureProvider(truckPost.truckUid));
-      final userProvider = ref.watch(userFutureProvider(truckPost.ownerUid));
+      final truckProvider = ref.watch(truckStreamProvider(truckPost.truckUid));
+      final userProvider = ref.watch(userStreamProvider(truckPost.ownerUid));
 
       return Container(
         width: width,
@@ -438,8 +438,8 @@ Widget smallerTruckPostsWidget(double width, double height, String language,
   return Consumer(
     builder: (context, ref, child) {
 
-      final truckProvider = ref.watch(truckFutureProvider(truckPost.truckUid));
-      final userProvider = ref.watch(userFutureProvider(truckPost.ownerUid));
+      final truckProvider = ref.watch(truckStreamProvider(truckPost.truckUid));
+      final userProvider = ref.watch(userStreamProvider(truckPost.ownerUid));
 
       return Container(
         width: width,

@@ -41,7 +41,7 @@ class PostLoadView extends ConsumerWidget {
     final placeState = ref.watch(placeController);
     final placeNotifier = ref.watch(placeController.notifier);
 
-    final userProvider = ref.watch(userFutureProvider(FirebaseAuth.instance.currentUser!.uid));
+    final userProvider = ref.watch(userStreamProvider(FirebaseAuth.instance.currentUser!.uid));
 
 
     final GlobalKey _menuKey = GlobalKey();

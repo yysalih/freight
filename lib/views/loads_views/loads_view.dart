@@ -48,8 +48,8 @@ class LoadsView extends ConsumerWidget {
     final latLng = LatLng(locationNotifier.locationData.latitude ?? 41.0082376,
         locationNotifier.locationData.longitude ?? 28.9783589);
 
-    final availableLoadsNotifier = ref.watch(availableLoadsFutureProvider(""));
-    final availableTruckPostsNotifier = ref.watch(availableTruckPostsFutureProvider(""));
+    final availableLoadsNotifier = ref.watch(availableLoadsStreamProvider(""));
+    final availableTruckPostsNotifier = ref.watch(availableTruckPostsStreamProvider(""));
 
     final placesProvider = ref.watch(placesFutureProvider(""));
 

@@ -101,12 +101,12 @@ class OfferInnerView extends ConsumerWidget {
           child: offerProvider.when(
             data: (offer) {
               final truckProvider =
-                  ref.watch(truckFutureProvider(offer.truckUid));
-              final loadProvider = ref.watch(loadFutureProvider(offer.unitUid));
+                  ref.watch(truckStreamProvider(offer.truckUid));
+              final loadProvider = ref.watch(loadStreamProvider(offer.unitUid));
               final offerOwnerProvider =
-                  ref.watch(userFutureProvider(offer.loadOwnerUid));
+                  ref.watch(userStreamProvider(offer.loadOwnerUid));
               final carrierProvider =
-                  ref.watch(userFutureProvider(offer.carrierUid));
+                  ref.watch(userStreamProvider(offer.carrierUid));
 
               return offerOwnerProvider.when(
                 data: (offerOwner) => Column(
@@ -363,7 +363,7 @@ class OfferInnerView extends ConsumerWidget {
                                       );
                                       //TODO send notification to carrier
                                       final loadProvider = ref
-                                          .read(loadFutureProvider(offer.unitUid!));
+                                          .read(loadStreamProvider(offer.unitUid!));
                                       loadProvider.when(
                                           data: (load) {
                                             NotificationService().sendPushMessage(
@@ -386,7 +386,7 @@ class OfferInnerView extends ConsumerWidget {
                                       );
                                       //TODO send notification to load owner
                                       final truckPostProvider = ref.read(
-                                          truckPostFutureProvider(offer.unitUid!));
+                                          truckPostStreamProvider(offer.unitUid!));
                                       truckPostProvider.when(
                                         data: (truckPost) {
                                           NotificationService().sendPushMessage(

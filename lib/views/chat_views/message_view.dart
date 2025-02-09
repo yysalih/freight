@@ -26,7 +26,7 @@ class MessageView extends ConsumerWidget {
 
 
     final chatStream = ref.watch(chatStreamProvider(chatModel.uid));
-    final chatUserProvider = ref.watch(userFutureProvider(chatModel.toUid));
+    final chatUserProvider = ref.watch(userStreamProvider(chatModel.toUid));
 
     final chatNotifier = ref.watch(chatController.notifier);
 

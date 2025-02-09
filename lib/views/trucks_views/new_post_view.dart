@@ -33,8 +33,8 @@ class NewPostView extends ConsumerWidget {
 
     final width = MediaQuery.of(context).size.width;
 
-    final truckProvider = ref.watch(truckFutureProvider(truckUid));
-    final truckPostProvider = ref.watch(truckPostFutureProvider(truckPostUid));
+    final truckProvider = ref.watch(truckStreamProvider(truckUid));
+    final truckPostProvider = ref.watch(truckPostStreamProvider(truckPostUid));
 
     final truckNotifier = ref.watch(truckController.notifier);
     final truckState = ref.watch(truckController);
@@ -42,7 +42,7 @@ class NewPostView extends ConsumerWidget {
     final placeState = ref.watch(placeController);
     final placeNotifier = ref.watch(placeController.notifier);
 
-    final userProvider = ref.watch(userFutureProvider(FirebaseAuth.instance.currentUser!.uid));
+    final userProvider = ref.watch(userStreamProvider(FirebaseAuth.instance.currentUser!.uid));
 
     return Scaffold(
       backgroundColor: kBlack,

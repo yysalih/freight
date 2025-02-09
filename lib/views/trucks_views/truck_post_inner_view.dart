@@ -36,7 +36,7 @@ class TruckPostInnerView extends ConsumerWidget {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
-    final truckPostProvider = ref.watch(truckPostFutureProvider(uid));
+    final truckPostProvider = ref.watch(truckPostStreamProvider(uid));
 
     final truckNotifier = ref.watch(truckController.notifier);
 
@@ -83,11 +83,11 @@ class TruckPostInnerView extends ConsumerWidget {
         child: SingleChildScrollView(
           child: truckPostProvider.when(
             data: (truckPost) {
-              final ownerUser = ref.watch(userFutureProvider(truckPost.ownerUid!));
+              final ownerUser = ref.watch(userStreamProvider(truckPost.ownerUid!));
               final originProvider = ref.watch(placeFutureProvider(truckPost.origin!));
               final destinationProvider = ref.watch(placeFutureProvider(truckPost.destination!));
 
-              final truckProvider = ref.watch(truckFutureProvider(truckPost.truckUid));
+              final truckProvider = ref.watch(truckStreamProvider(truckPost.truckUid));
               return Column(
                 children: [
                   SizedBox(

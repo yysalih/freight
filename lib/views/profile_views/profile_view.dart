@@ -30,7 +30,7 @@ class ProfileView extends ConsumerWidget {
 
     final authNotifier = ref.watch(authController.notifier);
 
-    final userProvider = ref.watch(userFutureProvider(FirebaseAuth.instance.currentUser!.uid));
+    final userProvider = ref.watch(userStreamProvider(FirebaseAuth.instance.currentUser!.uid));
 
     final profileNotifier = ref.watch(profileController.notifier);
 

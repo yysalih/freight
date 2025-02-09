@@ -12,7 +12,7 @@ class UserRepository {
   UserRepository({String? uid})
       : _uid = uid ?? "";
 
-  Future<UserModel> getUser() async {
+  Future<UserModel> getUserFuture() async {
     final response = await http.post(
       appUrl,
       body: {
@@ -38,11 +38,53 @@ class UserRepository {
     }
     return UserModel();
   }
+  Stream<UserModel> getUserStream() async* {
+    while(true) {
+      try {
+        final response = await http.post(
+          appUrl,
+          body: {
+            'singleQuery': "SELECT * FROM users WHERE uid = '$_uid'",
+          },
+        );
+
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          UserModel userModel = UserModel().fromJson(data);
+
+
+          if(data.toString().contains("error")) {
+            debugPrint('Error: ${response.statusCode}');
+            debugPrint('Error: ${response.reasonPhrase}');
+          } else {
+            yield userModel;
+          }
+        } else {
+          debugPrint('Error: ${response.statusCode}');
+          debugPrint('Error: ${response.reasonPhrase}');
+          yield UserModel();
+        }
+        yield UserModel();
+      }
+      catch (e) {
+        debugPrint('Error fetching user: $e');
+      }
+
+      // Wait before fetching the next update
+      await Future.delayed(const Duration(seconds: 2));
+      }
+
+    }
 }
+
+final userStreamProvider = StreamProvider.autoDispose.family<UserModel, String?>((ref, uid) {
+  final userRepository = ref.watch(userRepositoryProvider(uid));
+  return userRepository.getUserStream();
+});
 
 final userFutureProvider = FutureProvider.autoDispose.family<UserModel, String?>((ref, uid) {
   final userRepository = ref.watch(userRepositoryProvider(uid));
-  return userRepository.getUser();
+  return userRepository.getUserFuture();
 });
 
 final userRepositoryProvider = Provider.family<UserRepository, String?>((ref, uid) {

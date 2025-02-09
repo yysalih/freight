@@ -18,7 +18,7 @@ class PickTruckButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final GlobalKey _menuKey = GlobalKey();
 
-    final trucksProvider = ref.watch(trucksFutureProvider(FirebaseAuth.instance.currentUser!.uid));
+    final trucksProvider = ref.watch(trucksStreamProvider(FirebaseAuth.instance.currentUser!.uid));
 
     final width = MediaQuery.of(context).size.width;
     final language = ref.watch(languageStateProvider);

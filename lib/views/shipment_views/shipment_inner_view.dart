@@ -68,10 +68,10 @@ class ShipmentInnerView extends ConsumerWidget {
           child: shipmentProvider.when(
             data: (shipment) {
 
-              final truckProvider = ref.watch(truckFutureProvider(shipment.truckUid));
-              final carrierProvider = ref.watch(userFutureProvider(shipment.carrierUid));
-              final loadOwnerProvider = ref.watch(userFutureProvider(shipment.loadOwnerUid));
-              final loadProvider = ref.watch(loadFutureProvider(shipment.unitUid));
+              final truckProvider = ref.watch(truckStreamProvider(shipment.truckUid));
+              final carrierProvider = ref.watch(userStreamProvider(shipment.carrierUid));
+              final loadOwnerProvider = ref.watch(userStreamProvider(shipment.loadOwnerUid));
+              final loadProvider = ref.watch(loadStreamProvider(shipment.unitUid));
               return loadProvider.when(
                 data: (load) {
                   return carrierProvider.when(
