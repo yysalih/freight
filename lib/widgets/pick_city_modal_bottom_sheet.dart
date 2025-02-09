@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kamyon/constants/app_constants.dart';
 import 'package:kamyon/constants/languages.dart';
 import 'package:kamyon/constants/providers.dart';
+import 'package:kamyon/controllers/auth_controller.dart';
 import 'package:kamyon/controllers/truck_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PickCityModalBottomSheet extends ConsumerWidget {
   const PickCityModalBottomSheet({super.key});
@@ -41,13 +43,17 @@ class PickCityModalBottomSheet extends ConsumerWidget {
 }
 
 class FileOptionsModalBottomSheet extends ConsumerWidget {
-  const FileOptionsModalBottomSheet({super.key});
+  final String type;
+  const FileOptionsModalBottomSheet({super.key, required this.type});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
 
     final language = ref.watch(languageStateProvider);
+
+    final authNotifier = ref.watch(authController.notifier);
+    final authState = ref.watch(authController);
 
     return Container(
 
@@ -57,7 +63,18 @@ class FileOptionsModalBottomSheet extends ConsumerWidget {
         children: [
           MaterialButton(
             height: 40.h,
-            onPressed: () {
+            onPressed: () async {
+              authNotifier.handleUploadPDF(type);
+
+              await authNotifier.updateFilesState(
+                idFront: authState.idFront,
+                idBack: authState.idBack,
+                licenseFront: authState.licenseFront,
+                licenseBack: authState.licenseBack,
+                psiko: type == "psiko" ? authState.downloadURL : authState.psiko,
+                src: type == "src" ? authState.downloadURL : authState.src,
+                registration: type == "registration" ? authState.downloadURL : authState.registration,
+              );
 
             },
             child: Row(
@@ -72,7 +89,12 @@ class FileOptionsModalBottomSheet extends ConsumerWidget {
           MaterialButton(
             height: 40.h,
             onPressed: () {
-
+              if(type == "psiko") {
+                launchUrl(Uri.parse(authState.psiko));
+              } else if(type == "src")
+                launchUrl(Uri.parse(authState.src));
+              else if(type == "registration")
+                launchUrl(Uri.parse(authState.registration));
             },
             child: Row(
               children: [

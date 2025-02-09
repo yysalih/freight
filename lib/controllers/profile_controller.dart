@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:kamyon/constants/languages.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,46 @@ class ProfileController extends StateNotifier<ProfileState> {
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final ImagePicker _picker = ImagePicker();
+
+  updateLocation({required BuildContext context, required String image, required ProfileState profileState,
+    required String errorTitle, required String succesTitle}) async {
+
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+
+    final response = await http.post(
+      appUrl,
+      body: {
+        'executeQuery': """
+        UPDATE users 
+        SET 
+          lat = ?,
+          long = ?
+        WHERE 
+          uid = '$currentUserUid'
+      """,
+        "params": jsonEncode([
+          position.latitude,
+          position.longitude
+        ]),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      var data = jsonDecode(response.body);
+      debugPrint('Response: $data');
+
+      if (!data.toString().contains("error")) {
+        debugPrint("Location updated");
+      } else {
+        debugPrint("Error location updated");
+      }
+    } else {
+      debugPrint('Error: ${response.statusCode}');
+      debugPrint('Error: ${response.reasonPhrase}');
+    }
+  }
 
   logout(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -168,6 +209,7 @@ class ProfileController extends StateNotifier<ProfileState> {
       debugPrint('error occured: $e');
     }
   }
+
   showPicker(BuildContext context, {required String language}) {
     showModalBottomSheet(
         context: context,
@@ -242,7 +284,7 @@ class ProfileController extends StateNotifier<ProfileState> {
     final response = await http.post(
       appUrl,
       body: {
-        'executeQuery': "UPDATE users SET token = '$token' WHERE uid = '${currentUserUid}'",
+        'executeQuery': "UPDATE users SET token = '$token' WHERE uid = '$currentUserUid'",
       },
     );
 

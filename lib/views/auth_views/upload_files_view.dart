@@ -56,16 +56,33 @@ class UploadFilesView extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       fileCardWidget(title: languages[language]!["id_front"]!,
-                        image: "id", color: kLightBlack, onPressed: () {
+                        image: "id", color: kLightBlack, onPressed: () async {
                           if(toEdit) {
-                            showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
+                            await authNotifier.showPicker(context, language: language, type: "idFront");
+                            await authNotifier.updateFilesState(
+                                idFront: authState.image,
+                                idBack: authState.idBack,
+                                licenseFront: authState.licenseFront,
+                                licenseBack: authState.licenseBack,
+                                psiko: authState.psiko,
+                                src: authState.src,
+                                registration: authState.registration);
+                            //showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
                           }
                         },),
                       SizedBox(width: 20.w,),
                       fileCardWidget(title: languages[language]!["id_back"]!,
-                        image: "id", color: kLightBlack, onPressed: () {
+                        image: "id", color: kLightBlack, onPressed: () async {
                           if(toEdit) {
-                            showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
+                            await authNotifier.showPicker(context, language: language, type: "idBack");
+                            await authNotifier.updateFilesState(
+                                idFront: authState.idFront,
+                                idBack: authState.image,
+                                licenseFront: authState.licenseFront,
+                                licenseBack: authState.licenseBack,
+                                psiko: authState.psiko,
+                                src: authState.src,
+                                registration: authState.registration);
                           }
                         },),
                     ],
@@ -77,16 +94,32 @@ class UploadFilesView extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         fileCardWidget(title: languages[language]!["license_front"]!,
-                          image: "license", color: kLightBlack, onPressed: () {
+                          image: "license", color: kLightBlack, onPressed: () async {
                           if(toEdit) {
-                            showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
+                            await authNotifier.showPicker(context, language: language, type: "licenseFront");
+                            await authNotifier.updateFilesState(
+                                idFront: authState.idFront,
+                                idBack: authState.idBack,
+                                licenseFront: authState.image,
+                                licenseBack: authState.licenseBack,
+                                psiko: authState.psiko,
+                                src: authState.src,
+                                registration: authState.registration);
                           }
                           },),
                         SizedBox(width: 20.w,),
                         fileCardWidget(title: languages[language]!["license_back"]!,
-                          image: "license", color: kLightBlack, onPressed: () {
+                          image: "license", color: kLightBlack, onPressed: () async {
                           if(toEdit) {
-                            showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
+                            await authNotifier.showPicker(context, language: language, type: "licenseBack");
+                            await authNotifier.updateFilesState(
+                                idFront: authState.idFront,
+                                idBack: authState.idBack,
+                                licenseFront: authState.licenseFront,
+                                licenseBack: authState.image,
+                                psiko: authState.psiko,
+                                src: authState.src,
+                                registration: authState.registration);
                           }
                           },),
                       ],
@@ -98,7 +131,9 @@ class UploadFilesView extends ConsumerWidget {
                       fileCardWidget2(title: languages[language]!["psiko"]!,
                           icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
                             if(toEdit) {
-                              showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
+                              showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet(
+                                type: "psiko",
+                              ));
                             }
                           }),
                       SizedBox(height: 20.h,),
