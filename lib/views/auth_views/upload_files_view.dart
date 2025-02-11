@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,73 +56,88 @@ class UploadFilesView extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      fileCardWidget(title: languages[language]!["id_front"]!,
-                        image: "id", color: kLightBlack, onPressed: () async {
-                          if(true) {
-                            await authNotifier.showPicker(context, language: language, type: "idFront");
-                            await authNotifier.updateFilesState(
-                                idFront: authState.image,
-                                idBack: authState.idBack,
-                                licenseFront: authState.licenseFront,
-                                licenseBack: authState.licenseBack,
-                                psiko: authState.psiko,
-                                src: authState.src,
-                                registration: authState.registration);
-                            //showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
-                          }
-                        },),
+                      Column(
+                        children: [
+                          fileCardWidget(title: languages[language]!["id_front"]!,
+                            image: "id", color: kLightBlack, onPressed: () async {
+                              if(true) {
+                                await authNotifier.showPicker(context, language: language, type: "idFront");
+
+                                //showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet());
+                              }
+                            },),
+                          if(authState.idFront.isNotEmpty) TextButton(
+                            child: Text(languages[language]!["show"]!, style: kCustomTextStyle.copyWith(
+                              color: Colors.lightBlueAccent, fontSize: 12
+                            ),),
+                            onPressed: () {
+                              showUploadedFile(authState.idFront.isNotEmpty, authState.idFront, context);
+                            },
+                          ),
+                        ],
+                      ),
                       SizedBox(width: 20.w,),
-                      fileCardWidget(title: languages[language]!["id_back"]!,
-                        image: "id", color: kLightBlack, onPressed: () async {
-                          if(true) {
-                            await authNotifier.showPicker(context, language: language, type: "idBack");
-                            await authNotifier.updateFilesState(
-                                idFront: authState.idFront,
-                                idBack: authState.image,
-                                licenseFront: authState.licenseFront,
-                                licenseBack: authState.licenseBack,
-                                psiko: authState.psiko,
-                                src: authState.src,
-                                registration: authState.registration);
-                          }
-                        },),
+                      Column(
+                        children: [
+                          fileCardWidget(title: languages[language]!["id_back"]!,
+                            image: "id", color: kLightBlack, onPressed: () async {
+                              await authNotifier.showPicker(context, language: language, type: "idBack");
+
+
+                            },),
+                          if(authState.idBack.isNotEmpty) TextButton(
+                            child: Text(languages[language]!["show"]!, style: kCustomTextStyle.copyWith(
+                                color: Colors.lightBlueAccent, fontSize: 12
+                            ),),
+                            onPressed: () {
+                              showUploadedFile(authState.idBack.isNotEmpty, authState.idBack, context);
+                            },
+                          ),
+                        ],
+                      ),
                     ],
                   ),
 
                   authState.isCarrier ? Padding(
-                    padding: EdgeInsets.only(top: 20.0.h),
+                    padding: EdgeInsets.only(top: 10.0.h),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        fileCardWidget(title: languages[language]!["license_front"]!,
-                          image: "license", color: kLightBlack, onPressed: () async {
-                          if(true) {
-                            await authNotifier.showPicker(context, language: language, type: "licenseFront");
-                            await authNotifier.updateFilesState(
-                                idFront: authState.idFront,
-                                idBack: authState.idBack,
-                                licenseFront: authState.image,
-                                licenseBack: authState.licenseBack,
-                                psiko: authState.psiko,
-                                src: authState.src,
-                                registration: authState.registration);
-                          }
-                          },),
+                        Column(
+                          children: [
+                            fileCardWidget(title: languages[language]!["license_front"]!,
+                              image: "license", color: kLightBlack, onPressed: () async {
+                                await authNotifier.showPicker(context, language: language, type: "licenseFront");
+
+                              },),
+                            if(authState.licenseFront.isNotEmpty) TextButton(
+                              child: Text(languages[language]!["show"]!, style: kCustomTextStyle.copyWith(
+                                  color: Colors.lightBlueAccent, fontSize: 12
+                              ),),
+                              onPressed: () {
+                                showUploadedFile(authState.licenseFront.isNotEmpty, authState.licenseFront, context);
+                              },
+                            ),
+                          ],
+                        ),
                         SizedBox(width: 20.w,),
-                        fileCardWidget(title: languages[language]!["license_back"]!,
-                          image: "license", color: kLightBlack, onPressed: () async {
-                          if(true) {
-                            await authNotifier.showPicker(context, language: language, type: "licenseBack");
-                            await authNotifier.updateFilesState(
-                                idFront: authState.idFront,
-                                idBack: authState.idBack,
-                                licenseFront: authState.licenseFront,
-                                licenseBack: authState.image,
-                                psiko: authState.psiko,
-                                src: authState.src,
-                                registration: authState.registration);
-                          }
-                          },),
+                        Column(
+                          children: [
+                            fileCardWidget(title: languages[language]!["license_back"]!,
+                              image: "license", color: kLightBlack, onPressed: () async {
+                                await authNotifier.showPicker(context, language: language, type: "licenseBack");
+
+                              },),
+                            if(authState.licenseBack.isNotEmpty) TextButton(
+                              child: Text(languages[language]!["show"]!, style: kCustomTextStyle.copyWith(
+                                  color: Colors.lightBlueAccent, fontSize: 12
+                              ),),
+                              onPressed: () {
+                                showUploadedFile(authState.licenseBack.isNotEmpty, authState.licenseBack, context);
+                              },
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ) : const SizedBox(),
@@ -129,7 +145,9 @@ class UploadFilesView extends ConsumerWidget {
                   authState.isCarrier ? Column(
                     children: [
                       fileCardWidget2(title: languages[language]!["psiko"]!,
-                          icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
+                          icon: Icons.file_present_sharp, color: kLightBlack,
+                          isUploaded: authState.psiko.isNotEmpty,
+                          onPressed: () {
                             if(true) {
                               showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet(
                                 type: "psiko",
@@ -138,7 +156,9 @@ class UploadFilesView extends ConsumerWidget {
                           }),
                       SizedBox(height: 20.h,),
                       fileCardWidget2(title: languages[language]!["src"]!,
-                          icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
+                          icon: Icons.file_present_sharp, color: kLightBlack,
+                          isUploaded: authState.src.isNotEmpty,
+                          onPressed: () {
                             if(true) {
                               showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet(
                                 type: "src",
@@ -149,7 +169,9 @@ class UploadFilesView extends ConsumerWidget {
                   ) : Column(
                     children: [
                       fileCardWidget2(title: languages[language]!["registration"]!,
-                          icon: Icons.file_present_sharp, color: kLightBlack, onPressed: () {
+                          icon: Icons.file_present_sharp, color: kLightBlack,
+                          isUploaded: authState.registration.isNotEmpty,
+                          onPressed: () {
                             if(true) {
                               showModalBottomSheet(context: context, builder: (context) => const FileOptionsModalBottomSheet(
                                 type: "registration",
@@ -183,6 +205,24 @@ class UploadFilesView extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void showUploadedFile(bool stateValueExists, String stateValue, BuildContext context) {
+    if(stateValueExists) {
+      showDialog(context: context, builder: (context) => AlertDialog(
+        backgroundColor: kBlack,
+        content: Container(
+          width: 200, height: 200,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              image: CachedNetworkImageProvider(stateValue),
+              fit: BoxFit.cover
+            )
+          ),
+        ),
+      ),);
+    }
   }
 }
 

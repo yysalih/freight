@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kamyon/constants/snackbars.dart';
 import 'package:kamyon/controllers/profile_controller.dart';
 import 'package:kamyon/views/auth_views/pick_role_view.dart';
 
@@ -86,8 +87,10 @@ class FillOutView extends ConsumerWidget {
                     hintText: languages[language]!["input_name"]!,
                     icon: Icons.person, onTap: () {
 
-                    }, controller: authNotifier.nameController..text = toEdit ? authState.currentUser.name! :
-                      authNotifier.currentUser!.displayName == null ? "" : authNotifier.currentUser!.displayName!,
+                    }, controller: authNotifier.nameController..text = toEdit ?
+                    authState.currentUser.name! :
+                      authNotifier.currentUser!.displayName == null ? ""
+                          : authNotifier.currentUser!.displayName ?? authNotifier.nameController.text,
                    onChanged: (value) {
 
                    },),
@@ -96,8 +99,9 @@ class FillOutView extends ConsumerWidget {
                     hintText: languages[language]!["input_surname"]!,
                     icon: Icons.person, onTap: () {
 
-                    }, controller: authNotifier.surnameController..text = toEdit ? authState.currentUser.lastname! :
-                      "", onChanged: (value) {
+                    }, controller: authNotifier.surnameController..text = toEdit
+                        ? authState.currentUser.lastname! :
+                         authNotifier.surnameController.text, onChanged: (value) {
 
                       },),
                   SizedBox(height: 10.h,),
@@ -106,7 +110,7 @@ class FillOutView extends ConsumerWidget {
                     icon: Icons.local_post_office, onTap: () {
 
                     }, controller: authNotifier.emailController..text = toEdit ? authState.currentUser.email! :
-                      authNotifier.currentUser!.email!, onChanged: (value) {
+                      authNotifier.currentUser!.email ?? authNotifier.emailController.text, onChanged: (value) {
 
                       },),
                   SizedBox(height: 10.h,),
@@ -114,7 +118,8 @@ class FillOutView extends ConsumerWidget {
                     hintText: languages[language]!["input_phone"]!,
                     icon: Icons.phone, onTap: () {
 
-                    }, controller: authNotifier.phoneController..text = toEdit ? authState.currentUser.phone! : "",
+                    }, controller: authNotifier.phoneController..text = toEdit
+                        ? authState.currentUser.phone! : authNotifier.phoneController.text,
                   onChanged: (value) {
 
                   },),
@@ -160,8 +165,11 @@ class FillOutView extends ConsumerWidget {
 
               customButton(title: languages[language]![toEdit ? "save" : "continue"]!, color: kGreen, onPressed: () {
 
-                if(!toEdit) {
+                if(!toEdit && authNotifier.isAbleToContinue) {
                   Navigator.push(context, routeToView(const PickRoleView()));
+                }
+                else if(!authNotifier.isAbleToContinue) {
+                  showWarningSnackbar(context: context, title: languages[language]!["missing_values"]!);
                 }
                 else {
                   authNotifier.editUser(context: context, profileState: profileState,

@@ -117,10 +117,10 @@ class ProfileView extends ConsumerWidget {
                           onPressed: () {
                             Navigator.push(context, routeToView(ShipmentsView()));
                           },),
-                          ProfileButtonWidget(width: width, title: languages[language]!["contacts"]!, icon: Icons.quick_contacts_dialer_rounded,
-                          onPressed: () {
-                            Navigator.push(context, routeToView( ContactsView(currentUser: user,)));
-                          },),
+                          // ProfileButtonWidget(width: width, title: languages[language]!["contacts"]!, icon: Icons.quick_contacts_dialer_rounded,
+                          // onPressed: () {
+                          //   Navigator.push(context, routeToView( ContactsView(currentUser: user,)));
+                          // },),
                           ProfileButtonWidget(width: width, title: languages[language]!["languages"]!, icon: Icons.language,
                             onPressed: () {
                               showLanguageDialog(context, language, width);

@@ -192,12 +192,12 @@ class ProfileController extends StateNotifier<ProfileState> {
 
     state = state.copyWith(isCompleted: true);
 
-    final destination = 'files/$fileName';
+    final destination = 'registers/$currentUserUid/profile_photo-$fileName';
 
     try {
       final ref = FirebaseStorage.instance.ref(destination);
       await ref.putFile(state.photo);
-      var pathReference = _storage.ref('files/$fileName');
+      var pathReference = _storage.ref('registers/$currentUserUid/profile_photo-$fileName');
 
       pathReference.getDownloadURL().then((value) async {
 

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../constants/app_constants.dart';
+import '../controllers/auth_controller.dart';
 
-Widget fileCardWidget({required String title, required String image, required Color color, required Function() onPressed}) {
+Widget fileCardWidget({required String title, required String image,
+  required Color color, required Function() onPressed, }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
@@ -24,7 +26,8 @@ Widget fileCardWidget({required String title, required String image, required Co
   );
 }
 
-Widget fileCardWidget2({required String title, required IconData icon, required Color color, required Function() onPressed}) {
+Widget fileCardWidget2({required String title, required IconData icon,
+  required Color color, required bool isUploaded, required Function() onPressed}) {
   return SizedBox(
     height: 50,
     child: ClipRRect(
@@ -33,10 +36,16 @@ Widget fileCardWidget2({required String title, required IconData icon, required 
         onPressed: onPressed,
         color: color,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(icon, color: kWhite,),
-            SizedBox(width: 5.w,),
-            Text(title, style: kCustomTextStyle,),
+            Row(
+              children: [
+                Icon(icon, color: kWhite,),
+                SizedBox(width: 5.w,),
+                Text(title, style: kCustomTextStyle,),
+              ],
+            ),
+            if(isUploaded) const Icon(Icons.done, color: Colors.green, size: 20,),
           ],
         )
       ),

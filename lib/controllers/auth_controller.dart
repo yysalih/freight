@@ -43,6 +43,7 @@ class AuthState {
   final String registration;
 
   final String downloadURL;
+  final String type;
 
   AuthState({
     required this.isRegister,
@@ -60,6 +61,7 @@ class AuthState {
     this.src = "",
     this.registration = "",
     this.downloadURL = "",
+    this.type = "",
   });
 
   AuthState copyWith({
@@ -78,6 +80,7 @@ class AuthState {
     String? src,
     String? registration,
     String? downloadURL,
+    String? type
   }) {
     return AuthState(
       isRegister: isRegister ?? this.isRegister,
@@ -95,6 +98,7 @@ class AuthState {
       src: src ?? this.src,
       registration: registration ?? this.registration,
       downloadURL: downloadURL ?? this.downloadURL,
+      type: type ?? this.type,
     );
   }
 }
@@ -109,6 +113,11 @@ class AuthController extends StateNotifier<AuthState> {
   TextEditingController surnameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+
+  bool get isAbleToContinue => nameController.text.isNotEmpty &&
+      surnameController.text.isNotEmpty &&
+      phoneController.text.isNotEmpty &&
+      emailController.text.isNotEmpty;
 
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordAgainController = TextEditingController();
@@ -480,6 +489,16 @@ class AuthController extends StateNotifier<AuthState> {
         state = state.copyWith(
           isCompleted: true,
           image: value,
+
+        );
+        updateFilesState(
+            idFront: type == "idFront" ? value : state.idFront,
+            idBack: type == "idBack" ? value : state.idBack,
+            licenseFront: type == "licenseFront" ? value : state.licenseFront,
+            licenseBack: type == "image" ? value : state.image,
+            psiko: type == "psiko" ? value : state.psiko,
+            src: type == "src" ? value : state.src,
+            registration: type == "registration" ? value : state.registration,
         );
 
       });
@@ -558,6 +577,7 @@ final authController = StateNotifierProvider<AuthController, AuthState>(
       currentUser: UserModel(),
       photo: File(""),
       image: "",
+      type: "",
     ),
   ),
 );

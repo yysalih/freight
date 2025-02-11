@@ -4,6 +4,7 @@ const Map<String, Map<String, String>> languages = {
 };
 
 const Map<String, String> tr = {
+  "show" : "Görüntüle",
   "offer_accepted_load_title": "yükü için teklifiniz kabul edildi",
   "offer_accepted_truck_title": "aracı için teklifiniz kabul edildi",
   "offer_accepted_body": "Teklifiniz kabul edildi.",
@@ -260,8 +261,12 @@ const Map<String, String> tr = {
   "hotel": "Otel",
   "park": "Park ve Dinlenme",
   "show_on_map": "Google'da Göster",
+  "missing_values" : "Eksik bilgileri doldurunuz!",
+
 };
 const Map<String, String> en = {
+  "missing_values" : "There are missing values!",
+  "show" : "View",
   "new_offer_load_body": "A new offer has been received for your load",
   "new_offer_truck_body": "A new offer has been received for your vehicle",
   "new_offer_load_title": "New offer for your load:",

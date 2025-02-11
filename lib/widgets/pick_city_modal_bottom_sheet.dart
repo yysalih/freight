@@ -89,12 +89,16 @@ class FileOptionsModalBottomSheet extends ConsumerWidget {
           MaterialButton(
             height: 40.h,
             onPressed: () {
-              if(type == "psiko") {
+              if(type == "psiko" && authState.psiko.isNotEmpty) {
                 launchUrl(Uri.parse(authState.psiko));
-              } else if(type == "src")
+              }
+              else if(type == "src" && authState.src.isNotEmpty) {
                 launchUrl(Uri.parse(authState.src));
-              else if(type == "registration")
+              }
+
+              else if (type == "registration" && authState.registration.isNotEmpty) {
                 launchUrl(Uri.parse(authState.registration));
+              }
             },
             child: Row(
               children: [
